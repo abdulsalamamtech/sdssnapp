@@ -1,0 +1,32 @@
+name: Deploy to Staging (Dev)
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH Key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_DEV }}
+
+      - name: Deploy to Staging Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST_IP }} << 'EOF'
+            cd htdocs/dev.domain.com  # Navigate to the staging folder
+            git pull origin main  # Pull the latest changes from dev branch
+            npm install  # Install dependencies
+            rm -rf .next  # Remove the existing .next folder
+            export NEXT_PUBLIC_BASE_URL=https://test.domain.com/api  # Set environment variable
+            npm run build  # Build the Next.js app
+            npm install pm2 --save-dev
+            npx pm2 restart domain-dev-branch  # Restart PM2 process
+          EOF

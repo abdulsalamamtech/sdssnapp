@@ -1,0 +1,52 @@
+
+
+@token = token
+@live_url = "https://tms.sdssn.org"
+@local_url  = "http://localhost:8000"
+
+################################
+
+###
+# Register
+
+POST http://127.0.0.1:8000/api/register/
+content-type: application/json
+
+{
+    "name": "amtech1110",
+    "email": "abdulsalamamtech1110@gmail.com",
+    "password": "12345678",
+    "password_confirmation": "12345678",
+    "first_name": "amtech",
+    "last_name": "digital",
+    "role": "refinery",
+    "answer": "amtech",
+    "country": "nigeria",
+    "state": "lagos",
+    "city": "lagos",
+    "address": "lagos"
+}
+
+
+
+
+###
+# Register
+
+POST https://tms.sdssn.org/api/register/
+content-type: application/json
+
+{
+    "name": "amtech1110",
+    "email": "abdulsalamamtech1110@gmail.com",
+    "password": "12345678",
+    "password_confirmation": "12345678",
+    "first_name": "amtech",
+    "last_name": "digital",
+    "role": "refinery",
+    "country": "nigeria",
+    "state": "lagos",
+    "city": "lagos",
+    "address": "lagos"
+}
+
