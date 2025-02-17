@@ -1,4 +1,4 @@
-<?php
+2<?php
 
 use Laravel\Sanctum\Sanctum;
 
@@ -26,13 +26,16 @@ return [
         'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
         Sanctum::currentApplicationUrlWithPort(),
         env('FRONTEND_URL',  'http://localhost:3000'),
-        'https://domain.org',
-        'https://dev.domain.org',
-        'https://test.domain.org',
-        'https://app.vercel.app',
-        'https://tmmms.vercel.app',
-        'http://localhost:3000',
-        'https://tmms-mktr.vercel.app',
+        'http://localhost',
+        'https://sdssn.org',
+        'https://dev.sdssn.org',
+        'https://test.sdssn.org',
+        'https://sdssn.vercel.app',
+        'https://sdssn-frontend.vercel.app',
+        'https://reactapp.sdssn.org',
+        'https://static.sdssn.org',
+        'https://node.sdssn.org',
+        'https://next.sdssn.org',
     ))),
 
     /*
