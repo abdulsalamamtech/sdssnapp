@@ -41,17 +41,17 @@ Route::middleware('guest')->group(function () {
      * @return Response json
      */
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
+        ->name('api.password.email');
 
 
     // This request is sent from the UI [web route will handle the request]
     // Reset Password
     Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.store');
+        ->name('api.password.store');
     
     // This request is sent from the UI [web route will handle the request]
     //  Hash email verification url
-    Route::get('verify-email/{id}/{hash}', EmailVerifyController::class)->name('verification.verify');
+    Route::get('verify-email/{id}/{hash}', EmailVerifyController::class)->name('api.verification.verify');
 
 });
 
@@ -74,7 +74,7 @@ Route::middleware('auth:sanctum')->group(function () {
      */
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
         ->middleware('throttle:6,1')
-        ->name('verification.send');
+        ->name('api.verification.send');
 
     /**
      * Update the user's password
@@ -83,7 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
      * @param password_confirmation
      * @return Response
      */
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::put('password', [PasswordController::class, 'update'])->name('api.password.update');
 
     /**
      * Destroy the user's token.
@@ -91,6 +91,6 @@ Route::middleware('auth:sanctum')->group(function () {
      * @return Response 
      */
     Route::post('logout', [AuthController::class, 'logout'])
-        ->name('logout');
+        ->name('api.logout');
 });
 

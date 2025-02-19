@@ -117,7 +117,9 @@ Route::post('logout', [AuthController::class, 'logout'])
 
 
 
-
+// User Podcasts [admin only]
+Route::get('/admin/podcasts', [PodcastController::class, 'personal'])
+    ->middleware(['auth:sanctum','verified']);
 
 // PROFILE ROUTES
 // User profile, social media, projects, podcasts, certificates, information
@@ -133,8 +135,7 @@ Route::group(['prefix' => 'profile','middleware' => ['auth:sanctum','verified']]
     // User Projects
     Route::get('/projects', [ProjectController::class, 'personal']);
 
-    // User Podcasts [admin only]
-    Route::get('/podcasts', [PodcastController::class, 'personal']);
+
 
     // User certificates
     Route::get('/certificates', [PodcastController::class, 'personal']);
@@ -175,26 +176,7 @@ Route::group(['middleware' => ['auth:sanctum','verified']], function() {
     Route::post('projects/{project}/shares', [ProjectController::class, 'share']);
 
 
-    // PODCAST
-    // Project routes
-    Route::apiResource('podcasts', PodcastController::class)
-        ->only(['store', 'destroy']);
-    // Update podcast
-    Route::post('podcasts/{podcast}/update', [PodcastController::class, 'update']);
-    Route::put('podcasts/{podcast}', [PodcastController::class, 'update']);
-    // Podcast comments
-    Route::apiResource('podcasts.comments', PodcastCommentController::class)
-        ->only(['store', 'update', 'destroy']);
-    
-    // Like podcast
-    Route::put('podcasts/{podcast}/likes', [PodcastController::class, 'like']);
-    // Share podcast
-    Route::put('podcasts/{podcast}/shares', [PodcastController::class, 'share']);
-    
-    
-    // Podcast like and share using POST
-    Route::post('podcasts/{podcast}/likes', [PodcastController::class, 'like']);
-    Route::post('podcasts/{podcast}/shares', [PodcastController::class, 'share']);
+
 
 });
 
@@ -225,8 +207,7 @@ Route::group(['prefix' => 'admin','middleware' => ['auth:sanctum','verified', 'a
     Route::delete('/projects/{project}/delete-from-trash', [ProjectController::class, 'forceDelete']);
     // Get deleted trash projects
     Route::get('/projects/trash', [ProjectController::class, 'trash']);
-    // Podcast routes [admin]
-    Route::apiResource('/podcasts', PodcastController::class);
+
     // Certificate routes [admin]
     Route::apiResource('/certificates', CertificateController::class);
     // Membership status routes [admin]
@@ -251,6 +232,29 @@ Route::group(['prefix' => 'admin','middleware' => ['auth:sanctum','verified', 'a
 
     // Quest Messages routes
     Route::apiResource('messages', MessageController::class);
+
+
+    // PODCAST
+    // Project routes
+    // Podcast routes [admin]
+    Route::apiResource('/podcasts', PodcastController::class);
+    // Route::apiResource('podcasts', PodcastController::class);
+    // Update podcast
+    Route::post('podcasts/{podcast}/update', [PodcastController::class, 'update']);
+    Route::put('podcasts/{podcast}', [PodcastController::class, 'update']);
+    // Podcast comments
+    Route::apiResource('podcasts.comments', PodcastCommentController::class)
+        ->only(['store', 'update', 'destroy']);
+    
+    // Like podcast
+    Route::put('podcasts/{podcast}/likes', [PodcastController::class, 'like']);
+    // Share podcast
+    Route::put('podcasts/{podcast}/shares', [PodcastController::class, 'share']);
+    
+    
+    // Podcast like and share using POST
+    Route::post('podcasts/{podcast}/likes', [PodcastController::class, 'like']);
+    Route::post('podcasts/{podcast}/shares', [PodcastController::class, 'share']);    
     
     
 });
@@ -280,12 +284,17 @@ Route::get('/resources', [AdminController::class, 'resources']);
 Route::get('/statistics', [AdminController::class, 'index']);
 
 // Gallery resources
-Route::apiResource('galleries', GalleryController::class)
-    ->only(['index', 'show']);
+// Route::apiResource('galleries', GalleryController::class)
+//     ->only(['index', 'show']);
+Route::get('galleries', [GalleryController::class, 'index']);
+Route::get('galleries/{gallery}', [GalleryController::class, 'show']);
+
 
 // Partners routes
-Route::apiResource('partners', PartnerController::class)
-    ->only(['index', 'show']);
+// Route::apiResource('partners', PartnerController::class)
+//     ->only(['index', 'show']);
+Route::get('partners', [PartnerController::class, 'index']);
+Route::get('partners/{partner}', [PartnerController::class, 'show']);
 
 
 
@@ -307,8 +316,11 @@ Route::get('/projects/title/{project:slug}', [ProjectController::class, 'show'])
 
 // GENERAL PUBLIC ROUTES
 // Podcasts routes
-Route::apiResource('podcasts', PodcastController::class)
-    ->only(['index', 'show']);
+// Route::apiResource('podcasts', PodcastController::class)
+//     ->only(['index', 'show']);
+Route::get('/podcasts', [PodcastController::class, 'index']);
+Route::get('/podcasts/{podcast}', [PodcastController::class, 'show']);
+
 // Podcasts comments
 Route::apiResource('podcasts.comments', PodcastCommentController::class)
     ->only(['index', 'show']);
