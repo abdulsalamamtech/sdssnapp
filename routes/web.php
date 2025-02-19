@@ -38,7 +38,7 @@ Route::get('/mail', function (Request $request){
     return $send? "done": "fail";
 });
 
-// /home/amtech/Desktop/projects/tmmmsapp/resources/views/custom/tawk/index.blade.php
-Route::get('/tawk', function () {
-    return view('custom.tawk.index');
-});
+// /home/amtech/Desktop/projects/sdssnapp/resources/views/custom/tawk/index.blade.php
+// Route::get('/tawk', function () {
+//     return view('custom.tawk.index');
+// });
