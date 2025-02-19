@@ -122,3 +122,59 @@
     // Check if file exists
     $exists = Storage::disk('cloudinary')->fileExists($publicId);
 ```
+
+
+
+
+
+
+
+
+```sh
+git clone git@github.com:abdulsalamamtech/sdssnapp.git
+composer install --optimize-autoloader --no-dev
+cp .env.example .env
+php artisan migrate
+php artisan key:generate
+php artisan optimize:clear
+php artisan optimize
+
+sudo chmod -R 775 database
+sudo chmod -R 775 database/database.sql
+sudo chmod -R 775 database/database.sql
+
+php artisan route:list
+chmod 777 database/database.sqlite
+chown www-data:www-data database/database.sqlite
+
+
+chmod 777 database/database.sqlite
+chown www-data:www-data database/database.sqlite  # (For Nginx & PHP)
+
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+
+
+realpath database/database.sqlite
+chmod -R 775 database
+chown -R www-data:www-data database
+
+
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+
+
+sudo chmod -R 775 public && sudo chmod -R 777 storage
+chmod -R 775 storage bootstrap/cache
+
+```
+
+```sh
+# replace www-data to your username
+    chmod -R 775 bootstrap/cache
+    chown -R www-data:www-data bootstrap/cache
+    chown -R sdssn-pro:www-data bootstrap/cache
+    chmod -R 775 storage
+    chown -R sdssn-pro:sdssn-pro storage
+    chown -R sdssn-pro:sdssn-pro bootstrap/cache
+```
