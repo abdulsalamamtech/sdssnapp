@@ -178,3 +178,67 @@ chmod -R 775 storage bootstrap/cache
     chown -R sdssn-pro:sdssn-pro storage
     chown -R sdssn-pro:sdssn-pro bootstrap/cache
 ```
+
+```sh
+
+composer install
+composer install --optimize-autoloader --no-dev
+php artisan migrate
+php artisan key:generate
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+sudo chmod -R 775 public && sudo chmod -R 777 storage
+
+```
+
+
+
+## Next.js 
+
+These logs show a few concerning issues:
+
+1. 502 Bad Gateway Errors:
+- Your Next.js app is returning 502 errors, which typically means your Node.js server isn't responding correctly
+- Multiple attempts to access `/dashboard/projects` and `/` are failing
+
+2. Suspicious WordPress Scans:
+- There are attempts to access `/wp-admin/setup-config.php`
+- These are likely automated scans looking for WordPress vulnerabilities
+- You can safely ignore these if you're not running WordPress
+
+To fix the 502 errors, check:
+
+1. Is your Next.js process running?
+```bash
+# Check if process is running
+pm2 list
+# or
+ps aux | grep node
+```
+
+2. Check your Next.js logs:
+```bash
+# If using PM2
+pm2 logs
+
+# Or check application logs
+tail -f /path/to/your/app/logs/*.log
+```
+
+3. Verify your Node.js server configuration:
+```bash
+# Check if port is being used
+lsof -i :3000  # or whatever port you're using
+```
+
+4. Restart your Next.js application:
+```bash
+# If using PM2
+pm2 restart your-app-name
+
+# Or start if not running
+pm2 start npm --name "your-app" -- start
+```
+
+Would you like me to provide more specific debugging steps based on your setup (PM2, systemd, etc.)?
