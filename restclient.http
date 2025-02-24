@@ -33,12 +33,12 @@ content-type: application/json
 ###
 # Register
 
-POST https://tms.sdssn.org/api/register/
+POST http://localhost:8000/api/register/
 content-type: application/json
 
 {
     "name": "amtech1110",
-    "email": "abdulsalamamtech1110@gmail.com",
+    "email": "abdulsalamamtech@gmail.com",
     "password": "12345678",
     "password_confirmation": "12345678",
     "first_name": "amtech",
@@ -47,7 +47,9 @@ content-type: application/json
     "country": "nigeria",
     "state": "lagos",
     "city": "lagos",
-    "address": "lagos"
+    "address": "lagos",
+    "security_question": "security_question",
+    "answer": "security_answer"
 }
 
 
