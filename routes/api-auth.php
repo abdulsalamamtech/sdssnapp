@@ -86,11 +86,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('api.password.update');
 
     /**
-     * Destroy the user's token.
+     * Destroy current user's token.
      * @param token
      * @return Response 
      */
     Route::post('logout', [AuthController::class, 'logout'])
         ->name('api.logout');
+
+    /**
+     * Destroy the user's token.
+     * @param token
+     * @return Response 
+     */
+    Route::post('logout-devices', [AuthController::class, 'logoutDevices'])
+        ->name('api.logout-devices');        
 });
 

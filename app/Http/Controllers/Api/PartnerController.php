@@ -37,19 +37,58 @@ class PartnerController extends Controller
     {
         $data = $request->validated();
         $user = $request->user();
+        $data['user_id'] = $user->id;
 
+
+        // return $data;
         try {
             DB::beginTransaction();
 
-            if($request->hasFile('banner')){
-                $upload = $this->uploadToImageKit($request,'banner');
-    
-                // Add assets
-                $banner = Assets::create($upload);
-                $data['banner_id'] = $banner->id;
-                $data['user_id'] = $user->id;
-            }
+            // if($request->hasFile('banner')){
+            //    $upload = $this->uploadToImageKit($request,'banner');
+            //     return $upload;
+            //     // Add assets
+            //     $banner = Assets::create($upload);
+            //     $data['banner_id'] = $banner->id;
+            //     $data['user_id'] = $user->id;
+            // }
             
+            // return ($request->banner);
+
+
+            // Upload Asset if exists
+            if ($request->hasFile('banner')) {
+    
+                $cloudinaryImage = $request->file('banner')->storeOnCloudinary('sdssn-app');
+                $url = $cloudinaryImage->getSecurePath();
+                $public_id = $cloudinaryImage->getPublicId();
+        
+                // dd($cloudinaryImage);
+                // return [$cloudinaryImage];
+                // 'original_name',
+                // 'name',
+                // 'type',
+                // 'path',
+                // 'file_id',
+                // 'url',
+                // 'size',
+                // 'hosted_at',
+                // 'active',
+                $asset = Assets::create([
+                    'original_name' => 'partner image',
+                    'path' => 'image',
+                    'hosted_at' => 'cloudinary',
+                    'name' =>  $cloudinaryImage->getOriginalFileName(),
+                    'description' => 'assignment file upload',
+                    'url' => $url,
+                    'file_id' => $public_id,
+                    'type' => $cloudinaryImage->getFileType(),
+                    'size' => $cloudinaryImage->getSize(),
+                ]);
+
+                $data['banner_id'] = $asset->id;
+            }
+
             // Add partner
             $partner = Partner::create($data);
 

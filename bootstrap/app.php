@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\LogActivities;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -18,6 +20,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 
+
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -28,14 +32,19 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        ]);
 
-        $middleware->alias([
-            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            // Log laravel Activities
+            LogActivities::class,
         ]);
-
+       
         // Custom middleware
         $middleware->alias([ 
+            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+    
+            'user-role' => \App\Http\Middleware\UserRoleMiddleware::class,
+            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            'admin' => AdminMiddleware::class,
+
             // This is for laravel spatie/laravel-permission
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,

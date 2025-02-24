@@ -143,7 +143,7 @@ class ProjectController extends Controller
             }
 
 
-            // return [$data, $request->banner];
+            return [$data, $request->banner];
 
             // If the banner is updated
             if($request->banner){

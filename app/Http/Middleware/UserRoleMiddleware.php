@@ -37,4 +37,5 @@ class UserRoleMiddleware
 
         return response()->json($response, $statusCode);
     }
+    
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\PodcastCommentController;
 use App\Http\Controllers\Api\PodcastController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\TestCloudinaryController;
 use App\Http\Controllers\Api\UserProfile;
 use App\Http\Controllers\Api\UserSocial;
 use App\Http\Controllers\NewsletterController;
@@ -19,6 +20,7 @@ use App\Utils\ImageKit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -293,8 +295,8 @@ Route::get('galleries/{gallery}', [GalleryController::class, 'show']);
 // Partners routes
 // Route::apiResource('partners', PartnerController::class)
 //     ->only(['index', 'show']);
-Route::get('partners', [PartnerController::class, 'index']);
-Route::get('partners/{partner}', [PartnerController::class, 'show']);
+Route::get('all-partners', [PartnerController::class, 'index']);
+// Route::get('partners/{partner}/show', [PartnerController::class, 'show']);
 
 
 
@@ -334,6 +336,10 @@ Route::get('/podcasts/category/audio', [PodcastController::class, 'audio']);
 
 
 
+// Route::post('cloudinary', [TestCloudinaryController::class,'store']);
+// Route::apiResource('cloudinary', TestCloudinaryController::class);
+
+
 // Api auth routes
 require __DIR__.'/api-auth.php';
 
@@ -350,7 +356,7 @@ require __DIR__.'/terminal.php';
 
 // // Old Test Routes
 // Route::get('test-cloudinary', [\App\Http\Controllers\Api\TestCloudinary::class, 'index']);
-// Route::post('test-cloudinary', [\App\Http\Controllers\Api\TestCloudinary::class,'store']);
+// Route::post('test-cloudinary', [TestCloudinaryController::class,'store']);
 // Route::delete('test-cloudinary/{asset}', [\App\Http\Controllers\Api\TestCloudinary::class, 'destroy']);
 
 

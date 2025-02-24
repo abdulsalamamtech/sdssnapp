@@ -22,7 +22,7 @@ class PartnerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'banner' => ['nullable','image','mimes:jpeg,png,jpg,gif,svg', 'max:5120'], // 5MB limit
+            'banner' => ['required','image', 'max:5120'], // 5MB limit
             'name' => ['required','string','max:255'],
             'description' => ['required','string'],
         ];

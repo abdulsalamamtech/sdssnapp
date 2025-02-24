@@ -87,7 +87,7 @@ class AuthController extends Controller
         info('Login', $data);
 
         // Delete all user tokens
-        $user->tokens()->delete();
+        // $user->tokens()->delete();
 
         // Generate new token
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -104,7 +104,7 @@ class AuthController extends Controller
     }    
 
     /**
-     * Destroy the user's token.
+     * Destroy current users token.
      */
     public function logout(Request $request)
     {
@@ -116,6 +116,16 @@ class AuthController extends Controller
 
 
 
-    
+        /**
+     * Destroy the user's token.
+     */
+    public function logoutDevices(Request $request)
+    {
+        // $user->tokens()->delete();
+        $request->user()->tokens()->delete();
+        $message = 'Logged out successfully';
+        return ApiResponse::success([], $message);
+
+    }
 
 }

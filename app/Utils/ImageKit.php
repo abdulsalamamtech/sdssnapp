@@ -70,20 +70,21 @@ class Imagekit
             ]
         ];
 
+        // dd($data);
+
         try {
             // Initialize Guzzle client
             $client = new Client(['verify' => false]);
-
+            
             // Prepare the Guzzle request
             $response = $client->post(
                 $url,
-               $data
+                $data
             );
 
 
-
             // return $response;
-            // return($response->getBody());
+            // dd($response);
 
             // Decode and print the response
             $response_body = json_decode($response->getBody(), true);

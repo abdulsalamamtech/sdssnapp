@@ -49,6 +49,7 @@ class TestCloudinaryController extends Controller
 
         // dd($cloudinaryImage);
         // return [$cloudinaryImage];
+        // return $url;
 
         $asset = Asset::create([
             'name' =>  $cloudinaryImage->getOriginalFileName(),
