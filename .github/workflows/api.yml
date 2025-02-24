@@ -1,0 +1,34 @@
+name: Deploy Laravel App to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH Key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.PC_SSHKEY_PRIVATE}}
+
+      - name: Deploy to Staging Server
+        run: |
+          ssh -o StrictHostKeyChecking=no sdssn-api@${{ secrets.SSH_HOST_IP }} << 'EOF'
+            cd htdocs/api.sdssn.org/sdssnapp  # Navigate to the staging folder
+            git pull origin main  # Pull the latest changes from main branch
+            git reset --hard origin/main  # Reset to the latest commit on main branch
+            composer install  # Install dependencies
+            php artisan migrate  # Migrate the database
+            php artisan cache:clear  # Clear the cache
+            php artisan view:clear  # Clear the view cache
+            php artisan route:cache  # Clear the route cache
+            npm install  # Install dependencies
+            npm run build  # Build the Node app
+          EOF
