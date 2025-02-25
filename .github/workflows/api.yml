@@ -22,12 +22,15 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no sdssn-api@${{ secrets.SSH_HOST_IP }} << 'EOF'
             cd htdocs/api.sdssn.org/sdssnapp  # Navigate to the staging folder
-            git fetch origin
-            git reset --hard origin/main
+            git fetch origin # Fetch the latest version
+            git reset --hard origin/main  # Reset to the latest commit on main branch
+            git pull origin main  # Pull the latest changes from main branch
+            git clean -f # Clean the file system
             composer install  # Install dependencies
-            php artisan migrate  # Migrate the database
+            php artisan migrate --force  # Migrate the database
             php artisan cache:clear  # Clear the cache
             php artisan view:clear  # Clear the view cache
+            php artisan route:cache  # Clear the route cache
             php artisan optimize:clear # Clear the optimize cache
             npm install  # Install dependencies
             npm run build  # Build the Node app
