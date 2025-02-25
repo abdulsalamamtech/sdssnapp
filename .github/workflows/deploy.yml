@@ -23,9 +23,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.PRO_SSH_USER }}@${{ secrets.SSH_HOST_IP }} << 'EOF'
             # /home/sdssn-pro/htdocs/pro.sdssn.org/sdssnapp
             # Navigate to the staging folder
-            cd htdocs/pro.sdssn.org/sdssnapp  
-            # Pull the latest changes from main branch
-            git pull origin main  
+            cd htdocs/pro.sdssn.org/sdssnapp
             # Fetch the latest version
             git fetch origin 
             # Reset to the latest commit on main branch

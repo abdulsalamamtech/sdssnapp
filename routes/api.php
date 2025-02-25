@@ -188,7 +188,7 @@ Route::group(['middleware' => ['auth:sanctum','verified']], function() {
 
 
 // ADMIN ROUTES
-Route::group(['prefix' => 'admin','middleware' => ['auth:sanctum','verified', 'admin']], function() {
+Route::group(['prefix' => 'admin', 'name' => 'admin.','middleware' => ['auth:sanctum','verified', 'admin']], function() {
 
     // Admin dashboard route
     Route::apiResource('/', AdminController::class);

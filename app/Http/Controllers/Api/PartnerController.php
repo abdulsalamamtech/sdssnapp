@@ -92,12 +92,14 @@ class PartnerController extends Controller
             // Add partner
             $partner = Partner::create($data);
 
-            if (!$partner) {
-                return $this->sendError([], 'unable to update partner', 500);
-            }
+            // if (!$partner) {
+            //     return $this->sendError([], 'unable to update partner', 500);
+            // }
+
             $partner->load(['banner']);
 
             DB::commit();
+            
             return $this->sendSuccess($partner, 'partner created', 201);
 
         } catch (\Exception $e) {
