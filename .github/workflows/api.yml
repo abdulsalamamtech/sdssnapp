@@ -28,7 +28,7 @@ jobs:
             php artisan migrate  # Migrate the database
             php artisan cache:clear  # Clear the cache
             php artisan view:clear  # Clear the view cache
-            php artisan route:cache  # Clear the route cache
+            php artisan optimize:clear # Clear the optimize cache
             npm install  # Install dependencies
             npm run build  # Build the Node app
           EOF
