@@ -21,10 +21,11 @@ jobs:
       - name: Deploy to Staging Server
         run: |
           ssh -o StrictHostKeyChecking=no sdssn-api@${{ secrets.SSH_HOST_IP }} << 'EOF'
-            cd htdocs/api.sdssn.org/sdssnapp  # Navigate to the staging folder
+            cd htdocs/api.sdssn.org/sdssnapp
             git fetch origin
             git reset --hard origin/main
             git clean -f
+            # export COMPOSER_ALLOW_SUPERUSER=1; composer show;
             composer install  # Install dependencies
             php artisan migrate --force  # Migrate the database
             php artisan cache:clear  # Clear the cache

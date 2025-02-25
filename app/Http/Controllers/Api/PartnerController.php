@@ -25,10 +25,6 @@ class PartnerController extends Controller
         $metadata = $partners;
         $data = PartnerResource::collection($partners);
 
-        if (!$partners) {
-            return ApiResponse::error([], 'partners not found', 404);
-        }
-
         return ApiResponse::success($data, 'successful', 200, $metadata);
     }
 
@@ -157,10 +153,6 @@ class PartnerController extends Controller
 
             $partner->update($data);
             $partner->load(['banner']);
-
-            if (!$partner) {
-                return $this->sendError([], 'unable to update partner', 500);
-            }
 
             DB::commit();
             return $this->sendSuccess($partner, 'partner updated', 200);
