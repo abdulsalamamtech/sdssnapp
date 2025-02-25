@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\PartnerRequest;
 use App\Http\Requests\Api\UpdatePartnerRequest;
+use App\Http\Resources\PartnerResource;
 use App\Models\Assets;
 use App\Models\Partner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 
 class PartnerController extends Controller
 {
@@ -18,13 +22,14 @@ class PartnerController extends Controller
     public function index()
     {
         $partners = Partner::with(['banner'])->latest()->paginate();
-        $metadata = $this->getMetadata($partners);
+        $metadata = $partners;
+        $data = PartnerResource::collection($partners);
 
         if (!$partners) {
-            return $this->sendError([], 'unable to load partners', 500);
+            return ApiResponse::error([], 'partners not found', 404);
         }
 
-        return $this->sendSuccess($partners, 'successful', 200, $metadata);
+        return ApiResponse::success($data, 'successful', 200, $metadata);
     }
 
     /**
@@ -91,16 +96,12 @@ class PartnerController extends Controller
 
             // Add partner
             $partner = Partner::create($data);
-
-            // if (!$partner) {
-            //     return $this->sendError([], 'unable to update partner', 500);
-            // }
-
             $partner->load(['banner']);
-
             DB::commit();
-            
-            return $this->sendSuccess($partner, 'partner created', 201);
+
+
+            $data = new PartnerResource($partner);
+            return ApiResponse::success($data, 'partner created', 201);
 
         } catch (\Exception $e) {
             // Handle transaction failure
@@ -133,7 +134,6 @@ class PartnerController extends Controller
     public function update(UpdatePartnerRequest $request, Partner $partner)
     {
         $data = $request->validated();
-        $user = $request->user();
 
         try {
             DB::beginTransaction();
@@ -163,7 +163,6 @@ class PartnerController extends Controller
             }
 
             DB::commit();
-            return [$partner, $data];
             return $this->sendSuccess($partner, 'partner updated', 200);
 
         } catch (\Exception $e) {

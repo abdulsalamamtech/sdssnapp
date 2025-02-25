@@ -293,8 +293,8 @@ Route::get('galleries/{gallery}', [GalleryController::class, 'show']);
 
 
 // Partners routes
-// Route::apiResource('partners', PartnerController::class)
-//     ->only(['index', 'show']);
+Route::apiResource('partners', PartnerController::class)
+    ->only(['index', 'show']);
 Route::get('all-partners', [PartnerController::class, 'index']);
 // Route::get('partners/{partner}/show', [PartnerController::class, 'show']);
 
