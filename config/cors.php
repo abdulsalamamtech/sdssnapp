@@ -28,6 +28,8 @@ return [
         'https://dev.sdssn.org',
         'https://test.sdssn.org',
         'https://sdssn.vercel.app',
+        'https://api.sdssn.org',
+        'https://pro.sdssn.org',
         'https://sdssn-frontend.vercel.app',
         'https://sdssn-test.vercel.app',
         'http://localhost:3000',

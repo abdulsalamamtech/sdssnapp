@@ -31,6 +31,8 @@ return [
         'https://dev.sdssn.org',
         'https://test.sdssn.org',
         'https://sdssn.vercel.app',
+        'https://api.sdssn.org',
+        'https://pro.sdssn.org',
         'https://sdssn-frontend.vercel.app',
         'https://reactapp.sdssn.org',
         'https://static.sdssn.org',
