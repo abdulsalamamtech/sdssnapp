@@ -22,8 +22,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no sdssn-api@${{ secrets.SSH_HOST_IP }} << 'EOF'
             cd htdocs/api.sdssn.org/sdssnapp  # Navigate to the staging folder
-            git fetch origin # Fetch the latest version
-            git reset --hard origin/main  # Reset to the latest commit on main branch
+            git fetch origin
+            git reset --hard origin/main
             composer install  # Install dependencies
             php artisan migrate  # Migrate the database
             php artisan cache:clear  # Clear the cache
