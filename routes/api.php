@@ -234,7 +234,7 @@ Route::prefix('admin')
     // Route::apiResource('partners', PartnerController::class);
     Route::get('partners', [PartnerController::class, 'index']);
     Route::post('partners', [PartnerController::class, 'store']);
-    Route::post('/partners/{partner}/store', [PartnerController::class, 'store']);
+    Route::post('/partners-store', [PartnerController::class, 'store']);
     Route::get('partners/{partner}', [PartnerController::class,'show']);
     Route::put('partners/{partner}', [PartnerController::class, 'update']);
     Route::post('partners/{partner}/update', [PartnerController::class, 'update']);
