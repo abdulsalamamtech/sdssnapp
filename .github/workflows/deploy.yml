@@ -20,14 +20,14 @@ jobs:
 
       - name: Deploy to Staging Server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.PRO_SSH_USER }}@${{ secrets.SSH_HOST_IP }} << 'EOF'
-            cd htdocs/pro.sdssn.org # Navigate to the staging folder
-            git fetch origin # Fetch the latest version
-            git reset --hard origin/main  # Reset to the latest commit on main branch
+          ssh -o StrictHostKeyChecking=no sdssn-pro@${{ secrets.SSH_HOST_IP }} << 'EOF'
+            cd htdocs/pro.sdssn.org /# Navigate to the staging folder
+
             git pull origin main  # Pull the latest changes from main branch
+            git reset --hard origin/main  # Reset to the latest commit on main branch
             
             # Clean the file system
-            #git clean -f 
+            # git clean -f 
 
             composer install  # Install dependencies
             php artisan migrate --force  # Migrate the database
