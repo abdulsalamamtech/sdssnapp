@@ -99,11 +99,10 @@ class PartnerController extends Controller
             // Add partner
             $partner = Partner::create($data);
             $partner->load(['banner']);
+            // $data = new PartnerResource($partner);
             DB::commit();
 
-
-            $data = new PartnerResource($partner);
-            return ApiResponse::success($data, 'partner created', 201);
+            return ApiResponse::success($partner, 'partner created', 201);
 
         } catch (\Exception $e) {
             // Handle transaction failure
