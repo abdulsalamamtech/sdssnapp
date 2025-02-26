@@ -1,4 +1,4 @@
-name: Deploy Laravel App to PRO VPS
+name: Deploy Laravel App to (PRO) VPS
 
 on:
   push:
@@ -24,16 +24,17 @@ jobs:
             # /home/sdssn-pro/htdocs/pro.sdssn.org/sdssnapp
             # Navigate to the staging folder
             cd htdocs/pro.sdssn.org/sdssnapp
-            # Fetch the latest version
-            git fetch origin 
-            # Reset to the latest commit on main branch
-            git reset --hard origin/main  
-            git clean -f # Clean the file system
-            composer install  # Install dependencies
-            php artisan migrate # Migrate the database
-            php artisan cache:clear  # Clear the cache
-            php artisan view:clear  # Clear the view cache
-            php artisan route:cache  # Clear the route cache
-            npm install  # Install dependencies
-            npm run build  # Build the Node app
+            git pull origin main
+
+            composer install
+            php artisan migrate
+            php artisan cache:clear
+            php artisan view:clear
+            php artisan route:cache
+
+            npm install
+            npm run build
+
+            sudo chmod -R 775 storage bootstrap/cache
+            sudo chmod -R 775 storage storage/logs
           EOF
