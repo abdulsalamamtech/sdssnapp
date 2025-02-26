@@ -34,6 +34,8 @@ jobs:
             php artisan cache:clear  # Clear the cache
             php artisan view:clear  # Clear the view cache
             php artisan route:cache  # Clear the route cache
+            php artisan optimize:clear
+            
             npm install  # Install dependencies
             npm run build  # Build the Node app
             echo "Deployment to Staging Server completed successfully!"
