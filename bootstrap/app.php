@@ -38,9 +38,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
        
         // Custom middleware
-        $middleware->alias([ 
-            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-    
+        $middleware->alias([
+
             'user-role' => \App\Http\Middleware\UserRoleMiddleware::class,
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'admin' => AdminMiddleware::class,
@@ -53,7 +52,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
 
         //Incoming requests from your SPA can authenticate using Laravel's session cookies
-        $middleware->statefulApi();
+        // $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
 

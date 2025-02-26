@@ -21,11 +21,13 @@ jobs:
       - name: Deploy to Staging Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.PRO_SSH_USER }}@${{ secrets.SSH_HOST_IP }} << 'EOF'
-            cd htdocs/pro.sdssn.org/sdssnapp  # Navigate to the staging folder
+            cd htdocs/pro.sdssn.org # Navigate to the staging folder
             git fetch origin # Fetch the latest version
             git reset --hard origin/main  # Reset to the latest commit on main branch
             git pull origin main  # Pull the latest changes from main branch
-            git clean -f # Clean the file system
+            
+            # Clean the file system
+            #git clean -f 
 
             composer install  # Install dependencies
             php artisan migrate --force  # Migrate the database
@@ -34,6 +36,6 @@ jobs:
             php artisan route:cache  # Clear the route cache
             npm install  # Install dependencies
             npm run build  # Build the Node app
-            exit 0
             echo "Deployment to Staging Server completed successfully!"
+            exit 0
           EOF

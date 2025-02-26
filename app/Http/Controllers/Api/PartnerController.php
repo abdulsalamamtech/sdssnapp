@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\PartnerRequest;
@@ -9,9 +10,10 @@ use App\Http\Requests\Api\UpdatePartnerRequest;
 use App\Http\Resources\PartnerResource;
 use App\Models\Assets;
 use App\Models\Partner;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\Log;
 
 
 class PartnerController extends Controller
@@ -21,6 +23,8 @@ class PartnerController extends Controller
      */
     public function index()
     {
+        Log::info('Index method called');
+
         $partners = Partner::with(['banner'])->latest()->paginate();
         $metadata = $partners;
         $data = PartnerResource::collection($partners);
@@ -36,6 +40,8 @@ class PartnerController extends Controller
      */
     public function store(PartnerRequest $request)
     {
+        Log::info('Store method called');
+
         $data = $request->validated();
         $user = $request->user();
         $data['user_id'] = $user->id;
