@@ -7,7 +7,7 @@ use App\Models\Assets;
 use App\Models\Partner;
 use Illuminate\Http\Request;
 
-class OurPartners extends Controller
+class OurPartnerController extends Controller
 {
     /**
      * Display a listing of the resource.
