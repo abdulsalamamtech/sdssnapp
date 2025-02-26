@@ -14,12 +14,14 @@ use App\Http\Controllers\Api\TestCloudinaryController;
 use App\Http\Controllers\Api\UserProfile;
 use App\Http\Controllers\Api\UserSocial;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\OurPartnerController;
 use App\Models\Api\Certificate;
 use App\Models\User;
 use App\Utils\ImageKit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -252,6 +254,7 @@ Route::prefix('admin')
         Route::delete('partners/{partner}', [PartnerController::class, 'destroy']);
         Route::post('partners/{partner}/delete', [PartnerController::class, 'destroy']);
     });
+
     Route::apiResource('brands', PartnerController::class);
     Route::get('brands', [PartnerController::class, 'index']);
     Route::post('brands', [PartnerController::class,'store']);
@@ -262,6 +265,19 @@ Route::prefix('admin')
     Route::delete('brands/{brand}', [PartnerController::class, 'destroy']);
     Route::post('brands/{brand}/delete', [PartnerController::class, 'destroy']);
 
+
+    // Our Partners Route
+    Route::apiResource('our-partners', OurPartnerController::class);
+    Route::get('our-partners', [OurPartnerController::class, 'index']);
+    Route::post('our-partners', [OurPartnerController::class,'store']);
+    Route::post('/our-partners-store', [OurPartnerController::class,'store']);
+    Route::get('our-partners/{ourPartner}', [OurPartnerController::class,'show']);
+    Route::put('our-partners/{ourPartner}', [OurPartnerController::class, 'update']);
+    Route::post('our-partners/{ourPartner}/update', [OurPartnerController::class, 'update']);
+    Route::delete('our-partners/{ourPartner}', [OurPartnerController::class, 'destroy']);
+    Route::post('our-partners/{ourPartner}/delete', [OurPartnerController::class, 'destroy']);
+
+    // Our Team routes
 
 
     // Quest Messages routes
