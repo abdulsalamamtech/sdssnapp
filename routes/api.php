@@ -231,8 +231,16 @@ Route::prefix('admin')
 
 
     // Partners routes
-    Route::apiResource('partners', PartnerController::class);
-    Route::post('/partners/{partner}/update', [PartnerController::class, 'update']);
+    // Route::apiResource('partners', PartnerController::class);
+    Route::get('partners', [PartnerController::class, 'index']);
+    Route::post('partners', [PartnerController::class, 'store']);
+    Route::post('/partners/{partner}/store', [PartnerController::class, 'store']);
+    Route::get('partners/{partner}', [PartnerController::class,'show']);
+    Route::put('partners/{partner}', [PartnerController::class, 'update']);
+    Route::post('partners/{partner}/update', [PartnerController::class, 'update']);
+    Route::delete('partners/{partner}', [PartnerController::class, 'destroy']);
+    Route::post('partners/{partner}/delete', [PartnerController::class, 'destroy']);
+
 
 
     // Quest Messages routes
@@ -299,7 +307,8 @@ Route::get('galleries/{gallery}', [GalleryController::class, 'show']);
 Route::apiResource('partners', PartnerController::class)
     ->only(['index', 'show']);
 Route::get('all-partners', [PartnerController::class, 'index']);
-// Route::get('partners/{partner}/show', [PartnerController::class, 'show']);
+// Route::get('partners/{partner}/show', [PartnerController::class, 'show']);.
+
 
 
 
