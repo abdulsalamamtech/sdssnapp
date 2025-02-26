@@ -35,6 +35,6 @@ jobs:
             npm install
             npm run build
 
-            sudo chmod -R 775 storage bootstrap/cache
-            sudo chmod -R 775 storage storage/logs
+            chmod -R 775 storage bootstrap/cache
+            chmod -R 775 storage storage/logs
           EOF
