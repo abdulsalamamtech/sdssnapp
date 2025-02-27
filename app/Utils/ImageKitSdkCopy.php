@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use ImageKit\ImageKit;
 
-class ImageKitSdk extends Controller
+class ImageKitSdkCopy extends Controller
 {
     public function upload(Request $request)
     {
