@@ -243,28 +243,6 @@ Route::prefix('admin')
     Route::delete('partners/{partner}', [PartnerController::class, 'destroy']);
     Route::post('partners/{partner}/delete', [PartnerController::class, 'destroy']);
 
-    // Brands\
-    Route::prefix('brands')->name('brands.')->group(function (){
-        Route::get('partners', [PartnerController::class, 'index']);
-        Route::post('partners', [PartnerController::class, 'store']);
-        Route::post('/partners-store', [PartnerController::class, 'store']);
-        Route::get('partners/{partner}', [PartnerController::class,'show']);
-        Route::put('partners/{partner}', [PartnerController::class, 'update']);
-        Route::post('partners/{partner}/update', [PartnerController::class, 'update']);
-        Route::delete('partners/{partner}', [PartnerController::class, 'destroy']);
-        Route::post('partners/{partner}/delete', [PartnerController::class, 'destroy']);
-    });
-
-    Route::apiResource('brands', PartnerController::class);
-    Route::get('brands', [PartnerController::class, 'index']);
-    Route::post('brands', [PartnerController::class,'store']);
-    Route::post('/brands-store', [PartnerController::class,'store']);
-    Route::get('brands/{brand}', [PartnerController::class,'show']);
-    Route::put('brands/{brand}', [PartnerController::class, 'update']);
-    Route::post('brands/{brand}/update', [PartnerController::class, 'update']);
-    Route::delete('brands/{brand}', [PartnerController::class, 'destroy']);
-    Route::post('brands/{brand}/delete', [PartnerController::class, 'destroy']);
-
 
     // Our Partners Route
     Route::apiResource('our-partners', OurPartnerController::class);
