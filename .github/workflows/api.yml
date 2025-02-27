@@ -21,7 +21,7 @@ jobs:
       - name: Deploy to Staging Server
         run: |
           ssh -o StrictHostKeyChecking=no sdssn-api@${{ secrets.SSH_HOST_IP }} << 'EOF'
-            cd htdocs/api.sdssn.org/sdssnapp
+            cd htdocs/api.sdssn.org/sdssnapp/
             git fetch origin
             git reset --hard origin/main
             git clean -f
