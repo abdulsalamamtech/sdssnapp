@@ -88,11 +88,22 @@ class GalleryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(GalleryRequest  $request, Gallery $gallery)
+    public function update(Request  $request, Gallery $gallery)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'banner' => ['nullable', 'image', 'max:5120'], // 5MB limit
+            'title' => ['required','string', 'max:500'],
+            'description' => ['nullable','string'],
+        ]);
+        // Remove empty data
+        $data = array_filter($data);
+        // return $data = array_filter($data, function($value) {
+        //     return $value!== null;
+        // });
+
         $user = $request->user();
 
+        // return $gallery;
         try {
             DB::beginTransaction();
 
@@ -102,20 +113,17 @@ class GalleryController extends Controller
                 $slug = Str::slug($title);
 
                 $slug_fund = Gallery::where('slug', $slug)->first();
-                // if($slug_fund){
-                //     $data['slug'] = $slug.'-'.rand(100,999);
-                // }else{
-                //     $data['slug'] = $slug;
-                // }
+                
                 ($slug_fund)
                 ?$data['slug'] = $slug.'-'.rand(100,999)
                 :$data['slug'] = $slug;
+
             }
 
 
-            if ($user->id != $gallery->user_id) {
-                return $this->sendError([], 'you are unauthorize', 401);
-            }
+            // if ($user->id != $gallery->user_id) {
+            //     return $this->sendError([], "you are unauthorize, you can't update media uploaded by another admin", 401);
+            // }
 
             if($request->banner){
 
@@ -137,9 +145,7 @@ class GalleryController extends Controller
             $gallery->update($data);
             $gallery->load(['user', 'banner']);
 
-            if (!$gallery) {
-                return $this->sendError([], 'unable to update gallery', 500);
-            }
+
 
             return $this->sendSuccess($gallery, 'gallery updated', 200);
 
@@ -147,6 +153,9 @@ class GalleryController extends Controller
         } catch (\Exception $e) {
             // Handle transaction failure
             DB::rollBack();
+            return $this->sendError([], 'unable to update gallery, try again later!', 500);
+
+
         }
 
     }
@@ -156,6 +165,53 @@ class GalleryController extends Controller
      */
     public function destroy(Gallery $gallery)
     {
-        //
+        $user = request()->user();
+
+        if ($user->id!= $gallery->user_id) {
+            return $this->sendError([], 'you are unauthorize', 401);
+        }
+
+        $fileId = $gallery->banner->file_id;
+        $previousFile = $this->deleteImageKitFile($fileId);
+        Assets::where('file_id', $fileId)->delete();
+
+        if (!$gallery->delete()) {
+            return $this->sendError([], "you are unauthorize, you can't delete media uploaded by another admin", 401);
+        }
+
+        return $this->sendSuccess([], 'gallery deleted', 200);
     }
 }
+
+
+// {
+//     "success": true,
+//     "message": "successful",
+//     "data": {
+//       "id": 2,
+//       "user_id": 1,
+//       "banner_id": 7,
+//       "slug": "sdssn-lagos",
+//       "title": "SDSSN Lagos",
+//       "description": "SDSSN lagos state nigeria",
+//       "deleted_at": null,
+//       "created_at": "2025-03-05T16:34:34.000000Z",
+//       "updated_at": "2025-03-05T16:34:34.000000Z",
+//       "banner": {
+//         "id": 7,
+//         "name": "banner",
+//         "original_name": "sdssn-logo-new.webp",
+//         "type": "image/webp",
+//         "path": "/sdssn-app/images/images_2025-03-05_16_34_31_Ra2HOj5JU.webp",
+//         "file_id": "67c87d19432c47641667acb7",
+//         "url": "https://ik.imagekit.io/sdssn/sdssn-app/images/images_2025-03-05_16_34_31_Ra2HOj5JU.webp",
+//         "size": 23834,
+//         "hosted_at": "imagekit",
+//         "active": 1,
+//         "deleted_at": null,
+//         "created_at": "2025-03-05T16:34:34.000000Z",
+//         "updated_at": "2025-03-05T16:34:34.000000Z"
+//       }
+//     },
+//     "metadata": null
+//   }

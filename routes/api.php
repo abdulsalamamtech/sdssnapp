@@ -223,10 +223,12 @@ Route::prefix('admin')
 
     // Newsletters
     Route::apiResource('/newsletters', NewsletterController::class)
-    ->only(['index', 'show']);
-
+        ->only(['index', 'show']);
+        
+        
     // Gallery resources
     Route::apiResource('galleries', GalleryController::class);
+    Route::post('galleries/{gallery}/update', [GalleryController::class, 'update']);
 
     // Assign role to user
     Route::put('/update-role', [AdminController::class, 'updateRole']);
