@@ -22,7 +22,7 @@ class GalleryController extends Controller
             ->paginate(10);
 
         if (!$galleries) {
-            return $this->sendError([], 'unable to load galleries', 500);
+            return $this->sendError([], 'unable to load galleries', 404);
         }
 
         return $this->sendSuccess($galleries, 'successful', 200);        
@@ -37,38 +37,53 @@ class GalleryController extends Controller
         $data = $request->validated();
         $user = $request->user();
 
-        // $upload =  $this->uploadImage($request, 'banner');
-        $upload = $this->uploadToImageKit($request,'banner');
-
-        // Add assets
-        $banner = Assets::create($upload);
-        $data['banner_id'] = $banner->id;
-        $data['user_id'] = $user->id;
-
-        // Generate slug
-        $title = $data['title'];
-        $slug = Str::slug($title);
-
-        $slug_fund = Gallery::where('slug', $slug)->first();
-        // $data['slug'] = $slug;
-        // if($slug_fund){
-        //     $data['slug'] = $slug.'-'.rand(100,999);
-        // }
-        ($slug_fund)
-        ?$data['slug'] = $slug.'-'.rand(100,999)
-        :$data['slug'] = $slug;
-
-
-        // Add project
-        $project = Gallery::create($data);
-        $project->load(['user', 'banner']);
-
-
-        if (!$project) {
-            return $this->sendError([], 'unable to update gallery', 500);
+        // Check if the request has any data
+        if ($request->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No data received'
+            ]);
         }
 
-        return $this->sendSuccess($project, 'gallery created', 201);
+        try {
+            //code...
+            // $upload =  $this->uploadImage($request, 'banner');
+            $upload = $this->uploadToImageKit($request,'banner');
+    
+            // Add assets
+            $banner = Assets::create($upload);
+            $data['banner_id'] = $banner->id;
+            $data['user_id'] = $user->id;
+    
+            // Generate slug
+            $title = $data['title'];
+            $slug = Str::slug($title);
+    
+            $slug_fund = Gallery::where('slug', $slug)->first();
+       
+            ($slug_fund)
+            ?$data['slug'] = $slug.'-'.rand(100,999)
+            :$data['slug'] = $slug;
+    
+            info('Create Gallery Data: ' . [$data]);
+    
+            // Add project
+            $gallery = Gallery::create($data);
+            $gallery->load(['user', 'banner']);
+    
+    
+            if (!$gallery) {
+                return $this->sendError([], 'unable to create gallery', 404);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            info('Create Gallery Exceptions: ' . [$th->getMessage()]);
+
+            return $this->sendError([], 'unable to create gallery', 500);
+
+        }
+
+        return $this->sendSuccess($gallery, 'gallery created', 201);
     }
 
     /**
