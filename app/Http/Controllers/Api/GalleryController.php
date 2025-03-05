@@ -37,14 +37,6 @@ class GalleryController extends Controller
         $data = $request->validated();
         $user = $request->user();
 
-        // Check if the request has any data
-        if ($request->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No data received'
-            ]);
-        }
-
         try {
             //code...
             // $upload =  $this->uploadImage($request, 'banner');
@@ -65,7 +57,7 @@ class GalleryController extends Controller
             ?$data['slug'] = $slug.'-'.rand(100,999)
             :$data['slug'] = $slug;
     
-            info('Create Gallery Data: ' . [$data]);
+            info('Create Gallery Data: ', [$data]);
     
             // Add project
             $gallery = Gallery::create($data);
@@ -77,7 +69,7 @@ class GalleryController extends Controller
             }
         } catch (\Throwable $th) {
             //throw $th;
-            info('Create Gallery Exceptions: ' . [$th->getMessage()]);
+            info('Create Gallery Exceptions: ', [$th->getMessage()]);
 
             return $this->sendError([], 'unable to create gallery', 500);
 
