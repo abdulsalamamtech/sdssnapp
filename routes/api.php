@@ -35,7 +35,7 @@ Route::get('/', function () {
         'message' => 'Welcome to the API!',
         'data' => [
             'Laravel' => app()->version(),
-            'project' => 'SDSSN',
+            'project' => 'SDSSN: Spatial and Data Science Society of Nigeria.',
             'developers' => [
                 'backend' =>[
                     'name' => 'Abdulsalam Abdulrahman',
