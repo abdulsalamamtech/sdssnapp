@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Models\Assets;
 use App\Models\User;
 use App\Utils\ImageKit;
@@ -7,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Process\Process;
+
 
 
 // DEPLOYMENT ROUTES
@@ -56,36 +58,11 @@ Route::get('/link-storage', function () {
     return response()->json(['message' => 'Storage linked'], 201);
 });
 
-// Assign role to user
-Route::get('/assign-role', function (Request $request) {
 
-    // return $request->email;
-    $user = User::where('email', $request->email)->first();
-
-    // return $user;
-
-    if(!$user){
-        return response()->json(['status' => false, 'message' => 'User not found'], 201);
-    }
-
-    if(!$request->role){
-        return response()->json(['status' => false, 'message' => 'enter a role'], 201);
-    }
-
-    if(!in_array($request->role, ['user', 'moderator', 'admin', 'super-admin'])){
-        return response()->json(['status' => false,'message' => 'Invalid role'], 201);
-    }
-
-    $user->role = $request->role;
-    $user->save();
-
-    $message = $request->role . ' role assign to ' . $request->email;
-    return response()->json([
-        'status' => true,
-        'message' => $message
-    ], 201);
-    
-})->middleware(['auth:sanctum', 'role:admin']);
+/**
+ * Assign role to user
+ */
+Route::get('/assign-role',[AdminController::class, 'assignRole'])->middleware(['auth:sanctum', 'role:admin']);
 
 
 
@@ -102,6 +79,7 @@ Route::get('/files', function (Request $request) {
     ]);
 
 });
+
 Route::get('/files/upload', function (Request $request) {
 
 

@@ -196,7 +196,8 @@ Route::prefix('admin')
     ->group(function () {
 
     // Admin dashboard route
-    Route::apiResource('/', AdminController::class);
+    Route::apiResource('/', AdminController::class)
+        ->only(['index']);
     // Users routes
     Route::get('/users', [AdminController::class, 'users']);
     // Get all users routes

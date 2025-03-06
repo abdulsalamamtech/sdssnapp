@@ -152,16 +152,14 @@ class GalleryController extends Controller
             $gallery->update($data);
             $gallery->load(['user', 'banner']);
 
-
+            DB::commit();
 
             return $this->sendSuccess($gallery, 'gallery updated', 200);
 
-            DB::commit();
         } catch (\Exception $e) {
             // Handle transaction failure
             DB::rollBack();
             return $this->sendError([], 'unable to update gallery, try again later!', 500);
-
 
         }
 
@@ -189,36 +187,3 @@ class GalleryController extends Controller
         return $this->sendSuccess([], 'gallery deleted', 200);
     }
 }
-
-
-// {
-//     "success": true,
-//     "message": "successful",
-//     "data": {
-//       "id": 2,
-//       "user_id": 1,
-//       "banner_id": 7,
-//       "slug": "sdssn-lagos",
-//       "title": "SDSSN Lagos",
-//       "description": "SDSSN lagos state nigeria",
-//       "deleted_at": null,
-//       "created_at": "2025-03-05T16:34:34.000000Z",
-//       "updated_at": "2025-03-05T16:34:34.000000Z",
-//       "banner": {
-//         "id": 7,
-//         "name": "banner",
-//         "original_name": "sdssn-logo-new.webp",
-//         "type": "image/webp",
-//         "path": "/sdssn-app/images/images_2025-03-05_16_34_31_Ra2HOj5JU.webp",
-//         "file_id": "67c87d19432c47641667acb7",
-//         "url": "https://ik.imagekit.io/sdssn/sdssn-app/images/images_2025-03-05_16_34_31_Ra2HOj5JU.webp",
-//         "size": 23834,
-//         "hosted_at": "imagekit",
-//         "active": 1,
-//         "deleted_at": null,
-//         "created_at": "2025-03-05T16:34:34.000000Z",
-//         "updated_at": "2025-03-05T16:34:34.000000Z"
-//       }
-//     },
-//     "metadata": null
-//   }

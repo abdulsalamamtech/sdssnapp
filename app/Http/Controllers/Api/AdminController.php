@@ -120,7 +120,10 @@ class AdminController extends Controller
         return $this->sendSuccess($data, 'resource loaded successfully', 200);
     }
 
-    // Get the resource
+
+    /**
+     * Get all statistical resource
+     */
     public function resources(){
         $data = [
             'users' => [
@@ -168,19 +171,25 @@ class AdminController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Get all admin.
      */
-    // public function store(Request $request)
-    // {
-    //     //
-    // }
+    public function admin()
+    {
+        $admin = User::where('role', 'admin')->latest()->get();
+
+        if (!$admin) {
+            return $this->sendError([], 'unable to load admins', 404);
+        }
+
+        return $this->sendSuccess($admin, 'successful', 200);
+    }
 
     /**
      * Display all users.
      */
     public function allUsers()
     {
-        $users = User::all();
+        $users = User::latest()->get();
         $metadata = $this->getMetadata($users);
 
         if (!$users) {
@@ -190,25 +199,11 @@ class AdminController extends Controller
         return $this->sendSuccess($users, 'successful', 200, $metadata);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    // public function update(Request $request, string $id)
-    // {
-    //     //
-    // }
+
 
     /**
-     * Remove the specified resource from storage.
+     * Display and paginate users.
      */
-    // public function destroy(string $id)
-    // {
-    //     //
-    // }
-
-
-
-    // Get all the users
     public function users()
     {
 
@@ -216,15 +211,16 @@ class AdminController extends Controller
         $metadata = $this->getMetadata($users);
 
         if (!$users) {
-            return $this->sendError([], 'unable to load users', 500);
+            return $this->sendError([], 'unable to load users', 404);
         }
 
         return $this->sendSuccess($users, 'successful', 200, $metadata);
 
     }
 
-
-    // Get location of registered users
+    /**
+     * Display all location of registered users.
+     */
     public function locations()
     {
         $locations = User::select('state', DB::raw('count(*) as total'))
@@ -243,7 +239,10 @@ class AdminController extends Controller
 
     }
 
-    // Get memberships of users
+
+    /**
+     * Display all memberships of users.
+     */
     public function memberships()
     {
         $locations = User::select('membership_status', DB::raw('count(*) as total'))
@@ -266,6 +265,12 @@ class AdminController extends Controller
      */
     public function updateRole(Request $request)
     {
+
+        $request->validate([
+            'email' =>'required|email|exists:users,email',
+            'role' =>'required|in:user,admin'
+        ]);
+
         // return $request->email;
         $user = User::where('email', $request->email)->first();
 
@@ -290,6 +295,47 @@ class AdminController extends Controller
         $message = $request->role . ' role assign to ' . $request->email;
         return $this->sendSuccess($user, $message, 200);
 
+    }
+
+
+    /**
+     * Assign a role to a user
+     */
+    public function assignRole(Request $request){
+        $request->validate([
+            'email' =>'required|email|exists:users,email',
+            'role' =>'required|in:user,admin'
+        ]);
+    
+
+        $user = User::where('email', $request->email)->first();
+        // I remove the package from the middleware
+        // {
+        //   "success": false,
+        //   "message": "An error occurred. Please try again later.",
+        //   "error": "Authorizable class `App\\Models\\User` must use Spatie\\Permission\\Traits\\HasRoles trait."
+        // }
+
+        if(!$user){
+            return response()->json(['status' => false, 'message' => 'User not found'], 201);
+        }
+    
+        if(!$request->role){
+            return response()->json(['status' => false, 'message' => 'enter a role'], 201);
+        }
+    
+        if(!in_array($request->role, ['user', 'moderator', 'admin', 'super-admin'])){
+            return response()->json(['status' => false,'message' => 'Invalid role'], 201);
+        }
+    
+        $user->role = $request->role;
+        $user->save();
+    
+        $message = $request->role . ' role assign to ' . $request->email;
+        return response()->json([
+            'status' => true,
+            'message' => $message
+        ], 201);
     }
 
 }
