@@ -24,9 +24,10 @@ jobs:
             cd htdocs/app.sdssn.org/sdssnapp/
 
             echo "🔄 Fetching latest code..."
+            php artisan optimize:clear
             git pull origin main
-            git fetch --all
-            git reset --hard origin/main
+            # git fetch --all
+            # git reset --hard origin/main
     
             echo "📦 Installing PHP dependencies..."
             composer install --no-dev --optimize-autoloader
