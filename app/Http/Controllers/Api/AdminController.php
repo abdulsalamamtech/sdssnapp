@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\UserRoleEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Api\Certificate;
 use App\Models\Api\Podcast;
@@ -261,45 +262,9 @@ class AdminController extends Controller
 
 
     /**
-     * Update user role [user, admin, moderator]
-     */
-    public function updateRole(Request $request)
-    {
-
-        $request->validate([
-            'email' =>'required|email|exists:users,email',
-            'role' =>'required|in:user,admin'
-        ]);
-
-        // return $request->email;
-        $user = User::where('email', $request->email)->first();
-
-
-        if(!$user){
-            return $this->sendError([], 'user not found', 404);
-        }
-
-        if(!$request->role){
-            return $this->sendError([], 'enter a role', 404);
-
-
-        }
-
-        if(!in_array($request->role, ['user', 'moderator', 'admin', 'super-admin'])){
-            return $this->sendError([], 'invalid role', 402);
-        }
-
-        $user->role = $request->role;
-        $user->save();
-
-        $message = $request->role . ' role assign to ' . $request->email;
-        return $this->sendSuccess($user, $message, 200);
-
-    }
-
-
-    /**
-     * Assign a role to a user
+     * Assign role to a user
+     * Update user role [user, admin]
+     * @param ['user', 'admin']
      */
     public function assignRole(Request $request){
         $request->validate([
@@ -328,9 +293,24 @@ class AdminController extends Controller
             return response()->json(['status' => false,'message' => 'Invalid role'], 201);
         }
     
-        $user->role = $request->role;
+
+        // Represent the user role
+        if($request->role == 'admin'){
+            // $user->assignRole(UserRoleEnum::ADMIN->value);
+            // Remove previous roles
+            $user->syncRoles(UserRoleEnum::ADMIN->value);
+            $user->role = UserRoleEnum::ADMIN->value;
+        }else if($request->role == 'moderator'){
+            $user->syncRoles(UserRoleEnum::MODERATOR->value);
+            $user->role = UserRoleEnum::MODERATOR->value;
+        }else{
+            $user->syncRoles(UserRoleEnum::USER->value);
+            $user->role = UserRoleEnum::USER->value;
+        }
+        // $user->role = $request->role;
         $user->save();
     
+
         $message = $request->role . ' role assign to ' . $request->email;
         return response()->json([
             'status' => true,

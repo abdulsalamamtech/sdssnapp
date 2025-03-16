@@ -59,12 +59,6 @@ Route::get('/link-storage', function () {
 });
 
 
-/**
- * Assign role to user
- */
-Route::get('/assign-role',[AdminController::class, 'assignRole'])->middleware(['auth:sanctum', 'role:admin']);
-
-
 
 // TEST ROUTES
 Route::get('/files', function (Request $request) {

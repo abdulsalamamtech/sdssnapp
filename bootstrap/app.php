@@ -40,9 +40,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // Custom middleware
         $middleware->alias([
 
-            'user-role' => \App\Http\Middleware\UserRoleMiddleware::class,
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-            'admin' => AdminMiddleware::class,
+            
+            // Comment this when using spatie permission
+            // 'admin' => AdminMiddleware::class,
+            // 'user-role' => \App\Http\Middleware\UserRoleMiddleware::class,
 
             // This is for laravel spatie/laravel-permission
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
@@ -52,7 +54,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
 
         //Incoming requests from your SPA can authenticate using Laravel's session cookies
-        // $middleware->statefulApi();
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
 

@@ -46,8 +46,8 @@ Route::middleware('guest')->group(function () {
 
     // This request is sent from the UI [web route will handle the request]
     // Reset Password
-    Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('api.password.store');
+    // Route::post('reset-password', [NewPasswordController::class, 'store'])
+    //     ->name('api.password.store');
     
     // This request is sent from the UI [web route will handle the request]
     //  Hash email verification url

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Enums\UserRoleEnum;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginRequest;
@@ -30,12 +31,19 @@ class AuthController extends Controller
             // Create user
             $user = User::create($request->validated());
 
+            
             // Create social media record
             $user->social()->create();
             
             // Dispatch event
             event(new Registered($user));
+            
             // $user->sendEmailVerificationNotification();
+
+            // Represent the user role
+            $user->assignRole(UserRoleEnum::USER->value);
+            $user->role = UserRoleEnum::USER->value;
+            $user->save();
 
 
             // Unset sensitive information

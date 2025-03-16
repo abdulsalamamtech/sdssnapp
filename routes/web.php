@@ -1,10 +1,9 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::get('/', function () {
 
@@ -42,3 +41,7 @@ Route::get('/mail', function (Request $request){
 // Route::get('/tawk', function () {
 //     return view('custom.tawk.index');
 // });
+
+
+
+
