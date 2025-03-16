@@ -142,20 +142,20 @@ Route::get('assign-admin', function(){
     return $user;
 });
 
-Route::get('assign-admin-all', function(){
-    $assign = [];
-    $users = User::where('role', 'admin')->get();
-    foreach ($users as $user) {
-        # code...
-        $assign[] = $user;
+// Route::get('assign-admin-all', function(){
+//     $assign = [];
+//     $users = User::where('role', 'admin')->get();
+//     foreach ($users as $user) {
+//         # code...
+//         $assign[] = $user;
 
-        $user->assignRole(UserRoleEnum::ADMIN->value);
-        $user->role = UserRoleEnum::ADMIN->value;
-        $user->save();
-    }
+//         $user->assignRole(UserRoleEnum::ADMIN->value);
+//         $user->role = UserRoleEnum::ADMIN->value;
+//         $user->save();
+//     }
 
-    return $assign;
-});
+//     return $assign;
+// });
 
 Route::get('assign-admin-test', function(){
     return [
@@ -163,9 +163,9 @@ Route::get('assign-admin-test', function(){
     ];
 })->middleware(['role:admin']);
 
-Route::get('assign-admin-get', function(){
-    return [
-        'test' => 'testing of admin permission successful!',
-        'roles' => Role::all()
-    ];
-});
+// Route::get('assign-admin-get', function(){
+//     return [
+//         'test' => 'testing of admin permission successful!',
+//         'roles' => Role::all()
+//     ];
+// });
