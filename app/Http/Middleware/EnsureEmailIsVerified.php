@@ -26,7 +26,8 @@ class EnsureEmailIsVerified
             $response['message'] = 'Your email address is not verified.';
             $statusCode = 409;
 
-            return response()->json($response, $statusCode);
+            // return response()->json($response, $statusCode);
+            return redirect()->away(config('app.frontend_verify_email_error_url') . '?message=email_not_verified?status=409');
 
         }
 

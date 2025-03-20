@@ -14,19 +14,39 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-        ->name('register');
+    // Route::get('register', [RegisteredUserController::class, 'create'])
+    //     ->name('register');
+    Route::get('register', function(){
+        // Redirect to external link
+        return redirect()->away(config('app.frontend_register_url'));
+    });
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    // Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('register', function(){
+        // Redirect to external link
+        return redirect()->away(config('app.frontend_register_url'));
+    });
 
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+    // Route::get('login', [AuthenticatedSessionController::class, 'create'])
+    //     ->name('login');
+    Route::get('login', function(){
+        // Redirect to external link
+        return redirect()->away(config('app.frontend_login_url'));
+    });
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    // Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::get('login', function(){
+        // Redirect to external link
+        return redirect()->away(config('app.frontend_login_url'));
+    });
 
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-        ->name('password.request');
-
+    // Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+    //     ->name('password.request');
+    Route::get('forgot-password', function(){
+        // Redirect to external link
+        return redirect()->away(config('app.frontend_forgot_password_url'));
+    });
+    
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
         ->name('password.email');
 

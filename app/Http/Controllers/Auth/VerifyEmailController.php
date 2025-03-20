@@ -29,17 +29,20 @@ class VerifyEmailController extends Controller
     // : RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(
-                config('app.frontend_url').'/dashboard?verified=1'
-            );
+            // return redirect()->intended(
+            //     config('app.frontend_url').'/auth/login?verified=1'
+            // );
+            return redirect()->away(config('app.frontend_login_url') . '?message=email_already_verified');
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        return redirect()->intended(
-            config('app.frontend_url').'/dashboard?verified=1'
-        );
+        // return redirect()->intended(
+        //     config('app.frontend_url').'/dashboard?verified=1'
+        // );
+        return redirect()->away(config('app.frontend_login_url') . '?message=email_verified');
+
     }
 }

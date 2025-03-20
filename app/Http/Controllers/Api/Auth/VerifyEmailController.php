@@ -73,7 +73,8 @@ class VerifyEmailController extends Controller
             $message = 'user not found';
             $status_code = 404;
             // return response()->json(['success' => false,'message' => $message], $status_code);
-            return redirect()->intended(route('login', absolute: false).'?verified=1');
+            // return redirect()->intended(route('login', absolute: false).'?verified=1');
+            return redirect()->away(config('app.frontend_error_url') . '?message=user_not_found');
 
         }
 
@@ -91,7 +92,8 @@ class VerifyEmailController extends Controller
             // Redirect to success page
             // return redirect($this->redirectUrl()['success']);
 
-            return redirect()->intended(route('login', absolute: false).'?verified=1');
+            // return redirect()->intended(route('login', absolute: false).'?verified=1');
+            return redirect()->away(config('app.frontend_login_url') . '?message=email_already_verified');
 
         }
 
@@ -120,7 +122,8 @@ class VerifyEmailController extends Controller
             $message = 'Invalid signature or hash or expired URL';
             $status_code = 403;
             // return response()->json(['success' => false,'message' => $message], $status_code);
-            return redirect()->intended(route('login', absolute: false).'?verified=0');
+            // return redirect()->intended(route('login', absolute: false).'?verified=0');
+            return redirect()->away(config('app.frontend_verify_email_error_url') . '?message=expired_token?status=403');
 
 
         // Check successful
@@ -133,12 +136,15 @@ class VerifyEmailController extends Controller
 
                 // Redirect to success page
                 // return redirect($this->redirectUrl()['success']);
-                return redirect()->intended(route('login', absolute: false).'?verified=1');
+                // return redirect()->intended(route('login', absolute: false).'?verified=1');
+                return redirect()->away(config('app.frontend_login_url') . '?message=email_verified');
+
 
         }
 
         // return response()->json(['success'=> true,'message' => $message], $status_code);
-        return redirect()->intended(route('login', absolute: false).'?verified=1');
+        // return redirect()->intended(route('login', absolute: false).'?verified=1');
+        return redirect()->away(config('app.frontend_login_url') . '?message=email_verified');
 
     }     
 
