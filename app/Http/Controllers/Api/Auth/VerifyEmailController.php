@@ -128,6 +128,8 @@ class VerifyEmailController extends Controller
 
         // Check successful
         }else{
+
+                $user->email_verified = true;
                 $user->email_verified_at = now();
                 $user->save();
 
