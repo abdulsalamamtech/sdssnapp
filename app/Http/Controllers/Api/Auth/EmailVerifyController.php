@@ -41,7 +41,9 @@ class EmailVerifyController extends Controller
 
             $message = 'user not found';
             $status_code = 404;
-            return response()->json(['success' => false,'message' => $message], $status_code);
+            // return response()->json(['success' => false,'message' => $message], $status_code);
+            return redirect()->away(config('app.frontend_error_url') . '?message=user_not_found');
+
 
         }
 
@@ -57,6 +59,7 @@ class EmailVerifyController extends Controller
             // $status_code = 200;
 
             // return response()->json(['success' => true,'message' => $message], $status_code);
+            return redirect()->away(config('app.frontend_login_url') . '?message=email_already_verified');
 
         }
 
@@ -96,10 +99,13 @@ class EmailVerifyController extends Controller
                 $status_code = 200;
 
                 // Redirect to success page
-                return redirect($this->redirectUrl()['success']);
+                // return redirect($this->redirectUrl()['success']);
+                return redirect()->away(config('app.frontend_login_url') . '?message=email_already_verified');
 
         }
 
-        return response()->json(['success'=> true,'message' => $message], $status_code);
+        // return response()->json(['success'=> true,'message' => $message], $status_code);
+        return redirect()->away(config('app.frontend_login_url') . '?message=email_verified');
+
     }
 }

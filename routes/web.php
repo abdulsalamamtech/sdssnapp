@@ -9,21 +9,6 @@ Route::get('/', function () {
 
     return redirect()->away(config('app.frontend_url'));
 
-    $data = [
-        'Laravel' => app()->version(),
-        'project' => 'SDSSN',
-        'developers' => [
-            'backend' =>[
-                'name' => 'Abdulsalam Abdulrahman',
-                'email' => 'abdulsalamamtech@gmail.com',
-            ],
-            'frontend' =>[
-                'name' => 'Mayowa Sanusi',
-                'email' => 'mayowa@gmail.com',
-            ]
-        ],
-    ];
-    return $data;
 });
 
 
