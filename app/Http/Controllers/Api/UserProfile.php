@@ -71,7 +71,7 @@ class UserProfile extends Controller
         $user = $request->user();
 
         $request->validate([
-            'picture' => ['required', 'image', 'max:2048'],
+            'picture' => ['required', 'image', 'max:5120'], // 5MB max
         ]);
 
         // $upload =  $this->uploadImage($request, 'banner');
