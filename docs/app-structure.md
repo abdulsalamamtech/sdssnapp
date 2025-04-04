@@ -419,3 +419,8 @@ To create a virtual wallet account [paystack]
 
     PUT api/marketers/program-trucks/{id}/customers                # update a customer for a truck
     GET api/marketers/program-trucks/{id}/customers                # get the customer for a truck
+
+
+## issues
+private articles
+profile pics
