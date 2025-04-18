@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * [public] Display a listing of the resource.
      */
     public function index()
     {
@@ -28,7 +28,6 @@ class ProjectController extends Controller
 
             // ->orderBy('created_at', 'desc')
             // ->paginate(10);
-
             // return $projects;
 
         if ($projects->isEmpty()) {
@@ -235,7 +234,9 @@ class ProjectController extends Controller
 
         $user = $request->user();
 
-        $project = Project::where('user_id', $user->id)->with(['user', 'comments.user', 'banner'])->latest()->get();
+        $project = Project::where('user_id', $user->id)
+            ->with(['user', 'comments.user', 'banner'])
+            ->latest()->get();
 
         if ($project->isEmpty()) {
             return $this->sendError([], 'personal project not found', 404);
