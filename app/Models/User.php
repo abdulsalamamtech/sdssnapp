@@ -119,6 +119,15 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
+    /**
+     * Load the user project with status of public
+     *
+     * $user = User::with('publicProjects')
+     */
+    public function publicProjects()
+    {
+        return $this->hasMany(Project::class)->where('status', 'public');
+    }
     
     /**
      * The assets that belong to the User

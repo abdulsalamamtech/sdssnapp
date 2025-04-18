@@ -53,12 +53,12 @@ class UserProfile extends Controller
     public function profile(User $user){
 
         // $user->load(['picture', 'picture.asset', 'social', 'projects', 'certificates']);
-        $user->load(['picture', 'picture.asset', 'social', 'projects', 'projects.user', 'projects.banner', 'certificates']);
+        $user->load(['picture.asset', 'social', 'certificates']);
 
-    
-        if (!$user) {
-            return $this->sendError([], 'unable to load profile', 500);
-        }
+        // Load the user project with status of public
+        $user->load(['projects' => function($query) {
+            $query->where('status', 'public');
+        }, 'projects.user', 'projects.banner']);
     
         return $this->sendSuccess($user, 'successful', 200);
 

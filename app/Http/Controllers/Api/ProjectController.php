@@ -20,6 +20,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
+        // ['public', 'private', 'draft'])
         $projects = Project::whereNotNull('approved_by')
             ->where('status', 'public')
             ->with(['user', 'comments.user', 'banner'])
@@ -30,8 +31,8 @@ class ProjectController extends Controller
 
             // return $projects;
 
-        if (!$projects) {
-            return ApiResponse::error([], 'unable to load projects', 400);
+        if ($projects->isEmpty()) {
+            return ApiResponse::error([], 'projects not found', 404);
         }
 
         return ApiResponse::success($projects, 'successful', 200);
@@ -143,7 +144,7 @@ class ProjectController extends Controller
             }
 
 
-            return [$data, $request->banner];
+            // return [$data, $request->banner];
 
             // If the banner is updated
             if($request->banner){
@@ -226,23 +227,69 @@ class ProjectController extends Controller
     }
 
 
-    // show user project
+    /**
+     * Show all user project resource from storage.
+     */
     public function personal(Request $request)
     {
 
         $user = $request->user();
 
-        $project = Project::where('user_id', $user->id)->with(['user', 'comments.user', 'banner'])->get();
+        $project = Project::where('user_id', $user->id)->with(['user', 'comments.user', 'banner'])->latest()->get();
 
-        if (!$project) {
-            return $this->sendError([], 'unable to load personal projects', 500);
+        if ($project->isEmpty()) {
+            return $this->sendError([], 'personal project not found', 404);
         }
 
-        return $this->sendSuccess($project, 'successful', 200);
+        return $this->sendSuccess($project, 'successful', 200, $this->getMetadata($project));
     }
 
 
-    // Like project
+    /**
+     * Show all user private project resource from storage.
+     */
+    public function private(Request $request)
+    {
+
+        $user = $request->user();
+
+        $project = Project::where('user_id', $user->id)
+            ->where('status', '!=', 'public')
+            ->with(['user', 'comments.user', 'banner'])
+            ->latest()->get();
+
+        if ($project->isEmpty()) {
+            return $this->sendError([], 'private projects not found', 404);
+        }
+
+        return $this->sendSuccess($project, 'successful', 200, $this->getMetadata($project));
+    }
+
+
+    /**
+     * Show all user public project resource from storage.
+     */
+    public function public(Request $request)
+    {
+
+        $user = $request->user();
+
+        $project = Project::where('user_id', $user->id)
+            ->where('status', 'public')
+            ->with(['user', 'comments.user', 'banner'])
+            ->latest()->get();
+
+        if ($project->isEmpty()) {
+            return $this->sendError([], 'public projects not found', 404);
+        }
+
+        return $this->sendSuccess($project, 'successful', 200, $this->getMetadata($project));
+    }
+
+
+     /**
+     * Like a project.
+     */
     public function like(Request $request, Project $project)
     {
 
@@ -250,8 +297,8 @@ class ProjectController extends Controller
         $project->save();
         $project->load(['user', 'comments.user', 'banner']);
 
-        if (!$project) {
-            return $this->sendError([], 'unable to like project', 500);
+        if ($project->isEmpty()) {
+            return $this->sendError([], 'unable to like project', 404);
         }
 
         return $this->sendSuccess($project, 'successful', 200);
@@ -259,7 +306,9 @@ class ProjectController extends Controller
     }
 
 
-    // Share project
+     /**
+     * Share a project.
+     */
     public function share(Project $project)
     {
 
@@ -268,8 +317,8 @@ class ProjectController extends Controller
 
         $project->load(['user', 'comments.user', 'banner']);
 
-        if (!$project) {
-            return $this->sendError([], 'unable to load project', 500);
+        if ($project->isEmpty()) {
+            return $this->sendError([], 'unable to load project', 404);
         }
 
         return $this->sendSuccess($project, 'successful', 200);
@@ -277,7 +326,9 @@ class ProjectController extends Controller
     }
 
 
-     // Approve project
+     /**
+     * Approve a project.
+     */
     public function approve(Request $request, Project $project)
     {
         $user = $request->user();
@@ -290,14 +341,16 @@ class ProjectController extends Controller
 
 
         if (!$project) {
-            return $this->sendError([], 'unable to load project', 500);
+            return $this->sendError([], 'unable to load project', 404);
         }
 
         return $this->sendSuccess($project, 'project approved successfully', 200);
 
     }
 
-    // Reject project
+     /**
+     * Reject a project.
+     */
     public function reject(Request $request, Project $project)
     {
         $user = $request->user();
@@ -310,14 +363,17 @@ class ProjectController extends Controller
 
 
         if (!$project) {
-            return $this->sendError([], 'unable to load project', 500);
+            return $this->sendError([], 'unable to load project', 404);
         }
 
         return $this->sendSuccess($project, 'project rejected successfully', 200);
 
     }
 
-    // User approved public project
+
+    /**
+     * User approved public project.
+     */
     public function approved(Request $request)
     {
 
@@ -325,8 +381,8 @@ class ProjectController extends Controller
 
         $project = Project::where('approved_by', $user->id)->with(['user', 'comments.user', 'banner'])->get();
 
-        if (!$project) {
-            return $this->sendError([], 'unable to load projects', 500);
+        if ($project->isEmpty()) {
+            return $this->sendError([], 'unable to load projects', 404);
         }
 
         return $this->sendSuccess($project, 'successful', 200);
@@ -372,13 +428,17 @@ class ProjectController extends Controller
 
         $project = Project::onlyTrashed()->with(['user', 'comments.user', 'banner'])->get();
 
-        if (!$project) {
-            return $this->sendError([], 'unable to load trashed projects', 500);
+        if ($project->isEmpty()) {
+            return $this->sendError([], 'unable to load trashed projects', 404);
         }
 
         return $this->sendSuccess($project, 'successful', 200);
     }
 
+
+    /**
+     * Search for a public project.
+     */
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -414,7 +474,8 @@ class ProjectController extends Controller
 
     public function allProjects()
     {
-        $projects = Project::with(['user', 'comments.user', 'banner'])
+        $projects = Project::where('status', 'public')
+            ->with(['user', 'comments.user', 'banner'])
             ->latest()->paginate();
 
             // return $projects;
