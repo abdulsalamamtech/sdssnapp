@@ -133,6 +133,10 @@ Route::group(['prefix' => 'profile','middleware' => ['auth:sanctum','verified']]
     // User Projects
     Route::get('/projects', [ProjectController::class, 'personal']);
 
+    // User private projects
+    Route::get('/projects/private', [ProjectController::class, 'private']);
+    // User public projects
+    Route::get('/projects/public', [ProjectController::class, 'public']);
 
 
     // User certificates
