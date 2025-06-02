@@ -1,4 +1,4 @@
-name: Deploy Laravel App to (API) VPS
+name: Deploy Laravel App to Live (API) VPS
 
 on:
   push:
