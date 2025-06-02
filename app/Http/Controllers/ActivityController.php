@@ -22,7 +22,7 @@ class ActivityController extends Controller
 
         // Check if there are any activities
         if($activities->isEmpty()){
-            return ApiResponse::success([], 'No activities found', 200);
+            return ApiResponse::success([], 'No activities found', 404);
         }
 
         // Transform the items
