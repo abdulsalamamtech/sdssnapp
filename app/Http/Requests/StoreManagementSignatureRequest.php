@@ -25,11 +25,12 @@ class StoreManagementSignatureRequest extends FormRequest
             'title' => 'nullable|string|max:255',
             'full_name' => 'required|string|max:255',
             'position' => 'nullable|string|max:255',
-            // 'signature_id' => 'nullable|exists:assets,id',
-            // 'created_by' => 'nullable|exists:users,id',
-            // 'updated_by' => 'nullable|exists:users,id',
-            // 'deleted_by' => 'nullable|exists:users,id',
-            'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Assuming signature is an image file
+            'signature' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Assuming signature is an image file
         ];
     }
 }
+
+// 'signature_id' => 'nullable|exists:assets,id',
+// 'created_by' => 'nullable|exists:users,id',
+// 'updated_by' => 'nullable|exists:users,id',
+// 'deleted_by' => 'nullable|exists:users,id',

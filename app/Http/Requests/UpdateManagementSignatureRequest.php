@@ -23,7 +23,7 @@ class UpdateManagementSignatureRequest extends FormRequest
     {
         return [
             'title' => 'nullable|string|max:255',
-            'full_name' => 'required|string|max:255',
+            'full_name' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
             'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Assuming signature is an image file
         ];

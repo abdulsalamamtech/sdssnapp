@@ -20,8 +20,8 @@ class ManagementSignatureResource extends JsonResource
             'title' => $this->title,
             'full_name' => $this->full_name,
             'position' => $this->position,
-            'signature_id' => $this->signature_id,
-            'signature' => $this->signature ? $this->signature->url : null, // Assuming signature is an Asset with a url attribute
+            // 'signature_id' => $this->signature_id,
+            'signature_url' => $this->signature ? $this->signature->url : null, // Assuming signature is an Asset with a url attribute
             'created_by' => new UserResource($this->whenLoaded('createdBy')),
             // 'updated_by' => new UserResource($this->whenLoaded('updatedBy')),
             // 'deleted_by' => new UserResource($this->whenLoaded('deletedBy')),

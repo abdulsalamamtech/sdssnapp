@@ -28,7 +28,7 @@ class ManagementSignature extends Model
 
     public function signature()
     {
-        return $this->belongsTo(Asset::class, 'signature_id');
+        return $this->belongsTo(Assets::class, 'signature_id');
     }
     public function createdBy()
     {
