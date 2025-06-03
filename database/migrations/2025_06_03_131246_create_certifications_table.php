@@ -21,6 +21,10 @@ return new class extends Migration
             $table->integer('duration')->nullable()->default(2);
             // length of month, years, or weeks
             $table->string('duration_unit')->nullable()->default('years')->comment('duration in weeks, month, year');
+            // amount
+            $table->decimal('amount', 10, 2)->nullable()->default(20000.00)->comment('Amount');
+            // currency
+            $table->string('currency')->nullable()->default('NGN')->comment('Currency in Naira');
             // requirements
             $table->text('requirements')->nullable()->default('Completion of the Spatial and Data Science Society of Nigeria training program, passing the certification exam, and adherence to the code of conduct.');
             // benefits of the certification
