@@ -15,6 +15,7 @@ class Certification extends Model
         'type',
         'duration',
         'duration_unit',
+        'amount',
         'benefits',
         'requirements',
         'created_by',
@@ -24,6 +25,7 @@ class Certification extends Model
     
     protected $casts = [
         'management_signature_id' => 'integer',
+        'amount' => 'decimal:2',
         'duration' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer',

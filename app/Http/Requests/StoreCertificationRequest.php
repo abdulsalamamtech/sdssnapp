@@ -27,6 +27,7 @@ class StoreCertificationRequest extends FormRequest
             'title' => 'nullable|unique:certifications,title|string|max:255',
             'type' => 'nullable|string|max:255',
             'duration' => 'nullable|integer|min:1',
+            'amount' => 'required|numeric|min:0',
             'duration_unit' => 'nullable|string|in:weeks,months,years',
             'requirements' => 'nullable|string|max:1000',
             'benefits' => 'nullable|string|max:1000',
