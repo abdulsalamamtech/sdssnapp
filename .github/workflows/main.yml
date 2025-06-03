@@ -28,11 +28,12 @@ jobs:
             git pull origin main
             # git fetch --all
             # git reset --hard origin/main
-    
+
             echo "📦 Installing PHP dependencies..."
             composer install --no-dev --optimize-autoloader
 
             echo "🔄 Running migrations..."
+            php artisan migrate:refresh --step=1
             php artisan migrate --force
 
             echo "⚡ Clearing cache..."
