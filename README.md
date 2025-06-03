@@ -36,15 +36,18 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
     php artisan make:model Department -mcrR --api
     php artisan make:resource DepartmentResource
     php artisan make:model WarehouseImage -m
-    
+    php artisan migrate:refresh --step=1
+
 ```
 
 ## Extra Columns
+
 ```php
     $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete(); // User ID or name of the creator
     $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete(); // User ID or name of the last updater
     $table->foreignId('deleted_by')->nullable()->constrained('users')->nullOnDelete(); // User ID or name of the delete
     $table->softDeletes();
+    # BLOB, TEXT, GEOMETRY or JSON column 'requirements' can't have a default value
 ```
 
 ## Laravel Sponsors
