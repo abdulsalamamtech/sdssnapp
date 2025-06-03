@@ -26,9 +26,11 @@ return new class extends Migration
             // currency
             $table->string('currency')->nullable()->default('NGN')->comment('Currency in Naira');
             // requirements
-            $table->text('requirements')->nullable()->default('Completion of the Spatial and Data Science Society of Nigeria training program, passing the certification exam, and adherence to the code of conduct.');
+            $table->text('requirements')->nullable();
+            // ->default('Completion of the Spatial and Data Science Society of Nigeria training program, passing the certification exam, and adherence to the code of conduct.');
             // benefits of the certification
-            $table->text('benefits')->nullable()->default('Access to exclusive resources, networking opportunities, and professional development workshops.');
+            $table->text('benefits')->nullable();
+            // ->default('Access to exclusive resources, networking opportunities, and professional development workshops.');
             // $table->string('certification_code')->nullable()->default('CSDSN-2025');
             // $table->date('issue_date')->nullable();
             // $table->date('expiry_date')->nullable();
