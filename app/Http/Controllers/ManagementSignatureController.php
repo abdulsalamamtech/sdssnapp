@@ -20,10 +20,11 @@ class ManagementSignatureController extends Controller
         $managementSignatures = ManagementSignature::with(['signature', 'createdBy'])->get();
                 // Check if there are any management signatures
         if($managementSignatures->isEmpty()){
-            return ApiResponse::success([], 'No management signatures found', 404);
+            return ApiResponse::error([], 'No management signatures found', 404);
         }
         $data = ManagementSignatureResource::collection($managementSignatures);
         return ApiResponse::success($data, 'Management signatures retrieved successfully.');
+    
     }
 
     /**

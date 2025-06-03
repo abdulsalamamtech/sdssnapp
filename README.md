@@ -36,6 +36,15 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
     php artisan make:model Department -mcrR --api
     php artisan make:resource DepartmentResource
     php artisan make:model WarehouseImage -m
+    
+```
+
+## Extra Columns
+```php
+    $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete(); // User ID or name of the creator
+    $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete(); // User ID or name of the last updater
+    $table->foreignId('deleted_by')->nullable()->constrained('users')->nullOnDelete(); // User ID or name of the delete
+    $table->softDeletes();
 ```
 
 ## Laravel Sponsors

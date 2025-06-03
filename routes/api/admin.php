@@ -9,14 +9,16 @@ use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\PodcastCommentController;
 use App\Http\Controllers\Api\PodcastController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\ManagementSignatureController;
 use App\Http\Controllers\NewsletterController;
-use App\Http\Controllers\OurPartnerController;
 
+use App\Http\Controllers\OurPartnerController;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
+
 
 
 
@@ -127,6 +129,11 @@ Route::prefix('admin')
         Route::apiResource('management-signature', ManagementSignatureController::class)
             ->except(['update']);
         Route::post('management-signature/{managementSignature}/update', [ManagementSignatureController::class, 'update']);
+
+        // Certification resource routes
+        Route::apiResource('certifications', CertificationController::class);
+
+        
     });
 
 
@@ -191,3 +198,4 @@ Route::get('assign-admin-test', function () {
 // Route::delete('management-signature/{managementSignature}', [\App\Http\Controllers\ManagementSignatureController::class, 'destroy'])
 //     // ->middleware(['auth:sanctum', 'verified', 'role:admin|super-admin'])
 //     ->name('management-signature.destroy');
+
