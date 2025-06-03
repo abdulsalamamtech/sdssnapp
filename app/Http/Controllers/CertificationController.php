@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Helpers\ApiResponse;
+use App\Http\Requests\StoreCertificationRequest;
+use App\Http\Requests\UpdateCertificationRequest;
+use App\Http\Resources\CertificationResource;
+use App\Models\Certification;
+use Illuminate\Support\Facades\DB;
+
+class CertificationController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $certifications = Certification::with(['ManagementSignature.signature', 'createdBy'])->get();
+        // Check if there are any certifications
+        if($certifications->isEmpty()){
+            return ApiResponse::error([], 'No certifications found', 404);
+        }
+        $data = CertificationResource::collection($certifications);
+        // Return the certifications resource
+        return ApiResponse::success($data, 'certifications retrieved successfully.');
+    
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreCertificationRequest $request)
+    {
+        $data = $request->validated();
+        try {
+            //code...
+            DB::beginTransaction();
+            // create by the authenticated user
+            $data['created_by'] = auth()?->user()->id; // Set the created_by field to the authenticated user
+            $certification = Certification::create($data);
+            $certification->load(['ManagementSignature.signature', 'createdBy']);
+            // Log the successful creation of the certification
+            info('Certification created successfully: ' . $certification->id);
+            $response = new CertificationResource($certification);
+            DB::commit(); // Commit the transaction if everything is successful
+            // Return the created certification resource
+            return ApiResponse::success($response, 'Certification created successfully.', 201);
+        } catch (\Exception $e) {
+            DB::rollBack(); // Rollback the transaction in case of an error
+            // Log the error and return an error response
+            info('Failed to create certification: ' . $e->getMessage());
+            // Return an error response with a 500 status code
+            return ApiResponse::error($e->getMessage(), 'Failed to create certification', 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Certification $certification)
+    {
+        $certification->load(['ManagementSignature.signature', 'createdBy']);
+        return ApiResponse::success(new CertificationResource($certification), 'Certification retrieved successfully.');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateCertificationRequest $request, Certification $certification)
+    {
+        $data = $request->validated();
+        try {
+            //code...
+            DB::beginTransaction();
+            // update by the authenticated user
+            $data['updated_by'] = auth()?->user()?->id; // Set the updated_by field to the authenticated user
+            // Update the certification
+            if (isset($data['management_signature_id']) && $data['management_signature_id'] === null) {
+                // If management_signature_id is null, remove it from the data array
+                unset($data['management_signature_id']);
+            }
+            $certification->update($data);
+            $certification->load(['ManagementSignature.signature', 'createdBy']);
+            $response = new CertificationResource($certification);
+            DB::commit(); // Commit the transaction if everything is successful
+            // Return the updated certification resource
+            info('Certification updated successfully: ' . $certification->id);
+            return ApiResponse::success($response, 'Certification updated successfully.');
+        } catch (\Exception $e) {
+            // Log the error and return an error response
+            info('Error updating certification: ' . $e->getMessage());
+            return ApiResponse::error($e->getMessage(), 'Failed to update certification', 500);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Certification $certification)
+    {
+        try {
+            //code...
+            // update the deleted_by field
+            $certification->deleted_by = auth()?->user()?->id; // Set the deleted_by field to the authenticated user
+            $certification->save();
+            // Soft delete the certification
+            $certification->delete();
+            // Return a success response
+            return ApiResponse::success([], 'Certification deleted successfully.', 200);
+        } catch (\Exception $e) {
+            // Log the error and return an error response
+            info('Error deleting certification: ' . $e->getMessage());
+            return ApiResponse::error($e->getMessage(), 'Failed to delete certification', 500);
+        }
+    }
+}
