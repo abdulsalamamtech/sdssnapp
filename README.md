@@ -50,6 +50,30 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
     # BLOB, TEXT, GEOMETRY or JSON column 'requirements' can't have a default value
 ```
 
+## Transactions
+```php
+    Schema::create('transactions', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->foreignId('order_id')->constrained()->onDelete('cascade');
+        $table->decimal('amount', 10, 2);
+        $table->enum('status', 
+            [
+                'pending', 
+                'successful', 
+                'cancelled', 
+                'suspended', 
+                'rejected'
+            ])
+            ->default('pending');
+        $table->string('reference')->unique();
+        $table->string('payment_method')->default('online');
+        $table->json('data')->nullable(); // response data from payment server
+        $table->timestamps();
+        $table->softDeletes();
+    });
+```
+
 ## Laravel Sponsors
 
 We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
