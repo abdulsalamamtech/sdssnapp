@@ -33,7 +33,6 @@ class CertificationRequestController extends Controller
         $data = CertificationRequestResource::collection($certificationRequests);
         // Return the certification requests resource
         return ApiResponse::success($data, 'certification requests retrieved successfully.');
-    
     }
 
     /**
@@ -122,7 +121,7 @@ class CertificationRequestController extends Controller
             // event(new CertificationRequestedProceedEvent($certificationRequest));
             // dispatch the event to notify the admin about the certification request
             CertificationRequestedProceedEvent::dispatch($certificationRequest);
-            
+
             DB::commit(); // Commit the transaction if everything is successful
             // Return the created certification request resource
             return ApiResponse::success($response, 'Certification request created successfully.', 201);
@@ -133,7 +132,6 @@ class CertificationRequestController extends Controller
             // Return an error response with a 500 status code
             return ApiResponse::error($e->getMessage(), 'Failed to create certification request', 500);
         }
-        
     }
 
     /**
@@ -173,24 +171,31 @@ class CertificationRequestController extends Controller
             // Begin a database transaction
             DB::beginTransaction();
             // Check if the certification request is rejected send a mail to the user
-            if (($certificationRequest->status === 'pending' || $certificationRequest->status === 'rejected') 
-            && $data['status'] === 'approved') {
+            if (($certificationRequest->status === 'pending' || $certificationRequest->status === 'rejected')
+                && $data['status'] === 'approved'
+            ) {
                 // Here you can send an email to the user notifying them of the approval
                 // Mail::to($certificationRequest->user->email)->send(new CertificationRequestApprovedMail($certificationRequest));
 
                 $serial_no = CustomGenerator::generateCertificateSerialNo();
-                $req = (object) [
+                $req = [
                     'user_id' => $certificationRequest->user_id,
                     'full_name' => $certificationRequest->full_name,
                     'certification_request_id' => $certificationRequest->id,
-                    'serial_no' => $certificationRequest->user_id,
-                    'qr_code' => config('app.frontend_certificate_verify_url') . $serial_no,
+                    'serial_no' => $serial_no,
+                    'qr_code' => config('app.frontend_certificate_verify_url') . '/' . $serial_no,
                     'issued_on' => Carbon::today()->format('Y-m-d'),
-                    'expires_on' => 
-                        date('Y-m-d', 
-                        strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)),
+                    'expires_on' =>
+                    date(
+                        'Y-m-d',
+                        strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)
+                    ),
                 ];
-                return $mem = (new MembershipController)->store($req);
+                // return $certificationRequest->membership;
+                if (!$certificationRequest->membership) {
+                    // return $mem = (new MembershipController)->storeMembership($req);
+                    $membership = Membership::create($req);
+                }
             }
             // Check if the certification request is approved send a mail to the user
             if ($certificationRequest->status === 'pending' && $data['status'] === 'rejected') {
@@ -199,7 +204,7 @@ class CertificationRequestController extends Controller
             }
             // Update the certification request with the validated data
             $certificationRequest->update($data);
-            $certificationRequest->load(['user', 'userSignature', 'credential']);
+            $certificationRequest->load(['user', 'userSignature', 'credential', 'membership']);
             // Log the successful update of the certification request
             info('Certification request updated successfully: ' . $certificationRequest->id);
             $response = new CertificationRequestResource($certificationRequest);

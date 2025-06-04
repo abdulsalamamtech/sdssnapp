@@ -65,6 +65,7 @@ class CertificationRequest extends Model
      */
     public function membership()
     {
+        // return $this->hasMany(Membership::class);
         return $this->hasOne(Membership::class);
     }
 

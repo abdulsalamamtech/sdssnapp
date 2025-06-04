@@ -95,4 +95,24 @@ class MembershipController extends Controller
         return ApiResponse::success([], 'Membership deleted successfully.', 204);
     }
 
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function storeMembership($request)
+    {
+        // 'user_id',
+        // 'full_name',
+        // 'certification_request_id',
+        // 'issued_on',
+        // 'expires_on',
+        // 'serial_no',
+        // 'qr_code',
+        // Create a new membership
+        // $request = (array) $request;
+        // return $membership = Membership::create($request);
+
+        // Return the created membership resource
+        // return ApiResponse::success(new MembershipResource($membership), 'Membership created successfully.', 201);
+    }
 }

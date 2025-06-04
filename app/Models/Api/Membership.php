@@ -38,6 +38,6 @@ class Membership extends Model
     // certification request
     public function certificationRequest()
     {
-        return $this->hasOne(CertificationRequest::class);
+        return $this->belongsTo(CertificationRequest::class);
     }
 }
