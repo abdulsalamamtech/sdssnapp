@@ -18,7 +18,9 @@ class CertificationRequestController extends Controller
      */
     public function index()
     {
-        $certificationRequests = CertificationRequest::with(['user'])->get();
+        // $certificationRequests = CertificationRequest::with(['user'])->get();
+        $certificationRequests = CertificationRequest::latest()->paginate();
+
         // Check if there are any certification requests
         if ($certificationRequests->isEmpty()) {
             return ApiResponse::error([], 'No certification requests found', 404);
@@ -26,11 +28,10 @@ class CertificationRequestController extends Controller
         $data = CertificationRequestResource::collection($certificationRequests);
         // Return the certification requests resource
         return ApiResponse::success($data, 'certification requests retrieved successfully.');
-    
     }
 
     /**
-     * Store a newly created resource in storage.
+     * [login user] Store a newly created resource in storage.
      */
     public function store(StoreCertificationRequestRequest $request)
     {
@@ -39,7 +40,9 @@ class CertificationRequestController extends Controller
             // Begin a database transaction
             DB::beginTransaction();
             // Set the user_id to the authenticated user's ID
-            $data['user_id'] = auth()?->user()?->id;
+            $user = auth()?->user();
+            $data['user_id'] = $user?->id ?? 1;
+            $data['full_name'] = $user->fullName;
 
             // Set the status to 'pending' by default
             $data['status'] = 'pending';
@@ -56,9 +59,9 @@ class CertificationRequestController extends Controller
                 // Get the secure URL and public ID from the uploaded file
                 $url = $cloudinaryImage->getSecurePath();
                 $public_id = $cloudinaryImage->getPublicId();
-    
+
                 info('User signature image uploaded to Cloudinary: ' . $url);
-    
+
                 $asset = Assets::create([
                     'original_name' => 'user signature image',
                     'path' => 'image',
@@ -70,7 +73,7 @@ class CertificationRequestController extends Controller
                     'type' => $cloudinaryImage->getFileType(),
                     'size' => $cloudinaryImage->getSize(),
                 ]);
-    
+
                 $data['user_signature_id'] = $asset->id;
             }
 
@@ -85,9 +88,9 @@ class CertificationRequestController extends Controller
                 // Get the secure URL and public ID from the uploaded file
                 $url = $cloudinaryImage->getSecurePath();
                 $public_id = $cloudinaryImage->getPublicId();
-    
+
                 info('User credential file uploaded to Cloudinary: ' . $url);
-    
+
                 $asset = Assets::create([
                     'original_name' => 'user credential file',
                     'path' => 'file',
@@ -99,13 +102,12 @@ class CertificationRequestController extends Controller
                     'type' => $cloudinaryImage->getFileType(),
                     'size' => $cloudinaryImage->getSize(),
                 ]);
-    
+
                 $data['credential_id'] = $asset->id;
             }
 
             // Create the certification request
             $certificationRequest = CertificationRequest::create($data);
-            $certificationRequest->load(['user']);
             // Log the successful creation of the certification request
             info('Certification request created successfully: ' . $certificationRequest->id);
             $response = new CertificationRequestResource($certificationRequest);
@@ -119,6 +121,7 @@ class CertificationRequestController extends Controller
             // Return an error response with a 500 status code
             return ApiResponse::error($e->getMessage(), 'Failed to create certification request', 500);
         }
+        
     }
 
     /**

@@ -17,7 +17,7 @@ class ManagementSignatureController extends Controller
      */
     public function index()
     {
-        $managementSignatures = ManagementSignature::with(['signature', 'createdBy'])->get();
+        $managementSignatures = ManagementSignature::with(['signature', 'createdBy'])->latest()->paginate();
                 // Check if there are any management signatures
         if($managementSignatures->isEmpty()){
             return ApiResponse::error([], 'No management signatures found', 404);

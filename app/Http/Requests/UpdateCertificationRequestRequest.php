@@ -22,9 +22,9 @@ class UpdateCertificationRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'certification_id' => 'required|exists:certifications,id',
             'management_note' => 'nullable|string|max:1000',
             'status' => 'required|in:pending,approved,rejected',
+            // 'certification_id' => 'required|exists:certifications,id',
             // 'credential' => 'image|mimes:jpeg,png,pdf,jpg,gif,svg|max:20480', // Optional image upload for credential
             // 'signature' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Optional image upload for signature
             // 'user_id' => 'required|exists:users,id',

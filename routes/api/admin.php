@@ -136,13 +136,13 @@ Route::prefix('admin')
         Route::apiResource('certifications', CertificationController::class);
 
         
+        // Certification request routes
+        Route::apiResource('certification-requests', CertificationRequestController::class)
+            ->only(['index', 'show', 'update', 'destroy']);
     });
 
 
 
-// Certification request routes
-Route::apiResource('certification-requests', CertificationRequestController::class)
-    ->only(['index', 'store', 'show', 'update', 'destroy']);
 
 
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\CertificationRequestController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\MessageController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\NewsletterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -174,6 +176,10 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     // Project like and share using POST
     Route::post('projects/{project}/likes', [ProjectController::class, 'like']);
     Route::post('projects/{project}/shares', [ProjectController::class, 'share']);
+
+    // Certification request routes
+    Route::apiResource('certification-requests', CertificationRequestController::class)
+        ->only(['store']);
 });
 
 

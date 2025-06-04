@@ -16,7 +16,7 @@ class CertificationController extends Controller
      */
     public function index()
     {
-        $certifications = Certification::with(['ManagementSignature.signature', 'createdBy'])->get();
+        $certifications = Certification::with(['ManagementSignature.signature', 'createdBy'])->latest()->paginate();
         // Check if there are any certifications
         if ($certifications->isEmpty()) {
             return ApiResponse::error([], 'No certifications found', 404);
