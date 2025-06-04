@@ -2,52 +2,22 @@
 
 namespace App\Helpers;
 
+use App\Models\Api\Membership;
+use App\Models\Certification;
+
 class CustomGenerator {
 
     /**
      * Generates a random atc number
      */
-    public static function generateUniqueATC() {
-        $prefix = 'ATC-';
-        $time = time();
-        $random_int = random_int(10, 99);
-        $random_no = mt_rand(100, 999);
-        return $prefix . $time . '-'. $random_int . $random_no;
-    }
-    /**
-     * Generates a random pfi number
-     */    
-    public static function generateUniquePFI() {
-        $prefix = 'PFI-';
-        $time = time();
-        $random_int = random_int(10, 99);
-        $random_no = mt_rand(100, 999);
-        return $prefix . $time . '-'. $random_int . $random_no;
+    public static function generateCertificateSerialNo(){
+        $uniqid = strtoupper(uniqid('SDSSN'));
+        while(Membership::where('serial_no', $uniqid)?->exists()){
+            $uniqid = strtoupper(uniqid('SDSSN'));
+        }
+        return $uniqid;
     }
 
-    /**
-     * Generates a random ticket number
-     */
-    public static function generateUniqueTicketNumber() {
-        $randomString = random_int(0, 9);
-        $randomVal = uniqid('TIC');
-        $time = time();
-        return $randomVal . $time . $randomString;
-    }
-
-
-    /**
-     * Generates a random waybill number
-     */
-    public static function generateUniqueWayBillNumber() {
-        $randomString = random_int(0, 9);
-        $randomVal = uniqid('WBN');
-        $time = time();
-        return $randomVal . $time . $randomString;
-    }
-
-
-    
     public static function generateUniqueName($length = 10) {
         $characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
         $randomString = '';

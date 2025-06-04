@@ -61,12 +61,12 @@ class CertificationRequest extends Model
         return $this->belongsTo('App\Models\Assets', 'credential_id');
     }
     /**
-     * Get the management signature associated with the request.
+     * Get the membership.
      */
-    // public function managementSignature()
-    // {
-    //     return $this->belongsTo('App\Models\ManagementSignature', 'management_signature_id');
-    // }
+    public function membership()
+    {
+        return $this->hasOne(Membership::class);
+    }
 
     
     /**

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\Api\CertificationRequestController;
 use App\Http\Controllers\Api\GalleryController;
+use App\Http\Controllers\Api\MembershipController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\PodcastCommentController;
@@ -139,6 +140,10 @@ Route::prefix('admin')
         // Certification request routes
         Route::apiResource('certification-requests', CertificationRequestController::class)
             ->only(['index', 'show', 'update', 'destroy']);
+
+        // Membership routes
+        Route::apiResource('memberships', MembershipController::class)
+            ->only(['index', 'show', 'update', 'destroy', 'store', 'up']);
     });
 
 

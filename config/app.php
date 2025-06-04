@@ -61,6 +61,8 @@ return [
     'frontend_register_url' => env('FRONTEND_REGISTER_URL', 'http://localhost:3000/auth/login'),
     'frontend_error_url' => env('FRONTEND_ERROR_URL', 'http://localhost:3000/auth/password/reset/error'),
     'frontend_verify_email_error_url' => env('FRONTEND_VERIFY_EMAIL_ERROR_URL', 'http://localhost:3000/auth/verify-email-error'),
+    // FRONTEND_CERTIFICATE_VERIFICATION_URL
+    'frontend_certificate_verify_url' => env('FRONTEND_CERTIFICATE_VERIFICATION_URL', 'http://localhost:3000'),
 
 
     /*

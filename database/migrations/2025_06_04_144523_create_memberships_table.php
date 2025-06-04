@@ -22,11 +22,12 @@ return new class extends Migration
             // status [pending, paid]
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('full_name');
             $table->foreignId('certification_request_id')->constrained('certification_requests')->onDelete('cascade');
+            $table->string('full_name');
+            $table->string('serial_no');
             $table->date('issued_on');
             $table->date('expires_on');
-            $table->string('serial_no');
+            // config('app.frontend_certificate_verify_url') . $serial_no
             $table->string('qr_code');
             $table->enum('status', ['pending', 'paid'])->default('pending');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete(); // User ID or name of the creator

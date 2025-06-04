@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\CertificationRequestedProceedEvent;
 use App\Helpers\ApiResponse;
+use App\Helpers\CustomGenerator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCertificationRequestRequest;
 use App\Http\Requests\UpdateCertificationRequestRequest;
 use App\Http\Resources\CertificationRequestResource;
 use App\Models\Api\CertificationRequest;
+use App\Models\Api\Membership;
 use App\Models\Assets;
+use Carbon\Carbon;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\DB;
 
 class CertificationRequestController extends Controller
@@ -173,6 +177,20 @@ class CertificationRequestController extends Controller
             && $data['status'] === 'approved') {
                 // Here you can send an email to the user notifying them of the approval
                 // Mail::to($certificationRequest->user->email)->send(new CertificationRequestApprovedMail($certificationRequest));
+
+                $serial_no = CustomGenerator::generateCertificateSerialNo();
+                $req = (object) [
+                    'user_id' => $certificationRequest->user_id,
+                    'full_name' => $certificationRequest->full_name,
+                    'certification_request_id' => $certificationRequest->id,
+                    'serial_no' => $certificationRequest->user_id,
+                    'qr_code' => config('app.frontend_certificate_verify_url') . $serial_no,
+                    'issued_on' => Carbon::today()->format('Y-m-d'),
+                    'expires_on' => 
+                        date('Y-m-d', 
+                        strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)),
+                ];
+                return $mem = (new MembershipController)->store($req);
             }
             // Check if the certification request is approved send a mail to the user
             if ($certificationRequest->status === 'pending' && $data['status'] === 'rejected') {

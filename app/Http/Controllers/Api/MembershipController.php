@@ -33,6 +33,13 @@ class MembershipController extends Controller
      */
     public function store(StoreMembershipRequest $request)
     {
+        // 'user_id',
+        // 'full_name',
+        // 'certification_request_id',
+        // 'issued_on',
+        // 'expires_on',
+        // 'serial_no',
+        // 'qr_code',
         // Create a new membership
         $membership = Membership::create($request->validated());
 
@@ -87,4 +94,5 @@ class MembershipController extends Controller
         // Return success response
         return ApiResponse::success([], 'Membership deleted successfully.', 204);
     }
+
 }
