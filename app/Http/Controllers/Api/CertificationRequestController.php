@@ -144,6 +144,19 @@ class CertificationRequestController extends Controller
     public function update(UpdateCertificationRequestRequest $request, CertificationRequest $certificationRequest)
     {
         $data = $request->validated();
+        // approved can't be change
+        if ($certificationRequest->status === 'approved' && $data['status'] !== 'approved') {
+            return ApiResponse::error([], 'Cannot update an approved certification request', 403);
+        }
+        // rejected can be approved
+        if ($certificationRequest->status === 'rejected' && $data['status'] !== 'approved') {
+            return ApiResponse::error([], 'You can only update a rejected certification request to approved', 403);
+        }
+        // pending can be approved or rejected
+        if ($certificationRequest->status === 'pending' && !in_array($data['status'], ['approved', 'rejected'])) {
+            return ApiResponse::error([], 'You can only update a pending certification request to approved or rejected', 403);
+        }
+
         try {
             // Begin a database transaction
             DB::beginTransaction();
