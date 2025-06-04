@@ -3,6 +3,7 @@
 use App\Enums\UserRoleEnum;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\CertificateController;
+use App\Http\Controllers\Api\CertificationRequestController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PartnerController;
@@ -11,13 +12,14 @@ use App\Http\Controllers\Api\PodcastController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\ManagementSignatureController;
-use App\Http\Controllers\NewsletterController;
 
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\OurPartnerController;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
+
 
 
 
@@ -138,7 +140,9 @@ Route::prefix('admin')
 
 
 
-
+// Certification request routes
+Route::apiResource('certification-requests', CertificationRequestController::class)
+    ->only(['index', 'store', 'show', 'update', 'destroy']);
 
 
 

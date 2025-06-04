@@ -19,4 +19,61 @@ class CertificationRequest extends Model
         'credential_id',
         'status',
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'user_id' => 'integer',
+        'certification_id' => 'integer',
+        'user_signature_id' => 'integer',
+        'credential_id' => 'integer',
+        'status' => 'string',
+    ];
+    /**
+     * Get the user that owns the certification request.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+    /**
+     * Get the certification associated with the request.
+     */
+    public function certification()
+    {
+        return $this->belongsTo('App\Models\Certification', 'certification_id');
+    }
+    /**
+     * Get the user signature associated with the request.
+     */
+    public function userSignature()
+    {
+        return $this->belongsTo('App\Models\Assets', 'user_signature_id');
+    }
+    /**
+     * Get the credential associated with the request.
+     */
+    public function credential()
+    {
+        return $this->belongsTo('App\Models\Assets', 'credential_id');
+    }
+    /**
+     * Get the management signature associated with the request.
+     */
+    // public function managementSignature()
+    // {
+    //     return $this->belongsTo('App\Models\ManagementSignature', 'management_signature_id');
+    // }
+
+    
+    /**
+     * Get the user who created the certification request.
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo('App\Models\User', 'created_by');
+    }
 }

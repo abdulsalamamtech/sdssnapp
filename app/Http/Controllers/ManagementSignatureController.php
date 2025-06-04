@@ -39,8 +39,11 @@ class ManagementSignatureController extends Controller
             // Handle file upload if signature is provided
             // Upload Asset if exists
             if ($request->hasFile('signature')) {
-                $cloudinaryImage = $request->file('signature')->storeOnCloudinary('sdssn-app');
-    
+                $cloudinaryImage = $request->file('signature')->storeOnCloudinary('sdssn-app/signatures');
+                // Check if the file was uploaded successfully
+                if (!$cloudinaryImage) {
+                    return ApiResponse::error('Failed to upload signature image.', 500);
+                }
                 $url = $cloudinaryImage->getSecurePath();
                 $public_id = $cloudinaryImage->getPublicId();
     
@@ -101,8 +104,12 @@ class ManagementSignatureController extends Controller
             DB::beginTransaction();
             // Handle file upload if signature is provided
             if ($request->hasFile('signature')) {
-                $cloudinaryImage = $request->file('signature')->storeOnCloudinary('sdssn-app');
-
+                $cloudinaryImage = $request->file('signature')->storeOnCloudinary('sdssn-app/signatures');
+                // Check if the file was uploaded successfully
+                if (!$cloudinaryImage) {
+                    return ApiResponse::error('Failed to upload signature image.', 500);
+                }
+                // Get the secure URL and public ID from the uploaded file
                 $url = $cloudinaryImage->getSecurePath();
                 $public_id = $cloudinaryImage->getPublicId();
 

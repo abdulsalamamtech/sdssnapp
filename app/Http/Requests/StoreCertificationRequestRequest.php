@@ -11,7 +11,7 @@ class StoreCertificationRequestRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class StoreCertificationRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'certification_id' => 'required|exists:certifications,id',
+            'reason_for_certification' => 'nullable|string|max:1000',
+            'credential' => 'image|mimes:jpeg,png,pdf,jpg,gif,svg|max:20480', // Optional image upload for credential
+            'signature' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Optional image upload for signature
+            
+            // 'user_id' => 'required|exists:users,id',
+            // 'status' => 'required|in:pending,approved,rejected',
+            // 'requested_at' => 'required|date',
         ];
     }
 }
