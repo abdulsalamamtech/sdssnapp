@@ -4,10 +4,13 @@ namespace App\Providers;
 
 
 // use Dedoc\Scramble\Scramble;
+use App\Events\CertificationRequestedProceedEvent;
+use App\Listeners\NotifyAdminAboutCertificateRequestListener;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,5 +37,14 @@ class AppServiceProvider extends ServiceProvider
                 SecurityScheme::http('bearer')
             );
         });
+
+        // Register an event and listener for certification requests
+        // \App\Events\CertificationRequestedProceedEvent::class => [
+        //     \App\Listeners\NotifyAdminAboutCertificateRequestListener::class,
+        // ],
+        Event::listen(
+            CertificationRequestedProceedEvent::class,
+            NotifyAdminAboutCertificateRequestListener::class,
+        );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\CertificationRequestedProceedEvent;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCertificationRequestRequest;
@@ -112,6 +113,12 @@ class CertificationRequestController extends Controller
             // Log the successful creation of the certification request
             info('Certification request created successfully: ' . $certificationRequest->id);
             $response = new CertificationRequestResource($certificationRequest);
+
+            // Send an event to notify the admin about the certification request
+            // event(new CertificationRequestedProceedEvent($certificationRequest));
+            // dispatch the event to notify the admin about the certification request
+            CertificationRequestedProceedEvent::dispatch($certificationRequest);
+            
             DB::commit(); // Commit the transaction if everything is successful
             // Return the created certification request resource
             return ApiResponse::success($response, 'Certification request created successfully.', 201);

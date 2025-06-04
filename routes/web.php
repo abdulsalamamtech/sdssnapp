@@ -1,9 +1,12 @@
 <?php
 
 
+use App\Mail\NotifyAdminAboutCertificateRequestMail;
+use App\Models\Api\CertificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
 
@@ -17,6 +20,9 @@ require __DIR__.'/auth.php';
 
 
 Route::get('/mail', function (Request $request){
+    
+    // $certificationRequest = CertificationRequest::find(1); // Assuming you have a certification request with ID 1
+    // Mail::to('abdulsalamamtech@gmail.com')->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
     
     $send = Mail::raw('This is a test email, from: SDSSN', function ($message) {
         $message->to('abdulsalamamtech@gmail.com')->subject('Test Email: ' . now());

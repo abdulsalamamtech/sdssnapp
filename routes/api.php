@@ -266,7 +266,7 @@ require __DIR__ . '/api-auth.php';
 
 
 // For terminal, artisan and special commands
-require __DIR__ . '/terminal.php';
+// require __DIR__ . '/terminal.php';
 
 
 

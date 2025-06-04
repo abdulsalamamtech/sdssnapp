@@ -76,6 +76,56 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
     });
 ```
 
+## Laravel Event and Listener
+- step by step [guide](https://muwangaxyz.medium.com/laravel-events-listeners-and-observers-complete-guide-06196203b2a8)
+```sh
+    php artisan make:event PodcastProcessed
+    php artisan make:listener SendPodcastNotification --event=PodcastProcessed
+    php artisan make:mail
+    php artisan event:list
+```
+
+- within the boot method of your application's AppServiceProvider:
+```php
+    use App\Domain\Orders\Events\PodcastProcessed;
+    use App\Domain\Orders\Listeners\SendPodcastNotification;
+    use Illuminate\Support\Facades\Event;
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        Event::listen(
+            PodcastProcessed::class,
+            SendPodcastNotification::class,
+        );
+    }
+
+```
+- on production optimize or event:cache
+```sh
+    php artisan event:list
+    php artisan event:clear
+    php artisan event:cache
+```
+- from your controller
+```php
+    // Send an event to notify the admin about the certification request
+    // event(new CertificationRequestedProceedEvent($certificationRequest));
+    // dispatch the event to notify the admin about the certification request
+    CertificationRequestedProceedEvent::dispatch($certificationRequest);
+    OrderShipped::dispatchIf($condition, $order);
+    OrderShipped::dispatchUnless($condition, $order);
+```
+- you can also set it
+```php
+    use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
+    class OrderShipped implements ShouldDispatchAfterCommit
+    {}
+```
+
+
 ## Laravel Sponsors
 
 We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
