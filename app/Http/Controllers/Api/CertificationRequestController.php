@@ -160,6 +160,17 @@ class CertificationRequestController extends Controller
         try {
             // Begin a database transaction
             DB::beginTransaction();
+            // Check if the certification request is rejected send a mail to the user
+            if (($certificationRequest->status === 'pending' || $certificationRequest->status === 'rejected') 
+            && $data['status'] === 'approved') {
+                // Here you can send an email to the user notifying them of the approval
+                // Mail::to($certificationRequest->user->email)->send(new CertificationRequestApprovedMail($certificationRequest));
+            }
+            // Check if the certification request is approved send a mail to the user
+            if ($certificationRequest->status === 'pending' && $data['status'] === 'rejected') {
+                // Here you can send an email to the user notifying them of the rejection
+                // Mail::to($certificationRequest->user->email)->send(new CertificationRequestRejectedMail($certificationRequest));
+            }
             // Update the certification request with the validated data
             $certificationRequest->update($data);
             $certificationRequest->load(['user', 'userSignature', 'credential']);
