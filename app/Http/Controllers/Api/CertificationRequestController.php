@@ -28,6 +28,7 @@ class CertificationRequestController extends Controller
         $data = CertificationRequestResource::collection($certificationRequests);
         // Return the certification requests resource
         return ApiResponse::success($data, 'certification requests retrieved successfully.');
+    
     }
 
     /**
