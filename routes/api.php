@@ -11,10 +11,12 @@ use App\Http\Controllers\Api\PodcastController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\UserProfile;
 use App\Http\Controllers\Api\UserSocial;
+use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\NewsletterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -31,11 +33,11 @@ Route::get('/', function () {
             'Laravel' => app()->version(),
             'project' => 'SDSSN: Spatial and Data Science Society of Nigeria.',
             'developers' => [
-                'backend' =>[
+                'backend' => [
                     'name' => 'Abdulsalam Abdulrahman',
                     'email' => 'abdulsalamamtech@gmail.com',
                 ],
-                'frontend' =>[
+                'frontend' => [
                     'name' => 'Mayowa Sanusi',
                     'email' => 'mayowa.u.sunusi@gmail.com',
                 ]
@@ -66,8 +68,7 @@ Route::get('/security-questions', function (Request $request) {
 
     $message = 'Security questions retrieved successfully';
 
-    return response()->json(['success' => true,'message' => $message, 'data' => $questions], 200);
-
+    return response()->json(['success' => true, 'message' => $message, 'data' => $questions], 200);
 });
 
 
@@ -77,8 +78,7 @@ Route::get('/available-roles', function (Request $request) {
 
     $message = 'Available roles retrieved successfully';
 
-    return response()->json(['success' => true,'message' => $message, 'data' => $roles], 200);
-
+    return response()->json(['success' => true, 'message' => $message, 'data' => $roles], 200);
 });
 
 
@@ -94,7 +94,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
         'message' => $message,
         'data' => $user
     ], $statusCode);
-
 });
 
 
@@ -117,11 +116,11 @@ Route::post('logout', [AuthController::class, 'logout'])
 
 // User Podcasts [admin only]
 Route::get('/admin/podcasts', [PodcastController::class, 'personal'])
-    ->middleware(['auth:sanctum','verified']);
+    ->middleware(['auth:sanctum', 'verified']);
 
 // PROFILE ROUTES
 // User profile, social media, projects, podcasts, certificates, information
-Route::group(['prefix' => 'profile','middleware' => ['auth:sanctum','verified']], function() {
+Route::group(['prefix' => 'profile', 'middleware' => ['auth:sanctum', 'verified']], function () {
     // User Profile
     Route::get('/', [UserProfile::class, 'show']);
     Route::put('/', [UserProfile::class, 'update']);
@@ -149,13 +148,12 @@ Route::group(['prefix' => 'profile','middleware' => ['auth:sanctum','verified']]
     // {"picture": "image profile"}
     Route::put('/picture', [UserProfile::class, 'updatePicture']);
     Route::post('/picture/update', [UserProfile::class, 'updatePicture']);
-
 });
 
 
 
 // AUTH ROUTES RESOURCES
-Route::group(['middleware' => ['auth:sanctum','verified']], function() {
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
     // PROJECTS
     // Project routes
@@ -167,7 +165,7 @@ Route::group(['middleware' => ['auth:sanctum','verified']], function() {
     // Project comments
     Route::apiResource('projects.comments', CommentController::class)
         ->only(['store', 'update', 'destroy']);
-    
+
     // Like project
     Route::put('projects/{project}/likes', [ProjectController::class, 'like']);
     // Share project
@@ -176,14 +174,11 @@ Route::group(['middleware' => ['auth:sanctum','verified']], function() {
     // Project like and share using POST
     Route::post('projects/{project}/likes', [ProjectController::class, 'like']);
     Route::post('projects/{project}/shares', [ProjectController::class, 'share']);
-
-
-
-
 });
 
 
-
+// Certifications routes
+Route::get('certifications', [CertificationController::class, 'available']);
 
 // Quest Messages route
 Route::post('/quest-messages', [MessageController::class, 'store']);
@@ -227,10 +222,10 @@ Route::get('all-partners', [PartnerController::class, 'index']);
 // GENERAL PUBLIC ROUTES
 // Projects routes
 Route::apiResource('projects', ProjectController::class)
-->only(['index', 'show']);
+    ->only(['index', 'show']);
 // Projects comments
 Route::apiResource('projects.comments', CommentController::class)
-->only(['index', 'show']);
+    ->only(['index', 'show']);
 
 // Search for projects
 Route::get('/projects/search/query', [ProjectController::class, 'search']);
@@ -261,11 +256,11 @@ Route::get('/podcasts/category/audio', [PodcastController::class, 'audio']);
 require  __DIR__ . "/api/admin.php";
 
 // Api auth routes
-require __DIR__.'/api-auth.php';
+require __DIR__ . '/api-auth.php';
 
 
 // For terminal, artisan and special commands
-require __DIR__.'/terminal.php';
+require __DIR__ . '/terminal.php';
 
 
 
@@ -287,12 +282,3 @@ require __DIR__.'/terminal.php';
 // Route::get('/paystack/callback', [Paystack::class, 'callback'])->name('paystack.callback');
 // Route::get('/paystack/webhook', [Paystack::class, 'webhook'])->name('paystack.webhook');
 // Route::get('/paystack/verify/{reference}', [Paystack::class,'verifyPayment']);
-
-
-
-
-
-
-
-
-

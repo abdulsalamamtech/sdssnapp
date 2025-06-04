@@ -38,6 +38,8 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
     php artisan make:model WarehouseImage -m
     php artisan migrate:refresh --step=1
 
+    git commit -m"Add certificate request feature"
+
 ```
 
 ## Extra Columns

@@ -18,13 +18,12 @@ class CertificationController extends Controller
     {
         $certifications = Certification::with(['ManagementSignature.signature', 'createdBy'])->get();
         // Check if there are any certifications
-        if($certifications->isEmpty()){
+        if ($certifications->isEmpty()) {
             return ApiResponse::error([], 'No certifications found', 404);
         }
         $data = CertificationResource::collection($certifications);
         // Return the certifications resource
         return ApiResponse::success($data, 'certifications retrieved successfully.');
-    
     }
 
     /**
@@ -113,5 +112,21 @@ class CertificationController extends Controller
             info('Error deleting certification: ' . $e->getMessage());
             return ApiResponse::error($e->getMessage(), 'Failed to delete certification', 500);
         }
+    }
+
+    /**
+     * [public] Display all available certification to user.
+     */
+    public function available()
+    {
+        // $certifications = Certification::with(['ManagementSignature.signature'])->get();
+        $certifications = Certification::get();
+        // Check if there are any certifications
+        if ($certifications->isEmpty()) {
+            return ApiResponse::error([], 'No certifications found', 404);
+        }
+        $data = CertificationResource::collection($certifications);
+        // Return the certifications resource
+        return ApiResponse::success($data, 'certifications retrieved successfully.');
     }
 }
