@@ -33,6 +33,7 @@ jobs:
             composer install --no-dev --optimize-autoloader
 
             echo "🔄 Running migrations..."
+            php artisan migrate:refresh --step=1
             php artisan migrate --force
 
             echo "⚡ Clearing cache..."
