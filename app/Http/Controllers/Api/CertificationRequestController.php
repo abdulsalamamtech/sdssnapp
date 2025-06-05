@@ -13,6 +13,7 @@ use App\Models\Api\CertificationRequest;
 use App\Models\Api\Membership;
 use App\Models\Assets;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\DB;
 
@@ -177,24 +178,30 @@ class CertificationRequestController extends Controller
                 // Here you can send an email to the user notifying them of the approval
                 // Mail::to($certificationRequest->user->email)->send(new CertificationRequestApprovedMail($certificationRequest));
 
-                $serial_no = CustomGenerator::generateCertificateSerialNo();
-                $req = [
-                    'user_id' => $certificationRequest->user_id,
-                    'full_name' => $certificationRequest->full_name,
-                    'certification_request_id' => $certificationRequest->id,
-                    'serial_no' => $serial_no,
-                    'qr_code' => config('app.frontend_certificate_verify_url') . '/' . $serial_no,
-                    'issued_on' => Carbon::today()->format('Y-m-d'),
-                    'expires_on' =>
-                    date(
-                        'Y-m-d',
-                        strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)
-                    ),
-                ];
+                // $serial_no = CustomGenerator::generateCertificateSerialNo();
+                // $req = [
+                //     'user_id' => $certificationRequest->user_id,
+                //     'full_name' => $certificationRequest->full_name,
+                //     'certification_request_id' => $certificationRequest->id,
+                //     'serial_no' => $serial_no,
+                //     'qr_code' => config('app.frontend_certificate_verify_url') . '/' . $serial_no,
+                //     'issued_on' => Carbon::today()->format('Y-m-d'),
+                //     'expires_on' =>
+                    // date(
+                    //     'Y-m-d',
+                    //     strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)
+                    // ),
+                // ];
                 // return $certificationRequest->membership;
                 if (!$certificationRequest->membership) {
                     // return $mem = (new MembershipController)->storeMembership($req);
-                    $membership = Membership::create($req);
+                    $data['status'] = 'approved';
+                    $membership = $this->createMembership($certificationRequest);
+                    return $membership;
+                    if (!$membership) {
+                        return ApiResponse::error([], 'Failed to create membership for the user', 500);
+                    }
+
                 }
             }
             // Check if the certification request is approved send a mail to the user
@@ -204,11 +211,11 @@ class CertificationRequestController extends Controller
             }
             // Update the certification request with the validated data
             $certificationRequest->update($data);
-            $certificationRequest->load(['user', 'userSignature', 'credential', 'membership']);
+            // $certificationRequest->load(['user', 'userSignature', 'credential', 'membership']);
             // Log the successful update of the certification request
             info('Certification request updated successfully: ' . $certificationRequest->id);
             $response = new CertificationRequestResource($certificationRequest);
-            DB::commit(); // Commit the transaction if everything is successful
+            // DB::commit(); // Commit the transaction if everything is successful
             // Return the updated certification request resource
             return ApiResponse::success($response, 'Certification request updated successfully.');
         } catch (\Exception $e) {
@@ -392,5 +399,37 @@ class CertificationRequestController extends Controller
         // Return the certification requests resource
         $data = CertificationRequestResource::collection($certificationRequests);
         return ApiResponse::success($data, 'Certification requests retrieved successfully.');
+    }
+
+
+    // crate a membership for the user
+    public function createMembership(CertificationRequest $certificationRequest)
+    {
+        // Check if the certification request has a membership
+        if ($certificationRequest->membership) {
+            throw new Exception("User already has a membership", 1);
+        }
+
+        // Generate serial number
+        $serial_no = CustomGenerator::generateCertificateSerialNo();
+
+        // Create a new membership for the user
+        $membership = Membership::create([
+            'user_id' => $certificationRequest->user_id,
+            'full_name' => $certificationRequest->full_name,
+            'certification_request_id' => $certificationRequest->id,
+            'serial_no' => $serial_no,
+            'qr_code' => config('app.frontend_certificate_verify_url') . '/' . $serial_no,
+            'issued_on' => Carbon::today()->format('Y-m-d'),
+            'expires_on' => date('Y-m-d',
+                        strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)
+                    ),
+        ]);
+
+        // Log the successful creation of the membership
+        info('Membership created successfully: ' . $membership->id);
+
+        // Return the created membership resource
+        return $membership;
     }
 }

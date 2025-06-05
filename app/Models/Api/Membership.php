@@ -40,4 +40,11 @@ class Membership extends Model
     {
         return $this->belongsTo(CertificationRequest::class);
     }
+
+    // belongs to certificate through certification request
+    public function certificate()
+    {
+        return $this->hasOneThrough(Certificate::class, CertificationRequest::class);
+    }
+
 }

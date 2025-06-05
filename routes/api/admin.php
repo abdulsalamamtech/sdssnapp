@@ -6,20 +6,22 @@ use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\Api\CertificationRequestController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\MembershipController;
+use App\Http\Controllers\Api\MembershipPaymentController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\PodcastCommentController;
 use App\Http\Controllers\Api\PodcastController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\CertificationController;
-use App\Http\Controllers\ManagementSignatureController;
 
+use App\Http\Controllers\ManagementSignatureController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\OurPartnerController;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
+
 
 
 
@@ -146,6 +148,10 @@ Route::prefix('admin')
             ->only(['index', 'show', 'update', 'destroy', 'store', 'up']);
     });
 
+
+    // Membership payment routes
+Route::apiResource('membership-payments', MembershipPaymentController::class)
+    ->only(['index', 'show', 'store', 'update', 'destroy']);
 
 
 

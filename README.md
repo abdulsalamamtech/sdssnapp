@@ -53,23 +53,25 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 ```
 
 ## Transactions
+
 ```php
     Schema::create('transactions', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('order_id')->constrained()->onDelete('cascade');
         $table->decimal('amount', 10, 2);
-        $table->enum('status', 
+        $table->enum('status',
             [
-                'pending', 
-                'successful', 
-                'cancelled', 
-                'suspended', 
+                'pending',
+                'successful',
+                'cancelled',
+                'suspended',
                 'rejected'
             ])
             ->default('pending');
         $table->string('reference')->unique();
         $table->string('payment_method')->default('online');
+        $table->string('payment_provider')->default('paystack');
         $table->json('data')->nullable(); // response data from payment server
         $table->timestamps();
         $table->softDeletes();
@@ -77,7 +79,9 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 ```
 
 ## Laravel Event and Listener
-- step by step [guide](https://muwangaxyz.medium.com/laravel-events-listeners-and-observers-complete-guide-06196203b2a8)
+
+-   step by step [guide](https://muwangaxyz.medium.com/laravel-events-listeners-and-observers-complete-guide-06196203b2a8)
+
 ```sh
     php artisan make:event PodcastProcessed
     php artisan make:listener SendPodcastNotification --event=PodcastProcessed
@@ -85,7 +89,8 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
     php artisan event:list
 ```
 
-- within the boot method of your application's AppServiceProvider:
+-   within the boot method of your application's AppServiceProvider:
+
 ```php
     use App\Domain\Orders\Events\PodcastProcessed;
     use App\Domain\Orders\Listeners\SendPodcastNotification;
@@ -103,13 +108,17 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
     }
 
 ```
-- on production optimize or event:cache
+
+-   on production optimize or event:cache
+
 ```sh
     php artisan event:list
     php artisan event:clear
     php artisan event:cache
 ```
-- from your controller
+
+-   from your controller
+
 ```php
     // Send an event to notify the admin about the certification request
     // event(new CertificationRequestedProceedEvent($certificationRequest));
@@ -118,13 +127,35 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
     OrderShipped::dispatchIf($condition, $order);
     OrderShipped::dispatchUnless($condition, $order);
 ```
-- you can also set it
+
+-   you can also set it
+
 ```php
     use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
     class OrderShipped implements ShouldDispatchAfterCommit
     {}
 ```
 
+## Log Viewer
+
+-   log viewer to view log content
+
+```sh
+    composer require opcodesio/log-viewer
+    php artisan log-viewer:publish
+```
+
+## Installation Warning
+
+```sh
+Generating optimized autoload files
+Class ImageKitSdkCopy located in ./app/Utils/ImageKitSdkCopy.php does not comply with psr-4 autoloading standard (rule: App\ => ./app). Skipping.
+Class ImageKitSdk located in ./app/Utils/ImageKitSdk.php does not comply with psr-4 autoloading standard (rule: App\ => ./app). Skipping.
+Class App\Utils\Imagekit located in ./app/Utils/ImageKit.php does not comply with psr-4 autoloading standard (rule: App\ => ./app). Skipping.
+> Illuminate\Foundation\ComposerScripts::postAutoloadDump
+> @php artisan package:discover --ansi
+
+```
 
 ## Laravel Sponsors
 
