@@ -2,6 +2,7 @@
 
 namespace App\Models\Api;
 
+use App\Models\Certification;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,6 +21,9 @@ class Membership extends Model
         'expires_on',
         'serial_no',
         'qr_code',
+        'status', // pending, paid
+        // $table->string('certificate_status')->nullable()->default('processing'); // processing generated, expired etc
+        'certificate_status',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -41,10 +45,23 @@ class Membership extends Model
         return $this->belongsTo(CertificationRequest::class);
     }
 
-    // belongs to certificate through certification request
-    public function certificate()
+    // belongs to certification through certification_request
+    // public function certification()
+    // {
+    //     // This is a one-to-one relationship through another model
+    //     // return $this->belongsToThrough(Certification::class, CertificationRequest::class, 'id', 'id', 'certification_request_id', 'certification_id');
+    //     // return $this->belongsToOneThrough(Certification::class, CertificationRequest::class);
+    //     // return $this->certificationRequest()->certification;
+    //     // return $this->certificationRequest()->belongsTo(Certification::class, 'certification_id');
+    //     // return $this->belongsTo(CertificationRequest::class)->belongsTo(Certification::class, 'certification_id');
+    //     return app($this->certificationRequest())->certification;
+
+    // }
+
+    // membershipPayment
+    public function membershipPayments()
     {
-        return $this->hasOneThrough(Certificate::class, CertificationRequest::class);
+        return $this->hasMany(MembershipPayment::class);
     }
 
 }

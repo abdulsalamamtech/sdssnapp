@@ -22,6 +22,7 @@ class CertificationResource extends JsonResource
             'type'  => $this->type,
             'duration'  => $this->duration,
             'duration_unit'  => $this->duration_unit,
+            'amount'  => $this->amount,
             'benefits'  => $this->benefits,
             'requirements'  => $this->requirements,
             'management_signature' => $this->whenLoaded('ManagementSignature', function () {

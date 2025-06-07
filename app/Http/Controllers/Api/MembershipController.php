@@ -41,10 +41,10 @@ class MembershipController extends Controller
         // 'serial_no',
         // 'qr_code',
         // Create a new membership
-        $membership = Membership::create($request->validated());
+        // $membership = Membership::create($request->validated());
 
         // Return the created membership resource
-        return ApiResponse::success(new MembershipResource($membership), 'Membership created successfully.', 201);
+        // return ApiResponse::success(new MembershipResource($membership), 'Membership created successfully.', 201);
     }
 
     /**
@@ -56,9 +56,12 @@ class MembershipController extends Controller
         if (!$membership) {
             return ApiResponse::error([], 'Membership not found', 404);
         }
-
+        // load the certification and management signature
+        return $membership->load(['certificationRequest.certification.managementSignature.signature', 'certificationRequest.userSignature', 'certificationRequest.credential', 'user']);
+        // Transform the membership into a resource
+        $response = new MembershipResource($membership);
         // Return the membership resource
-        return ApiResponse::success(new MembershipResource($membership), 'Membership retrieved successfully.');
+        return ApiResponse::success($response, 'Membership retrieved successfully.');
     }
 
     /**
@@ -66,13 +69,14 @@ class MembershipController extends Controller
      */
     public function update(UpdateMembershipRequest $request, Membership $membership)
     {
+        $data = $request->validated();
         // Check if the membership exists
         if (!$membership) {
             return ApiResponse::error([], 'Membership not found', 404);
         }
 
         // Update the membership with validated data
-        $membership->update($request->validated());
+        $membership->update($data);
 
         // Return the updated membership resource
         return ApiResponse::success(new MembershipResource($membership), 'Membership updated successfully.');
@@ -97,9 +101,9 @@ class MembershipController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     * Search membership resource in storage.
      */
-    public function storeMembership($request)
+    public function searchMembership($request)
     {
         // 'user_id',
         // 'full_name',
@@ -114,5 +118,23 @@ class MembershipController extends Controller
 
         // Return the created membership resource
         // return ApiResponse::success(new MembershipResource($membership), 'Membership created successfully.', 201);
+    }
+
+
+    /**
+     * [User] Display all my certification requests.
+     */
+    public function myMemberships()
+    {
+        $memberships = Membership::latest()->paginate();
+
+        // Check if there are any memberships
+        if ($memberships->isEmpty()) {
+            return ApiResponse::error([], 'No memberships found', 404);
+        }
+        $data = MembershipResource::collection($memberships);
+        // Return the memberships resource
+        return ApiResponse::success($data, 'memberships retrieved successfully.');
+            
     }
 }

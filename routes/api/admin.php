@@ -145,13 +145,14 @@ Route::prefix('admin')
 
         // Membership routes
         Route::apiResource('memberships', MembershipController::class)
-            ->only(['index', 'show', 'update', 'destroy', 'store', 'up']);
+            ->only(['index', 'show', 'update']);
+        
+        // Membership payment routes
+        Route::apiResource('membership-payments', MembershipPaymentController::class)
+                ->only(['index', 'show']);
     });
 
 
-    // Membership payment routes
-Route::apiResource('membership-payments', MembershipPaymentController::class)
-    ->only(['index', 'show', 'store', 'update', 'destroy']);
 
 
 

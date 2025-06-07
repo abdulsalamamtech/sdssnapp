@@ -23,8 +23,7 @@ class CertificationController extends Controller
         }
         $data = CertificationResource::collection($certifications);
         // Return the certifications resource
-        return ApiResponse::success($data, 'certifications retrieved successfully.');
-    
+        return ApiResponse::success($data, 'certifications retrieved successfully.', 200, $certifications);
     }
 
     /**
@@ -61,7 +60,9 @@ class CertificationController extends Controller
     public function show(Certification $certification)
     {
         $certification->load(['ManagementSignature.signature', 'createdBy']);
-        return ApiResponse::success(new CertificationResource($certification), 'Certification retrieved successfully.');
+        // response resource
+        $response = new CertificationResource($certification);
+        return ApiResponse::success($response, 'Certification retrieved successfully.');
     }
 
     /**
@@ -121,13 +122,13 @@ class CertificationController extends Controller
     public function available()
     {
         // $certifications = Certification::with(['ManagementSignature.signature'])->get();
-        $certifications = Certification::get();
+        $certifications = Certification::latest()->paginate();
         // Check if there are any certifications
         if ($certifications->isEmpty()) {
             return ApiResponse::error([], 'No certifications found', 404);
         }
         $data = CertificationResource::collection($certifications);
         // Return the certifications resource
-        return ApiResponse::success($data, 'certifications retrieved successfully.');
+        return ApiResponse::success($data, 'certifications retrieved successfully.', 200, $certifications);
     }
 }

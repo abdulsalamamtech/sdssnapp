@@ -11,7 +11,7 @@ class UpdateMembershipRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class UpdateMembershipRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'full_name' => ['required', 'string']
         ];
     }
 }

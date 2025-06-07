@@ -25,7 +25,8 @@ class CertificationRequestController extends Controller
     public function index()
     {
         // $certificationRequests = CertificationRequest::with(['user'])->get();
-        $certificationRequests = CertificationRequest::latest()->paginate();
+        $certificationRequests = CertificationRequest::with(['certification'])
+            ->latest()->paginate();
 
         // Check if there are any certification requests
         if ($certificationRequests->isEmpty()) {
@@ -33,15 +34,24 @@ class CertificationRequestController extends Controller
         }
         $data = CertificationRequestResource::collection($certificationRequests);
         // Return the certification requests resource
-        return ApiResponse::success($data, 'certification requests retrieved successfully.');
+        return ApiResponse::success($data, 'certification requests retrieved successfully.', 200, $certificationRequests);
     }
 
     /**
-     * [login user] Store a newly created resource in storage.
+     * [Login user] Store a newly created resource in storage.
      */
     public function store(StoreCertificationRequestRequest $request)
     {
         $data = $request->validated();
+
+        // certification_id and user_id
+        $requestExisted = CertificationRequest::where('certification_id', $data['certification_id'])
+            ->where('user_id', $request->user()->id)
+            ->first();
+        if ($requestExisted) {
+            return ApiResponse::error([],  'you have already requested for this certification', 401);
+        }
+
         try {
             // Begin a database transaction
             DB::beginTransaction();
@@ -140,13 +150,14 @@ class CertificationRequestController extends Controller
      */
     public function show(CertificationRequest $certificationRequest)
     {
-        $certificationRequest->load(['user', 'userSignature', 'credential']);
+        $certificationRequest->load(['user', 'userSignature', 'credential', 'certification', 'membership']);
         // Check if the certification request exists
         if (!$certificationRequest) {
             return ApiResponse::error([], 'Certification request not found', 404);
         }
+        $response = new CertificationRequestResource($certificationRequest);
         // Return the certification request resource
-        return ApiResponse::success(new CertificationRequestResource($certificationRequest), 'Certification request retrieved successfully.');
+        return ApiResponse::success($response, 'Certification request retrieved successfully.');
     }
 
     /**
@@ -187,35 +198,35 @@ class CertificationRequestController extends Controller
                 //     'qr_code' => config('app.frontend_certificate_verify_url') . '/' . $serial_no,
                 //     'issued_on' => Carbon::today()->format('Y-m-d'),
                 //     'expires_on' =>
-                    // date(
-                    //     'Y-m-d',
-                    //     strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)
-                    // ),
+                // date(
+                //     'Y-m-d',
+                //     strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)
+                // ),
                 // ];
                 // return $certificationRequest->membership;
                 if (!$certificationRequest->membership) {
                     // return $mem = (new MembershipController)->storeMembership($req);
                     $data['status'] = 'approved';
                     $membership = $this->createMembership($certificationRequest);
-                    return $membership;
+                    // return $membership;
                     if (!$membership) {
                         return ApiResponse::error([], 'Failed to create membership for the user', 500);
                     }
-
                 }
-            }
-            // Check if the certification request is approved send a mail to the user
-            if ($certificationRequest->status === 'pending' && $data['status'] === 'rejected') {
-                // Here you can send an email to the user notifying them of the rejection
-                // Mail::to($certificationRequest->user->email)->send(new CertificationRequestRejectedMail($certificationRequest));
+                // // Check if the certification request is approved send a mail to the user
+                // if ($certificationRequest->status === 'pending' && $data['status'] === 'rejected') {
+                //     // Here you can send an email to the user notifying them of the rejection
+                //     // Mail::to($certificationRequest->user->email)->send(new CertificationRequestRejectedMail($certificationRequest));
+                // }
             }
             // Update the certification request with the validated data
             $certificationRequest->update($data);
-            // $certificationRequest->load(['user', 'userSignature', 'credential', 'membership']);
+            $certificationRequest->load(['membership', 'certification']);
             // Log the successful update of the certification request
             info('Certification request updated successfully: ' . $certificationRequest->id);
             $response = new CertificationRequestResource($certificationRequest);
-            // DB::commit(); // Commit the transaction if everything is successful
+            // Commit the transaction if everything is successful
+            DB::commit(); 
             // Return the updated certification request resource
             return ApiResponse::success($response, 'Certification request updated successfully.');
         } catch (\Exception $e) {
@@ -421,9 +432,10 @@ class CertificationRequestController extends Controller
             'serial_no' => $serial_no,
             'qr_code' => config('app.frontend_certificate_verify_url') . '/' . $serial_no,
             'issued_on' => Carbon::today()->format('Y-m-d'),
-            'expires_on' => date('Y-m-d',
-                        strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)
-                    ),
+            'expires_on' => date(
+                'Y-m-d',
+                strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)
+            ),
         ]);
 
         // Log the successful creation of the membership
@@ -431,5 +443,24 @@ class CertificationRequestController extends Controller
 
         // Return the created membership resource
         return $membership;
+    }
+
+    /**
+     * [User] Display all my certification requests.
+     */
+    public function myCertificationRequests()
+    {
+        $user = request()->user();
+        // $certificationRequests = CertificationRequest::with(['user'])->get();
+        $certificationRequests = CertificationRequest::where('user_id', $user->id)
+            ->latest()->paginate();
+
+        // Check if there are any certification requests
+        if ($certificationRequests->isEmpty()) {
+            return ApiResponse::error([], 'No certification requests found', 404);
+        }
+        $data = CertificationRequestResource::collection($certificationRequests);
+        // Return the certification requests resource
+        return ApiResponse::success($data, 'certification requests retrieved successfully.', 200, $certificationRequests);
     }
 }

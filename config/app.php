@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // Log viewer
+    'log_viewer_token' => env('LOG_VIEWER_TOKEN', 'your-log-viewer-token'),
+
     // For Rest Api Configuration
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
     'frontend_forgot_password_url' => env('FRONTEND_FORGOT_PASSWORD_URL', 'http://localhost:3000/auth/password/reset'),

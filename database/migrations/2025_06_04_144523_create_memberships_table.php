@@ -29,6 +29,7 @@ return new class extends Migration
             $table->date('expires_on');
             // config('app.frontend_certificate_verify_url') . $serial_no
             $table->string('qr_code');
+            $table->string('certificate_status')->nullable()->default('processing'); // processing generated, expired etc
             $table->enum('status', ['pending', 'paid'])->default('pending');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete(); // User ID or name of the creator
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete(); // User ID or name of the last updater

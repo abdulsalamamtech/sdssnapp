@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\CertificationRequestController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\GalleryController;
+use App\Http\Controllers\Api\MembershipPaymentController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\PodcastCommentController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\NewsletterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -120,6 +122,8 @@ Route::post('logout', [AuthController::class, 'logout'])
 Route::get('/admin/podcasts', [PodcastController::class, 'personal'])
     ->middleware(['auth:sanctum', 'verified']);
 
+
+
 // PROFILE ROUTES
 // User profile, social media, projects, podcasts, certificates, information
 Route::group(['prefix' => 'profile', 'middleware' => ['auth:sanctum', 'verified']], function () {
@@ -144,12 +148,19 @@ Route::group(['prefix' => 'profile', 'middleware' => ['auth:sanctum', 'verified'
     Route::get('/certificates', [PodcastController::class, 'personal']);
 
     // User certificates approved [admin only]
-    Route::get('/certificates/approved', [PodcastController::class, 'approved']);
+    // Route::get('/certificates/approved', [PodcastController::class, 'approved']);
 
     // For user profile picture
     // {"picture": "image profile"}
     Route::put('/picture', [UserProfile::class, 'updatePicture']);
     Route::post('/picture/update', [UserProfile::class, 'updatePicture']);
+
+
+    // User Certification request
+    Route::get('certification-requests', [CertificationRequestController::class, 'myCertificationRequests']);
+
+    // Membership payment routes
+    Route::get('my-membership-payments', [MembershipPaymentController::class, 'myMembershipPayments']);
 });
 
 
@@ -180,6 +191,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     // Certification request routes
     Route::apiResource('certification-requests', CertificationRequestController::class)
         ->only(['store']);
+    
+    // Membership payment routes
+    Route::post('membership-payments', [MembershipPaymentController::class, 'store']);
 });
 
 

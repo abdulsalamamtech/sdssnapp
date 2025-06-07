@@ -31,7 +31,7 @@ class MembershipPaymentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * [Login user] Store a newly created resource in storage.
      */
     public function store(StoreMembershipPaymentRequest $request)
     {
@@ -41,8 +41,22 @@ class MembershipPaymentController extends Controller
             $data = $request->validated();
             $membership = Membership::findOrFail($data['membership_id']);
             // certificate
-            return $cert = $membership->certificate;
-            $totalPayAmount = 10000;
+            // $cert = $membership->certificationRequest->certification->amount;
+            $totalPayAmount = $membership?->certificationRequest?->certification?->amount;
+            if (!$totalPayAmount) {
+                return ApiResponse::error([], 'Error: unable to retrieve membership payment amount!', 500);
+            }
+            // Check if the user has already paid for this membership
+            $existingPayment = $membership->membershipPayments()
+                ->where('user_id', $membership->user->id)
+                ->where('status', 'successful')
+                ->first();
+
+            if ($existingPayment) {
+                return ApiResponse::error([], 'Error: you have already paid for this membership!', 400);
+            }
+
+            // Create the payment data
             $payment_data = [
                 'name' => $membership->user->full_name,
                 'email' => $membership->user->email,
@@ -62,7 +76,7 @@ class MembershipPaymentController extends Controller
                 // 'reference',
                 // 'payment_method',
                 // 'data'
-                $membership->membershipPayment()->create([
+                $membership->membershipPayments()->create([
                     'user_id' => $membership->user->id,
                     'amount' => $totalPayAmount,
                     // 'status',
@@ -120,4 +134,23 @@ class MembershipPaymentController extends Controller
         $membershipPayment->delete();
         return ApiResponse::success([], 'Membership payment deleted successfully.');
     }
+
+    /**
+     * [User] My membership payments.
+     */
+    public function myMembershipPayments()
+    {
+        $user = request()->user();
+
+        $membershipPayments = MembershipPayment::where('user_id', $user->id)
+            ->latest()->paginate();
+
+        // Check if there are any membership payments
+        if ($membershipPayments->isEmpty()) {
+            return ApiResponse::error([], 'No membership payments found', 404);
+        }
+        $data = MembershipPaymentResource::collection($membershipPayments);
+        // Return the membership payments resource
+        return ApiResponse::success($data, 'Membership payments retrieved successfully.', 200,  $membershipPayments);
+    }    
 }

@@ -22,10 +22,10 @@ class Certification extends Model
         'updated_by',
         'deleted_by',
     ];
-    
+
     protected $casts = [
         'management_signature_id' => 'integer',
-        'amount' => 'decimal:2',
+        // 'amount' => 'decimal:2', // string or integer based on your needs
         'duration' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer',
