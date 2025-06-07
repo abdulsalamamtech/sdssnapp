@@ -146,11 +146,13 @@ Route::prefix('admin')
         // Membership routes
         Route::apiResource('memberships', MembershipController::class)
             ->only(['index', 'show', 'update']);
-        
-        // Membership payment routes
+        // Search for membership
+        Route::get('search-memberships', [MembershipController::class, 'searchMemberships']);
+
         Route::apiResource('membership-payments', MembershipPaymentController::class)
                 ->only(['index', 'show']);
-    });
+    }
+);
 
 
 

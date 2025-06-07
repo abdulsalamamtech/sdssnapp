@@ -246,6 +246,10 @@ class CertificationRequestController extends Controller
         try {
             // Begin a database transaction
             DB::beginTransaction();
+
+            if($certificationRequest->status !== 'rejected' || $certificationRequest->membership){
+                return ApiResponse::error([], 'you can only delete rejected certification request', 500);
+            }
             // Delete the certification request
             $certificationRequest->delete();
             // Log the successful deletion of the certification request
@@ -452,7 +456,8 @@ class CertificationRequestController extends Controller
     {
         $user = request()->user();
         // $certificationRequests = CertificationRequest::with(['user'])->get();
-        $certificationRequests = CertificationRequest::where('user_id', $user->id)
+        $certificationRequests = CertificationRequest::with(['certification'])
+            ->where('user_id', $user->id)
             ->latest()->paginate();
 
         // Check if there are any certification requests

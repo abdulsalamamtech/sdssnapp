@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\CertificationRequestController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\GalleryController;
+use App\Http\Controllers\Api\MembershipController;
 use App\Http\Controllers\Api\MembershipPaymentController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PartnerController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\NewsletterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -159,6 +161,10 @@ Route::group(['prefix' => 'profile', 'middleware' => ['auth:sanctum', 'verified'
     // User Certification request
     Route::get('certification-requests', [CertificationRequestController::class, 'myCertificationRequests']);
 
+    // Membership routes
+    Route::get('memberships', [MembershipController::class, 'myMemberships']);
+    Route::get('memberships{membership}', [MembershipController::class, 'showMembership']);
+
     // Membership payment routes
     Route::get('my-membership-payments', [MembershipPaymentController::class, 'myMembershipPayments']);
 });
@@ -191,11 +197,13 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     // Certification request routes
     Route::apiResource('certification-requests', CertificationRequestController::class)
         ->only(['store']);
-    
+
     // Membership payment routes
     Route::post('membership-payments', [MembershipPaymentController::class, 'store']);
 });
 
+// Verify membership certificate
+Route::get('verify-memberships/{membership:serial_no}', [MembershipController::class, 'verifyMembership']);
 
 // Certifications routes
 Route::get('certifications', [CertificationController::class, 'available']);
