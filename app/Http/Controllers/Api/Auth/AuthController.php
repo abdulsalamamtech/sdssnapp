@@ -124,7 +124,7 @@ class AuthController extends Controller
 
 
 
-        /**
+    /**
      * Destroy the user's token.
      */
     public function logoutDevices(Request $request)
