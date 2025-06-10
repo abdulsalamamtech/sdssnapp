@@ -122,7 +122,7 @@ class CertificationController extends Controller
     public function available()
     {
         // $certifications = Certification::with(['ManagementSignature.signature'])->get();
-        $certifications = Certification::latest()->paginate();
+        $certifications = Certification::latest()->limit(6)->paginate(6);
         // Check if there are any certifications
         if ($certifications->isEmpty()) {
             return ApiResponse::error([], 'No certifications found', 404);
