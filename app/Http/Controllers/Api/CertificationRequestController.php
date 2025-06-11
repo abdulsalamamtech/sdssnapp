@@ -161,7 +161,7 @@ class CertificationRequestController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the status of the certification request.
      */
     public function update(UpdateCertificationRequestRequest $request, CertificationRequest $certificationRequest)
     {
