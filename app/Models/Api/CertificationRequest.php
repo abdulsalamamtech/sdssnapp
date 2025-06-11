@@ -44,7 +44,7 @@ class CertificationRequest extends Model
      */
     public function certification()
     {
-        return $this->belongsTo('App\Models\Certification', 'certification_id');
+        return $this->belongsTo('App\Models\Certification', 'certification_id')->withTrashed();
     }
     /**
      * Get the user signature associated with the request.
@@ -69,7 +69,7 @@ class CertificationRequest extends Model
         return $this->hasOne(Membership::class);
     }
 
-    
+
     /**
      * Get the user who created the certification request.
      */
