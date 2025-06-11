@@ -176,16 +176,20 @@ class MembershipController extends Controller
     }
 
     /**
-     * [Public] verify membership certificate.
+     * [Public] verify membership certificate 'SDSSN68448AB8CA236'.
      * @param "serial_no": "SDSSN68448AB8CA236",
      */
     public function verifyMembership(Membership $membership)
     {
         //   "serial_no": "SDSSN68448AB8CA236",
-        return $membership;
+        $membership;
         // Check if the membership exists
         if (!$membership) {
             return ApiResponse::error([], 'Membership not found', 404);
+        }
+        // verify the membership status
+        if ($membership->status !== 'paid') {
+            return ApiResponse::error([], 'Membership is invalid or pending.', 400);
         }
         // load the certification and management signature
         // 'user', 'userSignature', 'credential', 'certification', 'membership'
