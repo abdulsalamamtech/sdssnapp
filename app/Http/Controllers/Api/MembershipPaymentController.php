@@ -90,7 +90,10 @@ class MembershipPaymentController extends Controller
                     'membership_id' => $membership->id,
                     'payment_link' => $PSP['authorization_url'],
                 ];
-
+                // Commit the transaction
+                DB::commit();
+                // Return the payment link
+                info('payment link created: ' . $PSP['authorization_url']);
                 return ApiResponse::success($response, 'Payment link created, please make payment to validate your membership!');
             } else {
                 info('payment initialization error: ' . $PSP['message']);
