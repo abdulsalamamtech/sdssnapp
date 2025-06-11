@@ -32,7 +32,6 @@ jobs:
             echo "📦 Installing PHP dependencies..."
             composer install --no-dev --optimize-autoloader
 
-            php artisan migrate:refresh --step=1
             echo "🔄 Running migrations..."
             php artisan migrate --force
 

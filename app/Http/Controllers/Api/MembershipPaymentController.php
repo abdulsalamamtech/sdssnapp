@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateMembershipPaymentRequest;
 use App\Http\Resources\MembershipPaymentResource;
 use App\Models\Api\Membership;
 use App\Models\Api\MembershipPayment;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class MembershipPaymentController extends Controller
@@ -46,12 +47,16 @@ class MembershipPaymentController extends Controller
             if (!$totalPayAmount) {
                 return ApiResponse::error([], 'Error: unable to retrieve membership payment amount!', 500);
             }
+
+            if ($membership->status == 'paid') {
+                return ApiResponse::success([], "you have paid for this membership certification!");
+            }
+
             // Check if the user has already paid for this membership
             $existingPayment = $membership->membershipPayments()
                 ->where('user_id', $membership->user->id)
                 ->where('status', 'successful')
                 ->first();
-
             if ($existingPayment) {
                 return ApiResponse::error([], 'Error: you have already paid for this membership!', 400);
             }
@@ -63,7 +68,8 @@ class MembershipPaymentController extends Controller
                 'amount' => round($totalPayAmount, 2),
                 'payment_id' => $membership->id,
                 // 'redirect_url' => URL('account/orders'),
-                'redirect_url' => config('app.frontend_url'),
+                // 'redirect_url' => config('app.frontend_url'),
+                'redirect_url' => route('transactions.verify'),
             ];
 
             $PSP = Paystack::make($payment_data);
@@ -112,7 +118,7 @@ class MembershipPaymentController extends Controller
      */
     public function show(MembershipPayment $membershipPayment)
     {
-        $membershipPayment->load(['user', 'membership']);
+        return $membershipPayment->load(['user', 'membership']);
         $response = new MembershipPaymentResource($membershipPayment);
         return ApiResponse::success($response, 'Membership payment retrieved successfully.');
     }
@@ -158,5 +164,98 @@ class MembershipPaymentController extends Controller
         $data = MembershipPaymentResource::collection($membershipPayments);
         // Return the membership payments resource
         return ApiResponse::success($data, 'Membership payments retrieved successfully.', 200,  $membershipPayments);
+    }
+
+    // verify transaction
+    /**
+     * Verify payment domain.com?reference=oo5ihug1qm
+     * @param reference=oo5ihug1qm
+     */
+    public function verifyTransaction(Request $request)
+    {
+        // http://localhost:3000/?trxref=oo5ihug1qm&reference=oo5ihug1qm
+        // http://127.0.0.1:8000/events/8?trxref=soq9s7fxmf&reference=soq9s7fxmf
+
+
+        try {
+            // Verify payment transaction
+            $redirectUrl = config('app.frontend_url') . '/payment/error';
+            if ($request?->filled('trxref') || $request?->filled('reference')) {
+                $reference = $request?->reference ?? $request?->trxref;
+                $PSP = Paystack::verify($reference);
+                info('paystack validation response: ', $PSP);
+                // return $PSP;
+                $message = $PSP['message'];
+                info('verify payment message: ', [$message]);
+                if ($PSP['success']) {
+                    $membershipPayment = MembershipPayment::where('reference', $reference)->first();
+                    if ($membershipPayment) {
+                        $membershipPayment->status = 'successful';
+                        $membershipPayment->save();
+
+                        // redirect to success page
+                        $redirectUrl = config('app.frontend_url') . '/payment/success?trxref=' . $membershipPayment->reference;
+
+                        // If payment type for membership is new
+                        if ($membershipPayment->payment_type == 'new' && $membershipPayment->membership_id) {
+                            // update membership
+                            $membership = Membership::where('id', $membershipPayment->membership_id)->first();
+                            // certification request
+                            $membership->certificationRequest->status = 'paid';
+                            $membership->certificationRequest->save();
+                            // update membership
+                            $membership->certificate_status = 'generated';
+                            $membership->status = 'paid';
+                            $membership->save();
+
+                            // Send mail to user you can now generate your certification
+
+
+                        }
+
+                        // Testing
+                        // $membership->issued_on = now();
+                        // $membership->expires_on = now()->addYear();
+                        // $membership->serial_no = 'SDSSN' . strtoupper(uniqid());
+                        // $membership->qr_code = config('app.frontend_certificate_verify_url') . $membership->serial_no;
+                        // $membership->save();
+
+                        // If payment type for membership is renewal
+                        // if ($membershipPayment->payment_type == 'renewal' && $membershipPayment->membership_id) {
+                        //     // update membership
+                        //     $membership = Membership::where('id', $membershipPayment->membership_id)->first();
+                        //     // certification request
+                        //     $membership->certificationRequest->status = 'paid';
+                        //     $membership->certificationRequest->expires_on = date(
+                        //         'Y-m-d',
+                        //         strtotime('+ ' . $membership->certificationRequest->certification->duration . '' . $membership->certificationRequest->certification->duration_unit)
+                        //     );
+                        //     $membership->certificationRequest->save();
+                        //     // update membership
+                        //     $membership->certificate_status = 'generated';
+                        //     $membership->status = 'paid';
+                        //     $membership->save();
+                        // }
+
+                        // return redirect($redirectUrl);
+                        return $membership;
+                    }
+                } else {
+                    // log error and return error response
+                    info('Membership Payment Transaction verification failed: ', [$message]);
+                    // Redirect to error page
+                    // $redirectUrl = config('app.frontend_url') . '/payment/error?trxref=' . $reference;
+                    return $message;
+                }
+            }
+
+            // return response
+            return redirect($redirectUrl);
+        } catch (\Exception $e) {
+            // log error and return error response
+            // return response()->json(['message' => 'Transaction verification failed', 'error' => $e->getMessage()], 500);
+            info('Transaction verification failed: ', [$e->getMessage()]);
+            return redirect($redirectUrl);
+        }
     }
 }

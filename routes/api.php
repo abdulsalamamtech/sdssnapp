@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\UserProfile;
 use App\Http\Controllers\Api\UserSocial;
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\NewsletterController;
+use App\Models\Api\Membership;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -279,6 +280,11 @@ Route::get('/podcasts/title/{podcast:slug}', [PodcastController::class, 'show'])
 Route::get('/podcasts/category/video', [PodcastController::class, 'video']);
 Route::get('/podcasts/category/audio', [PodcastController::class, 'audio']);
 
+
+
+// Verify transaction
+Route::get('transactions/verify', [MembershipPaymentController::class, 'verifyTransaction'])
+    ->name('transactions.verify');
 
 // Admin Routes
 require  __DIR__ . "/api/admin.php";

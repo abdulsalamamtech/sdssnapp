@@ -175,6 +175,7 @@ class MembershipController extends Controller
         return ApiResponse::success($response, 'Membership retrieved successfully.');
     }
 
+    
     /**
      * [Public] verify membership certificate 'SDSSN68448AB8CA236'.
      * @param "serial_no": "SDSSN68448AB8CA236",
