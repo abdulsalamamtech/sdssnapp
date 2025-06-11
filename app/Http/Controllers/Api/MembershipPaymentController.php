@@ -42,7 +42,7 @@ class MembershipPaymentController extends Controller
             $membership = Membership::findOrFail($data['membership_id']);
             // certificate
             // $cert = $membership->certificationRequest->certification->amount;
-            return $totalPayAmount = $membership?->certificationRequest?->certification?->amount;
+            $totalPayAmount = $membership?->certificationRequest?->certification?->amount;
             if (!$totalPayAmount) {
                 return ApiResponse::error([], 'Error: unable to retrieve membership payment amount!', 500);
             }
