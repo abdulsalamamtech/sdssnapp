@@ -176,10 +176,10 @@ class MembershipPaymentController extends Controller
         // http://localhost:3000/?trxref=oo5ihug1qm&reference=oo5ihug1qm
         // http://127.0.0.1:8000/events/8?trxref=soq9s7fxmf&reference=soq9s7fxmf
 
+        $redirectUrl = config('app.frontend_url') . '/payment/error';
 
         try {
             // Verify payment transaction
-            $redirectUrl = config('app.frontend_url') . '/payment/error';
             if ($request?->filled('trxref') || $request?->filled('reference')) {
                 $reference = $request?->reference ?? $request?->trxref;
                 $PSP = Paystack::verify($reference);
@@ -237,20 +237,26 @@ class MembershipPaymentController extends Controller
                         //     $membership->save();
                         // }
 
-                        // return redirect($redirectUrl);
-                        return $membership;
+                        // return $membershipPayment;
+                        return redirect($redirectUrl);
+                    }else{
+                        info('Membership Payment Transaction not found: ', [$message]);
+                        // Redirect to error page
+                        $redirectUrl = config('app.frontend_url') . '/payment/error?trxref=' . $reference;
                     }
                 } else {
+                    // return $message;
                     // log error and return error response
                     info('Membership Payment Transaction verification failed: ', [$message]);
                     // Redirect to error page
-                    // $redirectUrl = config('app.frontend_url') . '/payment/error?trxref=' . $reference;
-                    return $message;
+                    $redirectUrl = config('app.frontend_url') . '/payment/error?trxref=' . $reference;
                 }
             }
 
+            // return $redirectUrl;
             // return response
             return redirect($redirectUrl);
+
         } catch (\Exception $e) {
             // log error and return error response
             // return response()->json(['message' => 'Transaction verification failed', 'error' => $e->getMessage()], 500);

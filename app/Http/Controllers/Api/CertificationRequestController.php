@@ -219,9 +219,15 @@ class CertificationRequestController extends Controller
                 //     // Mail::to($certificationRequest->user->email)->send(new CertificationRequestRejectedMail($certificationRequest));
                 // }
             }
+
+            // Check if the certification request is already approved
+            if ($certificationRequest->status === 'approved' && $data['status'] == 'approved') {
+                return ApiResponse::error([], 'Certification request already approved', 403);
+            }
+            
             // Update the certification request with the validated data
             $certificationRequest->update($data);
-            $certificationRequest->load(['membership', 'certification']);
+            // $certificationRequest->load(['membership', 'certification']);
             // Log the successful update of the certification request
             info('Certification request updated successfully: ' . $certificationRequest->id);
             $response = new CertificationRequestResource($certificationRequest);
