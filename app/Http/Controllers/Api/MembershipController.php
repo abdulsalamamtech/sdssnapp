@@ -113,8 +113,8 @@ class MembershipController extends Controller
         if (!$request->input('search')) {
             return ApiResponse::error([], 'Membership not found', 404);
         }
-        $memberships = Membership::where('status', 'pending')
-            ->whereAny([
+
+        $memberships = Membership::whereAny([
                 'user_id',
                 'full_name',
                 'certification_request_id',

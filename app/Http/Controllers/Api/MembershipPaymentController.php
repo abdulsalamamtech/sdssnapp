@@ -31,7 +31,7 @@ class MembershipPaymentController extends Controller
     }
 
     /**
-     * [Login user] Store a newly created resource in storage.
+     * [Login user] Make payment for membership.
      */
     public function store(StoreMembershipPaymentRequest $request)
     {
@@ -42,7 +42,7 @@ class MembershipPaymentController extends Controller
             $membership = Membership::findOrFail($data['membership_id']);
             // certificate
             // $cert = $membership->certificationRequest->certification->amount;
-            $totalPayAmount = $membership?->certificationRequest?->certification?->amount;
+            return $totalPayAmount = $membership?->certificationRequest?->certification?->amount;
             if (!$totalPayAmount) {
                 return ApiResponse::error([], 'Error: unable to retrieve membership payment amount!', 500);
             }
@@ -129,11 +129,11 @@ class MembershipPaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MembershipPayment $membershipPayment)
-    {
-        $membershipPayment->delete();
-        return ApiResponse::success([], 'Membership payment deleted successfully.');
-    }
+    // public function destroy(MembershipPayment $membershipPayment)
+    // {
+    //     $membershipPayment->delete();
+    //     return ApiResponse::success([], 'Membership payment deleted successfully.');
+    // }
 
     /**
      * [User] My membership payments.
@@ -149,8 +149,11 @@ class MembershipPaymentController extends Controller
         if ($membershipPayments->isEmpty()) {
             return ApiResponse::error([], 'No membership payments found', 404);
         }
+        // load the user and membership relationships
+        // $membershipPayments->load(['user', 'membership']);
+        // Transform the membership payments into a resource collection
         $data = MembershipPaymentResource::collection($membershipPayments);
         // Return the membership payments resource
         return ApiResponse::success($data, 'Membership payments retrieved successfully.', 200,  $membershipPayments);
-    }    
+    }
 }
