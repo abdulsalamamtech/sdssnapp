@@ -176,6 +176,12 @@ class MembershipPaymentController extends Controller
         // http://localhost:3000/?trxref=oo5ihug1qm&reference=oo5ihug1qm
         // http://127.0.0.1:8000/events/8?trxref=soq9s7fxmf&reference=soq9s7fxmf
 
+        // validate request
+        $request->validate([
+            'trxref' => 'nullable|string',
+            'reference' => 'nullable|string',
+        ]);
+
         $redirectUrl = config('app.frontend_url') . '/payment/error';
 
         try {
