@@ -49,7 +49,8 @@ class CertificationRequestController extends Controller
             ->where('user_id', $request->user()->id)
             ->first();
         if ($requestExisted) {
-            return ApiResponse::error([],  'you have already requested for this certification', 401);
+            // with record existed status code 
+            return ApiResponse::error([], 'You have already requested for this certification', 409);
         }
 
         try {
