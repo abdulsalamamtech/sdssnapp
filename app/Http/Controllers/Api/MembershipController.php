@@ -101,7 +101,7 @@ class MembershipController extends Controller
 
 
     /**
-     * [public] Search paid membership certificate.
+     * [admin] Search all membership certificate.
      */
     public function searchMemberships(Request $request)
     {
@@ -139,7 +139,7 @@ class MembershipController extends Controller
 
 
     /**
-     * [User] Display all my certification requests.
+     * [User] Display all membership.
      */
     public function myMemberships()
     {
