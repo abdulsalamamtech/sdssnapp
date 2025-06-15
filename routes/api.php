@@ -164,7 +164,7 @@ Route::group(['prefix' => 'profile', 'middleware' => ['auth:sanctum', 'verified'
 
     // Membership routes
     Route::get('memberships', [MembershipController::class, 'myMemberships']);
-    Route::get('memberships{membership}', [MembershipController::class, 'showMembership']);
+    Route::get('memberships/{membership}', [MembershipController::class, 'showMembership']);
 
     // Membership payment routes
     Route::get('my-membership-payments', [MembershipPaymentController::class, 'myMembershipPayments']);
