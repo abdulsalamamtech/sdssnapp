@@ -115,14 +115,14 @@ class MembershipController extends Controller
         }
 
         $memberships = Membership::whereAny([
-                'user_id',
-                'full_name',
-                'certification_request_id',
-                'issued_on',
-                'expires_on',
-                'serial_no',
-                'qr_code',
-            ],  'like', '%' . $data['search'] . '%')
+            'user_id',
+            'full_name',
+            'certification_request_id',
+            'issued_on',
+            'expires_on',
+            'serial_no',
+            'qr_code',
+        ],  'like', '%' . $data['search'] . '%')
             ->with(['certificationRequest.certification.managementSignature.signature', 'certificationRequest.userSignature', 'certificationRequest.credential', 'user'])
             ->latest()
             ->paginate();
@@ -163,8 +163,13 @@ class MembershipController extends Controller
     public function showMembership(Membership $membership)
     {
         // Check if the membership exists
-        if (!$membership) {
+        if (!$membership || $membership->user_id !== request()->user()->id) {
             return ApiResponse::error([], 'Membership not found', 404);
+        }
+
+        // If not paid for, return error
+        if ($membership->status !== 'paid') {
+            return ApiResponse::error([], 'Membership is invalid or pending.', 400);
         }
         // load the certification and management signature
         // 'user', 'userSignature', 'credential', 'certification', 'membership'
@@ -175,7 +180,7 @@ class MembershipController extends Controller
         return ApiResponse::success($response, 'Membership retrieved successfully.');
     }
 
-    
+
     /**
      * [Public] verify membership certificate 'SDSSN68448AB8CA236'.
      * @param "serial_no": "SDSSN68448AB8CA236",
