@@ -25,8 +25,11 @@ class CertificationResource extends JsonResource
             'amount'  => $this->amount,
             'benefits'  => $this->benefits,
             'requirements'  => $this->requirements,
-            'management_signature' => $this->whenLoaded('ManagementSignature', function () {
-                return new ManagementSignatureResource($this->ManagementSignature);
+            'management_signature' => $this->whenLoaded('managementSignature', function () {
+                return new ManagementSignatureResource($this->managementSignature);
+            }),
+            'secretary_signature' => $this->whenLoaded('secretarySignature', function () {
+                return new SecretarySignatureResource($this->secretarySignature);
             }),
             'created_by' => $this->whenLoaded('createdBy', function () {
                 return [

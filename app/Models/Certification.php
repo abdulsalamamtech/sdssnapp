@@ -10,6 +10,7 @@ class Certification extends Model
     use SoftDeletes;
     protected $fillable = [
         'management_signature_id',
+        'secretary_signature_id',
         'organization_name', // Spatial and Data Science Society of Nigeria
         'title', // Certified Spatial and Data Scientist
         'type', // Professional Certification
@@ -45,6 +46,11 @@ class Certification extends Model
     public function managementSignature()
     {
         return $this->belongsTo(ManagementSignature::class, 'management_signature_id');
+    }
+
+    public function secretarySignature()
+    {
+        return $this->belongsTo(ManagementSignature::class, 'secretary_signature_id');
     }
 
     public function createdBy()

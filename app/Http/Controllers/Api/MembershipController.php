@@ -58,7 +58,12 @@ class MembershipController extends Controller
         }
         // load the certification and management signature
         // $membership->load(['certificationRequest.certification.managementSignature.signature', 'certificationRequest.userSignature', 'certificationRequest.credential', 'user']);
-        $membership->load(['certificationRequest.certification.managementSignature.signature', 'certificationRequest.credential', 'user']);
+        $membership->load([
+            'certificationRequest.certification.managementSignature.signature',
+            'certificationRequest.certification.secretarySignature.signature',
+            'certificationRequest.credential',
+            'user'
+        ]);
         // Transform the membership into a resource
         $response = new MembershipResource($membership);
         // Return the membership resource
@@ -125,7 +130,12 @@ class MembershipController extends Controller
             'qr_code',
         ],  'like', '%' . $data['search'] . '%')
             // ->with(['certificationRequest.certification.managementSignature.signature', 'certificationRequest.userSignature', 'certificationRequest.credential', 'user'])
-            ->with(['certificationRequest.certification.managementSignature.signature',  'certificationRequest.credential', 'user'])
+            ->with([
+                'certificationRequest.certification.managementSignature.signature',
+                'certificationRequest.certification.secretarySignature.signature',
+                'certificationRequest.credential',
+                'user'
+            ])
             ->latest()
             ->paginate();
 
@@ -176,7 +186,11 @@ class MembershipController extends Controller
         // load the certification and management signature
         // 'user', 'userSignature', 'credential', 'certification', 'membership'
         // $membership->load(['certificationRequest.certification.managementSignature.signature', 'certificationRequest.userSignature', 'certificationRequest.credential', 'user']);
-        $membership->load(['certificationRequest.certification.managementSignature.signature', 'certificationRequest.credential', 'user']);
+        $membership->load([
+            'certificationRequest.certification.managementSignature.signature', 
+            'certificationRequest.certification.secretarySignature.signature',  
+            'certificationRequest.credential', 'user'
+        ]);
 
         // Transform the membership into a resource
         $response = new MembershipResource($membership);
@@ -204,7 +218,12 @@ class MembershipController extends Controller
         // load the certification and management signature
         // 'user', 'userSignature', 'credential', 'certification', 'membership'
         // $membership->load(['certificationRequest.certification.managementSignature.signature', 'certificationRequest.userSignature', 'certificationRequest.credential', 'user']);
-        $membership->load(['certificationRequest.certification.managementSignature.signature', 'certificationRequest.credential', 'user']);
+        $membership->load([
+            'certificationRequest.certification.managementSignature.signature',
+            'certificationRequest.certification.secretarySignature.signature',
+            'certificationRequest.credential',
+            'user'
+        ]);
 
         // Transform the membership into a resource
         $response = new MembershipResource($membership);

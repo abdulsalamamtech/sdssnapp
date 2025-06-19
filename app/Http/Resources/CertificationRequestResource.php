@@ -20,7 +20,7 @@ class CertificationRequestResource extends JsonResource
             'user_id' => $this->user_id,
             'certification_id' => $this->certification_id,
             'full_name' => $this->full_name,
-            'user_signature_id' => $this->user_signature_id,
+            // 'user_signature_id' => $this->user_signature_id,
             'reason_for_certification' => $this->reason_for_certification,
             'management_note' => $this->management_note,
             'credential_id' => $this->credential_id,

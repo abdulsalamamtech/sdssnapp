@@ -22,7 +22,8 @@ class StoreCertificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'management_signature_id' => 'nullable|exists:management_signatures,id',
+            'management_signature_id' => 'required|exists:management_signatures,id',
+            'secretary_signature_id' => 'required|exists:management_signatures,id',
             'organization_name' => 'nullable|string|max:255',
             'title' => 'nullable|unique:certifications,title|string|max:255',
             'type' => 'nullable|string|max:255',

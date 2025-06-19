@@ -20,6 +20,11 @@ class CertificationRequest extends Model
         'status',
     ];
 
+    // hidden 
+    protected $hidden = [
+        'user_signature_id',
+    ];
+
     /**
      * The attributes that should be cast to native types.
      *

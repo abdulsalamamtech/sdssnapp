@@ -16,7 +16,11 @@ class CertificationController extends Controller
      */
     public function index()
     {
-        $certifications = Certification::with(['ManagementSignature.signature', 'createdBy'])->latest()->paginate();
+        $certifications = Certification::with([
+            'managementSignature.signature', 
+            'secretarySignature.signature', 
+            'createdBy'
+            ])->latest()->paginate();
         // Check if there are any certifications
         if ($certifications->isEmpty()) {
             return ApiResponse::error([], 'No certifications found', 404);
@@ -32,13 +36,17 @@ class CertificationController extends Controller
     public function store(StoreCertificationRequest $request)
     {
         $data = $request->validated();
+        // check if the management and secretary is the same
+        if ($data['management_signature_id'] === $data['secretary_signature_id']) {
+            return ApiResponse::error([], 'The president and secretary signature cannot be the same!, please reselect the secretary signature', 400);
+        }
         try {
             //code...
             DB::beginTransaction();
             // create by the authenticated user
             $data['created_by'] = auth()?->user()->id; // Set the created_by field to the authenticated user
             $certification = Certification::create($data);
-            $certification->load(['ManagementSignature.signature', 'createdBy']);
+            $certification->load(['managementSignature.signature', 'secretarySignature.signature', 'createdBy']);
             // Log the successful creation of the certification
             info('Certification created successfully: ' . $certification->id);
             $response = new CertificationResource($certification);
@@ -59,7 +67,7 @@ class CertificationController extends Controller
      */
     public function show(Certification $certification)
     {
-        $certification->load(['ManagementSignature.signature', 'createdBy']);
+        $certification->load(['managementSignature.signature', 'secretarySignature.signature', 'createdBy']);
         // response resource
         $response = new CertificationResource($certification);
         return ApiResponse::success($response, 'Certification retrieved successfully.');
@@ -71,6 +79,10 @@ class CertificationController extends Controller
     public function update(UpdateCertificationRequest $request, Certification $certification)
     {
         $data = $request->validated();
+        // check if the management and secretary is the same
+        if ($data['management_signature_id'] === $data['secretary_signature_id']) {
+            return ApiResponse::error([], 'The president and secretary signature cannot be the same!, please reselect the secretary signature', 400);
+        }
         try {
             //code...
             DB::beginTransaction();
@@ -82,7 +94,7 @@ class CertificationController extends Controller
                 unset($data['management_signature_id']);
             }
             $certification->update($data);
-            $certification->load(['ManagementSignature.signature', 'createdBy']);
+            $certification->load(['managementSignature.signature', 'secretarySignature.signature', 'createdBy']);
             $response = new CertificationResource($certification);
             DB::commit(); // Commit the transaction if everything is successful
             // Return the updated certification resource

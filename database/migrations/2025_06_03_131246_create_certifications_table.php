@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('certifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('management_signature_id')->nullable()->constrained('management_signatures')->nullOnDelete('cascade');
+            $table->foreignId('management_signature_id')->nullable()->constrained('management_signatures')->nullOnDelete();
+            $table->foreignId('secretary_signature_id')->nullable()->constrained('management_signatures')->nullOnDelete();
             $table->string('organization_name')->nullable()->default('Spatial And Data Science Society Of Nigeria');
             $table->string('title')->unique()->nullable()->default('Certified Spatial and Data Scientist');
             $table->string('type')->nullable()->default('Professional Certification');
