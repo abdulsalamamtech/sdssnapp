@@ -10,9 +10,10 @@ class Certification extends Model
     use SoftDeletes;
     protected $fillable = [
         'management_signature_id',
-        'organization_name',
-        'title',
-        'type',
+        'organization_name', // Spatial and Data Science Society of Nigeria
+        'title', // Certified Spatial and Data Scientist
+        'type', // Professional Certification
+        'for', // individual or organization
         'duration',
         'duration_unit',
         'amount',

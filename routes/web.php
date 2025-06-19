@@ -3,6 +3,7 @@
 
 use App\Mail\NotifyAdminAboutCertificateRequestMail;
 use App\Models\Api\CertificationRequest;
+use App\Models\Api\Membership;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -42,6 +43,20 @@ Route::get('/mail', function (Request $request) {
 
 
 Route::get('/run', function () {
+
+    // return date('s');
+    // $membership_id = 1;
+    // $cert_type = Membership::where('id', $membership_id)?->first();
+    // $cert_type = $cert_type->certificationRequest?->certification?->type;
+    // // get the first 3 letters
+    // $cer_abbr = substr($cert_type, 0, 3);
+    // $uniqid = strtoupper($cer_abbr) . date('y') . '00' . date('s') . $membership_id;
+    // while(App\Models\Api\Membership::where('membership_code', $uniqid)?->exists()){
+    //     $uniqid = strtoupper(uniqid('TIC'));
+    // }
+
+    // return $uniqid;
+
 
     // Using rand
     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';

@@ -20,6 +20,7 @@ class Membership extends Model
         'issued_on',
         'expires_on',
         'serial_no',
+        'membership_code',
         'qr_code',
         'status', // pending, paid
         // $table->string('certificate_status')->nullable()->default('processing'); // processing generated, expired etc

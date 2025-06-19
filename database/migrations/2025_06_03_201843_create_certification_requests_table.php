@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('certification_id')->constrained('certifications')->onDelete('cascade');
             $table->string('full_name');
-            $table->foreignId('user_signature_id')->constrained('assets')->onDelete('cascade');
+            $table->foreignId('user_signature_id')->nullable()->constrained('assets')->onDelete('cascade');
             $table->foreignId('credential_id')->constrained('assets')->onDelete('cascade');
             $table->text('reason_for_certification')->nullable();
             $table->text('management_note')->nullable();

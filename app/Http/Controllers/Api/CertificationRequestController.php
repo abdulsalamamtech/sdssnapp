@@ -67,32 +67,32 @@ class CertificationRequestController extends Controller
             // Handle file upload if signature is provided
             // upload the credential if it exists
             // Upload Asset if exists
-            if ($request->hasFile('signature')) {
-                $cloudinaryImage = $request->file('signature')->storeOnCloudinary('sdssn-app/signatures');
-                // Check if the file was uploaded successfully
-                if (!$cloudinaryImage) {
-                    return ApiResponse::error('Failed to upload signature image.', 500);
-                }
-                // Get the secure URL and public ID from the uploaded file
-                $url = $cloudinaryImage->getSecurePath();
-                $public_id = $cloudinaryImage->getPublicId();
+            // if ($request->hasFile('signature')) {
+            //     $cloudinaryImage = $request->file('signature')->storeOnCloudinary('sdssn-app/signatures');
+            //     // Check if the file was uploaded successfully
+            //     if (!$cloudinaryImage) {
+            //         return ApiResponse::error('Failed to upload signature image.', 500);
+            //     }
+            //     // Get the secure URL and public ID from the uploaded file
+            //     $url = $cloudinaryImage->getSecurePath();
+            //     $public_id = $cloudinaryImage->getPublicId();
 
-                info('User signature image uploaded to Cloudinary: ' . $url);
+            //     info('User signature image uploaded to Cloudinary: ' . $url);
 
-                $asset = Assets::create([
-                    'original_name' => 'user signature image',
-                    'path' => 'image',
-                    'hosted_at' => 'cloudinary',
-                    'name' =>  $cloudinaryImage->getOriginalFileName(),
-                    'description' => 'user signature file upload',
-                    'url' => $url,
-                    'file_id' => $public_id,
-                    'type' => $cloudinaryImage->getFileType(),
-                    'size' => $cloudinaryImage->getSize(),
-                ]);
+            //     $asset = Assets::create([
+            //         'original_name' => 'user signature image',
+            //         'path' => 'image',
+            //         'hosted_at' => 'cloudinary',
+            //         'name' =>  $cloudinaryImage->getOriginalFileName(),
+            //         'description' => 'user signature file upload',
+            //         'url' => $url,
+            //         'file_id' => $public_id,
+            //         'type' => $cloudinaryImage->getFileType(),
+            //         'size' => $cloudinaryImage->getSize(),
+            //     ]);
 
-                $data['user_signature_id'] = $asset->id;
-            }
+            //     $data['user_signature_id'] = $asset->id;
+            // }
 
             // upload the credential if it exists
             // Upload Asset if exists
@@ -151,7 +151,9 @@ class CertificationRequestController extends Controller
      */
     public function show(CertificationRequest $certificationRequest)
     {
-        $certificationRequest->load(['user', 'userSignature', 'credential', 'certification', 'membership']);
+        // $certificationRequest->load(['user', 'userSignature', 'credential', 'certification', 'membership']);
+        $certificationRequest->load(['user', 'credential', 'certification', 'membership']);
+
         // Check if the certification request exists
         if (!$certificationRequest) {
             return ApiResponse::error([], 'Certification request not found', 404);
@@ -448,6 +450,13 @@ class CertificationRequestController extends Controller
                 strtotime('+ ' . $certificationRequest->certification->duration . '' . $certificationRequest->certification->duration_unit)
             ),
         ]);
+
+        // membership code
+        $membership_code = CustomGenerator::generateMembershipCode($membership->id);
+        // log the membership code
+        info('Membership code created successfully: ' . $membership_code);
+        $membership->membership_code = $membership_code;
+        $membership->save();
 
         // Log the successful creation of the membership
         info('Membership created successfully: ' . $membership->id);

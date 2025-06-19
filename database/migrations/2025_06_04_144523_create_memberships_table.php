@@ -24,7 +24,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('certification_request_id')->constrained('certification_requests')->onDelete('cascade');
             $table->string('full_name');
-            $table->string('serial_no');
+            $table->string('serial_no')->unique();
+            $table->string('membership_code')->nullable()->unique();
             $table->date('issued_on');
             $table->date('expires_on');
             // config('app.frontend_certificate_verify_url') . $serial_no

@@ -18,6 +18,26 @@ class CustomGenerator {
         return $uniqid;
     }
 
+    // generateMembershipCode
+    public static function generateMembershipCode($membership_id){
+        // $membership_id = 1;
+        $cert_type = Membership::where('id', $membership_id)?->first();
+        // $certificationRequest->certification->abbreviation_code
+        if($cert_type?->certificationRequest?->certification?->abbreviation_code){
+            $cert_type = $cert_type?->certificationRequest?->certification?->abbreviation_code;
+        }else{
+            $cert_type = $cert_type?->certificationRequest?->certification?->type;
+        }
+        // get the first 3 letters
+        $cer_abbr = substr($cert_type, 0, 3);
+        $uniqid = strtoupper($cer_abbr) . date('y') . '00' . date('s') . $membership_id;
+        while(Membership::where('membership_code', $uniqid)?->exists()){
+            $uniqid = strtoupper($cer_abbr) . date('y') . '00' . date('s') . $membership_id;
+        }
+
+        return $uniqid;
+    }
+
     public static function generateUniqueName($length = 10) {
         $characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
         $randomString = '';

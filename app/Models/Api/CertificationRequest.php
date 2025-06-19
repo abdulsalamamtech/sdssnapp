@@ -13,7 +13,7 @@ class CertificationRequest extends Model
         'user_id',
         'certification_id',
         'full_name',
-        'user_signature_id',
+        // 'user_signature_id',
         'reason_for_certification',
         'management_note',
         'credential_id',
@@ -49,10 +49,10 @@ class CertificationRequest extends Model
     /**
      * Get the user signature associated with the request.
      */
-    public function userSignature()
-    {
-        return $this->belongsTo('App\Models\Assets', 'user_signature_id');
-    }
+    // public function userSignature()
+    // {
+    //     return $this->belongsTo('App\Models\Assets', 'user_signature_id');
+    // }
     /**
      * Get the credential associated with the request.
      */

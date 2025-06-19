@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('certifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('management_signature_id')->nullable()->constrained('management_signatures')->nullOnDelete('cascade');
-            $table->string('organization_name')->nullable()->default('Spatial and Data Science Society of Nigeria');
+            $table->string('organization_name')->nullable()->default('Spatial And Data Science Society Of Nigeria');
             $table->string('title')->unique()->nullable()->default('Certified Spatial and Data Scientist');
             $table->string('type')->nullable()->default('Professional Certification');
+            // code
+            $table->string('abbreviation_code')->nullable()->default('CER');
+            // individual or organization
+            $table->string('for')->default('individual');
             // duration in months
             $table->integer('duration')->nullable()->default(2);
             // length of month, years, or weeks
