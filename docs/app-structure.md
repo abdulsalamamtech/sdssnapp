@@ -424,3 +424,10 @@ To create a virtual wallet account [paystack]
 ## issues
 private articles
 profile pics
+
+
+
+
+echo "🔄 Running migrations..."
+php artisan migrate:refresh --step=6
+php artisan migrate --force
