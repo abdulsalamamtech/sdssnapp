@@ -71,7 +71,7 @@
 
         /* Main */
         .main {
-            padding: 30px 0px;
+            padding: 30px 0px 10px;
         }
 
         /* Content Area */
@@ -171,10 +171,10 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">
-                {{-- <img src="https://sdssn.org/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-new-white.897aba2b.png&w=1920&q=75"
-                    alt="" /> --}}
+                <img src="https://sdssn.org/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-new-white.897aba2b.png&w=1920&q=75"
+                    alt="" />
                 {{-- add log from public path --}}
-                <img src="{{ asset('/images/logo-new-white.png') }}" alt="" />
+                {{-- <img src="{{ asset('/images/logo-new-white.png') }}" alt="" /> --}}
             </div>
             <p>
                 Spatial Data Science Society Of Nigeria (SDSSN) is a
@@ -201,13 +201,14 @@
         </div>
         <!-- End of main content -->
 
+        <hr />
+
         <!-- Outro -->
         <div class="content">
-            <hr />
             <p>For more details</p>
             <p>
                 visit our website:
-                <a href="https://www.sdssn.org" target="_blank">www.sdssn.org</a>
+                <a href="https://sdssn.org" target="_blank">https://sdssn.org</a>
             </p>
             <p>
                 send us a message:
