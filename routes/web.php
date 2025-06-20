@@ -25,7 +25,7 @@ require __DIR__ . '/auth.php';
 
 Route::get('/mail', function (Request $request) {
 
-    $certificationRequest = CertificationRequest::find(5); // Assuming you have a certification request with ID 1
+    $certificationRequest = CertificationRequest::find(1); // Assuming you have a certification request with ID 1
     // Mail::to('abdulsalamamtech@gmail.com')->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
     Mail::to('abdulsalamamtech@gmail.com')->send(new CertificationRequestRejectedMail($certificationRequest));
 
