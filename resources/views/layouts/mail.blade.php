@@ -69,17 +69,18 @@
             opacity: 0.9;
         }
 
+        /* Main */
+        .main {
+            padding: 30px 0px;
+        }
+
         /* Content Area */
         .content {
-            padding: 10px;
             color: #333333;
             line-height: 1.6;
             font-size: 16px;
         }
 
-        .main {
-            padding: 20px 0px;
-        }
 
         .content h2 {
             color: #2c3e50;
@@ -184,17 +185,19 @@
         </div>
 
         <!-- Main Content -->
-        <div class="content main">
+        <div class="main">
+            <div class="content">
 
-            {{-- Yield content from other page --}}
-            @yield('content')
+                {{-- Yield content from other page --}}
+                @yield('content')
 
 
-            <!-- signature -->
-            <p>
-                Regards,<br />
-                SDSSN
-            </p>
+                <!-- signature -->
+                <p>
+                    Regards,<br />
+                    SDSSN
+                </p>
+            </div>
         </div>
         <!-- End of main content -->
 
