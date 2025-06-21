@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\CertificationRequestedProceedEvent;
+use App\Mail\CertificationRequestSubmittedMail;
 use App\Mail\NotifyAdminAboutCertificateRequestMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -40,5 +41,8 @@ class NotifyAdminAboutCertificateRequestListener
         // Send an email or notification to the admin
         // NotifyAdminAboutCertificateRequestMail 
         Mail::to('abdulsalamamtech@gmail.com')->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
+        // Send an email to the user
+        // CertificationRequestSubmittedMail
+        Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestSubmittedMail($certificationRequest));
     }
 }

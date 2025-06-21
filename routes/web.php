@@ -1,6 +1,8 @@
 <?php
 
+use App\Mail\CertificationRequestApprovedMail;
 use App\Mail\CertificationRequestRejectedMail;
+use App\Mail\CertificationRequestSubmittedMail;
 use App\Mail\NotifyAdminAboutCertificateRequestMail;
 use App\Models\Api\CertificationRequest;
 use App\Models\Api\Membership;
@@ -25,9 +27,18 @@ require __DIR__ . '/auth.php';
 
 Route::get('/mail', function (Request $request) {
 
-    $certificationRequest = CertificationRequest::find(5); // Assuming you have a certification request with ID 1
-    Mail::to('abdulsalamamtech@gmail.com')->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
-    Mail::to('abdulsalamamtech@gmail.com')->send(new CertificationRequestRejectedMail($certificationRequest));
+    $certificationRequest = CertificationRequest::find(1); // Assuming you have a certification request with ID 1
+    // Mail::to('abdulsalamamtech@gmail.com')->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
+    // Mail::to('abdulsalamamtech@gmail.com')->send(new CertificationRequestRejectedMail($certificationRequest));
+    // Mail::to('abdulsalamamtech@gmail.com')->send(new CertificationRequestApprovedMail($certificationRequest));
+
+    // Mail::to($certificationRequest?->user?->email)->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
+    // Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestRejectedMail($certificationRequest));
+    // Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestApprovedMail($certificationRequest));
+    Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestSubmittedMail($certificationRequest));
+
+    info('mail sent: ', [$certificationRequest->user->email]);
+
 
     return "DONE";
 

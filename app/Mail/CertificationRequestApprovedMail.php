@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 class CertificationRequestApprovedMail extends Mailable
 {
     use Queueable, SerializesModels;
-    
+
     /**
      * The certification request instance.
      *
@@ -33,8 +33,15 @@ class CertificationRequestApprovedMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        info('Sending email to user about certification request approval: ' . $this->certificationRequest->id);
+        info('Certification Request Details: ', [
+            'email' => $this->certificationRequest->user->email,
+            'user_id' => $this->certificationRequest->user_id,
+            'full_name' => $this->certificationRequest->full_name,
+            'status' => $this->certificationRequest->status,
+        ]);
         return new Envelope(
-            subject: 'Certification Request Approved Mail',
+            subject: 'Certification Request Approved',
         );
     }
 
@@ -45,6 +52,9 @@ class CertificationRequestApprovedMail extends Mailable
     {
         return new Content(
             view: 'mail.certification-request-approved-mail',
+            with: [
+                'certificationRequest' => $this->certificationRequest,
+            ],            
         );
     }
 

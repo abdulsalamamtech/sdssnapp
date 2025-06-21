@@ -34,7 +34,7 @@ class NotifyAdminAboutCertificateRequestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notify Admin About Certificate Request Mail',
+            subject: 'Notification For Certificate Request',
         );
     }
 
@@ -45,6 +45,7 @@ class NotifyAdminAboutCertificateRequestMail extends Mailable
     {
         info('Sending email to admin about certification request: ' . $this->certificationRequest->id);
         info('Certification Request Details: ', [
+            'email' => $this->certificationRequest->user->email,
             'user_id' => $this->certificationRequest->user_id,
             'full_name' => $this->certificationRequest->full_name,
             'status' => $this->certificationRequest->status,

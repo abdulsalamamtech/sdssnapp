@@ -10,26 +10,26 @@
         <!-- Salutation -->
         <h2>Dear {{ $certificationRequest?->full_name }},</h2>
         <p>
-            Thank you for your application for the
+            We are thrilled to inform you that your application for the 
             {{ $certificationRequest?->certification->title }}
             {{ $certificationRequest?->certification->type }}
-            certification.
+            certification has been approved! Congratulations on 
+            successfully meeting all the necessary requirements.
         </p>
         <p>
-            After review, we regret to inform you that we are unable
-            to approve your certification at this time.
-            Your application did not meet the necessary requirements.
+            To complete your certification and receive your certificate, 
+            please log in to your 
+            <a href="http://sdssn.org/auth/login" target="_blank" rel="noopener noreferrer">dashboard</a>
+             to make the payment.
         </p>
         <p>
             {{-- quoted word --}}
-        <blockquote>
-            {{ $certificationRequest?->management_note }}
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit tempore ratione consequatur, exercitationem
-            quidem saepe culpa mollitia cum dolorem vel.
-        </blockquote>
+            <blockquote>
+                {{ $certificationRequest?->management_note }}
+            </blockquote>
         </p>
         <p>
-            We encourage you to review our certification requirements and consider reapplying.
+            Congratulations again, and we look forward to your continued success!
         </p>
 
 @endsection

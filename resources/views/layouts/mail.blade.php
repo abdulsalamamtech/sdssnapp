@@ -194,7 +194,7 @@
 
                 <!-- signature -->
                 <p>
-                    Regards,<br />
+                    Sincerely,<br />
                     SDSSN
                 </p>
             </div>
@@ -208,7 +208,9 @@
             <p>For more details</p>
             <p>
                 visit our website:
-                <a href="https://sdssn.org" target="_blank">https://sdssn.org</a>
+                <a href="{{ config('app.frontend_url') ?? 'https://sdssn.org' }}" target="_blank">
+                    {{ config('app.frontend_url') ?? 'https://sdssn.org' }}
+                </a>
             </p>
             <p>
                 send us a message:
@@ -222,9 +224,13 @@
             <p>&copy; 2025 SDSSN. All rights reserved.</p>
             <p>No. 234 AMAC, Federal Capital Territory, Abuja</p>
             <p>
-                <a href="https://www.sdssn.org/#unsubscribe" target="_blank">Unsubscribe</a>
+                <a href="{{ config('app.frontend_url') ?? 'https://sdssn.org' }}/#unsubscribe"
+                    target="_blank">Unsubscribe
+                </a>
                 |
-                <a href="https://www.sdssn.org/terms" target="_blank">Terms of service</a>
+                <a href="{{ config('app.frontend_url') ?? 'https://sdssn.org' }}/terms" target="_blank">Terms of
+                    service
+                </a>
             </p>
         </div>
     </div>

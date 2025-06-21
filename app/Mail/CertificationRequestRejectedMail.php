@@ -45,6 +45,7 @@ class CertificationRequestRejectedMail extends Mailable
     {
         info('Sending email to user about certification request rejection: ' . $this->certificationRequest->id);
         info('Certification Request Details: ', [
+            'email' => $this->certificationRequest->user->email,
             'user_id' => $this->certificationRequest->user_id,
             'full_name' => $this->certificationRequest->full_name,
             'status' => $this->certificationRequest->status,
