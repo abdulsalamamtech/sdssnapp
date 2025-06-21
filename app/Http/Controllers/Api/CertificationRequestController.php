@@ -236,6 +236,8 @@ class CertificationRequestController extends Controller
             // Update the certification request with the validated data
             $certificationRequest->update($data);
             // $certificationRequest->load(['membership', 'certification']);
+            $certificationRequest->load(['membership']);
+
             // Log the successful update of the certification request
             info('Certification request updated successfully: ' . $certificationRequest->id);
             $response = new CertificationRequestResource($certificationRequest);
