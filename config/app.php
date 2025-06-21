@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // App mail address
+    'app_mail_address' => env('APP_MAIL_ADDRESS', 'info.sdssn@gmail.com'),
     // Log viewer
     'log_viewer_token' => env('LOG_VIEWER_TOKEN', 'your-log-viewer-token'),
 
