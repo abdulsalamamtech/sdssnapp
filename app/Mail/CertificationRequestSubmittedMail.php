@@ -26,6 +26,8 @@ class CertificationRequestSubmittedMail extends Mailable
     public function __construct($certificationRequest)
     {
         $this->certificationRequest = $certificationRequest;
+        $this->afterCommit();
+
     }
 
 

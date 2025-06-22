@@ -20,6 +20,8 @@ class CertificationResource extends JsonResource
             'title' => $this->title,
             'organization_name'  => $this->organization_name,
             'type'  => $this->type,
+            'for' => $this->for,
+            'abbreviation_code' => $this->abbreviation_code,
             'duration'  => $this->duration,
             'duration_unit'  => $this->duration_unit,
             'amount'  => $this->amount,

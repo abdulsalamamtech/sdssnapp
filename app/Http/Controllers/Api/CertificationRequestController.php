@@ -189,13 +189,25 @@ class CertificationRequestController extends Controller
             // Begin a database transaction
             DB::beginTransaction();
 
+
+            // // Check if the certification request is pending send a mail to the user for rejection
+            if ($certificationRequest->status === 'pending' && $data['status'] === 'rejected') {
+                // Here you can send an email to the user notifying them of the rejection
+                Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestRejectedMail($certificationRequest));
+            }
+
+            // Check if the certification request is already approved
+            if ($certificationRequest->status === 'approved' && $data['status'] == 'approved') {
+                return ApiResponse::error([], 'Certification request already approved', 403);
+            }
+
+
             // Check if the certification request is rejected or pending and the new status is approved, send a mail to the user
             if (($certificationRequest->status === 'pending' || $certificationRequest->status === 'rejected')
                 && $data['status'] === 'approved'
             ) {
-                // Here you can send an email to the user notifying them of the approval
-                Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestApprovedMail($certificationRequest));
-                
+
+
                 // $serial_no = CustomGenerator::generateCertificateSerialNo();
                 // $req = [
                 //     'user_id' => $certificationRequest->user_id,
@@ -219,22 +231,20 @@ class CertificationRequestController extends Controller
                     if (!$membership) {
                         return ApiResponse::error([], 'Failed to create membership for the user', 500);
                     }
+
+                    // Update the certification request with the validated data
+                    $certificationRequest->update($data);
+
+                    // Here you can send an email to the user notifying them of the approval
+                    Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestApprovedMail($certificationRequest));
                 }
             }
 
-            // // Check if the certification request is pending send a mail to the user for rejection
-            if ($certificationRequest->status === 'pending' && $data['status'] === 'rejected') {
-                // Here you can send an email to the user notifying them of the rejection
-                Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestRejectedMail($certificationRequest));
-            }
 
-            // Check if the certification request is already approved
-            if ($certificationRequest->status === 'approved' && $data['status'] == 'approved') {
-                return ApiResponse::error([], 'Certification request already approved', 403);
-            }
-            
             // Update the certification request with the validated data
             $certificationRequest->update($data);
+
+
             // $certificationRequest->load(['membership', 'certification']);
             $certificationRequest->load(['membership']);
 
@@ -242,7 +252,7 @@ class CertificationRequestController extends Controller
             info('Certification request updated successfully: ' . $certificationRequest->id);
             $response = new CertificationRequestResource($certificationRequest);
             // Commit the transaction if everything is successful
-            DB::commit(); 
+            DB::commit();
             // Return the updated certification request resource
             return ApiResponse::success($response, 'Certification request updated successfully.');
         } catch (\Exception $e) {
@@ -263,7 +273,7 @@ class CertificationRequestController extends Controller
             // Begin a database transaction
             DB::beginTransaction();
 
-            if($certificationRequest->status !== 'rejected' || $certificationRequest->membership){
+            if ($certificationRequest->status !== 'rejected' || $certificationRequest->membership) {
                 return ApiResponse::error([], 'you can only delete rejected certification request', 500);
             }
             // Delete the certification request

@@ -15,6 +15,7 @@ class Certification extends Model
         'title', // Certified Spatial and Data Scientist
         'type', // Professional Certification
         'for', // individual or organization
+        'abbreviation_code', // GRT, CER
         'duration',
         'duration_unit',
         'amount',
