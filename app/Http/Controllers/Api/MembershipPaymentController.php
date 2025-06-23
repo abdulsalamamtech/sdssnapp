@@ -8,10 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMembershipPaymentRequest;
 use App\Http\Requests\UpdateMembershipPaymentRequest;
 use App\Http\Resources\MembershipPaymentResource;
+use App\Mail\CertificateAndMembershipConfirmed;
 use App\Models\Api\Membership;
 use App\Models\Api\MembershipPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class MembershipPaymentController extends Controller
 {
@@ -218,6 +220,10 @@ class MembershipPaymentController extends Controller
 
 
                         }
+
+                        // Send email to user
+                        Mail::to($membershipPayment?->user?->email)
+                            ->send(new CertificateAndMembershipConfirmed($membershipPayment->membership));
 
                         // Testing
                         // $membership->issued_on = now();
