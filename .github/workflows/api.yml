@@ -29,7 +29,7 @@ jobs:
             # php artisan migrate --force  # Migrate the database
             # php artisan db:seed --force
             # refresh 7 db
-            php artisan migrate:refresh --step=6
+            php artisan migrate:refresh --step=7
 
             php artisan migrate --force  # Migrate the database
             php artisan cache:clear  # Clear the cache
