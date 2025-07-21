@@ -431,3 +431,7 @@ profile pics
 echo "🔄 Running migrations..."
 php artisan migrate:refresh --step=6
 php artisan migrate --force
+
+
+# refresh 7 db
+php artisan migrate:refresh --step=7
