@@ -23,7 +23,7 @@ class CertificationController extends Controller
             ])->latest()->paginate();
         // Check if there are any certifications
         if ($certifications->isEmpty()) {
-            return ApiResponse::error([], 'No certifications found', 404);
+            return ApiResponse::error([], 'coming soon', 404);
         }
         $data = CertificationResource::collection($certifications);
         // Return the certifications resource
@@ -137,7 +137,7 @@ class CertificationController extends Controller
         $certifications = Certification::latest()->limit(6)->paginate(6);
         // Check if there are any certifications
         if ($certifications->isEmpty()) {
-            return ApiResponse::error([], 'No certifications found', 404);
+            return ApiResponse::error([], 'coming soon', 404);
         }
         $data = CertificationResource::collection($certifications);
         // Return the certifications resource
