@@ -35,7 +35,7 @@ class StoreCertificationRequest extends FormRequest
             'duration_unit' => 'nullable|string|in:weeks,months,years',
             'requirements' => 'nullable|string|max:10000',
             'benefits' => 'nullable|string|max:10000',
-            'initial_amount' => 'required|numeric|min:0',
+            // 'initial_amount' => 'required|numeric|min:0',
             'targets' => 'nullable|string|max:10000',
             // 'created_by' => 'nullable|exists:users,id',
             // 'updated_by' => 'nullable|exists:users,id',
