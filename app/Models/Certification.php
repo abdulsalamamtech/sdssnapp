@@ -24,6 +24,8 @@ class Certification extends Model
         'created_by',
         'updated_by',
         'deleted_by',
+        'initial_amount', // New column for initial amount
+        'targets', // New column for targets
     ];
 
     protected $casts = [
@@ -35,14 +37,23 @@ class Certification extends Model
         'deleted_by' => 'integer',
     ];
 
+
+    // When you fetch a model from the database, Eloquent populates this $attributes array with the corresponding column values.
+    // When you save or update a model, Eloquent uses the values in this array to interact with the database.
     protected $attributes = [
         'organization_name' => 'Spatial and Data Science Society of Nigeria',
         'title' => 'Certified Spatial and Data Scientist',
-        'type' => 'Professional Certification',
+        // 'type' => 'Professional Certification',
         'duration' => 2,
         'duration_unit' => 'years',
-        'benefits' => 'Access to exclusive resources, networking opportunities, and professional development workshops.',
+        // 'benefits' => 'Access to exclusive resources, networking opportunities, and professional development workshops.',
     ];
+
+ 
+    // public function setAmountAttribute($value)
+    // {
+    //     $this->attributes['amount'] = is_numeric($value) ? number_format($value, 2, '.', '') : $value;
+    // }
 
     public function managementSignature()
     {

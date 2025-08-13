@@ -17,10 +17,10 @@ class CertificationController extends Controller
     public function index()
     {
         $certifications = Certification::with([
-            'managementSignature.signature', 
-            'secretarySignature.signature', 
+            'managementSignature.signature',
+            'secretarySignature.signature',
             'createdBy'
-            ])->latest()->paginate();
+        ])->latest()->paginate();
         // Check if there are any certifications
         if ($certifications->isEmpty()) {
             return ApiResponse::error([], 'coming soon', 404);
@@ -45,6 +45,13 @@ class CertificationController extends Controller
             DB::beginTransaction();
             // create by the authenticated user
             $data['created_by'] = auth()?->user()->id; // Set the created_by field to the authenticated user
+            // initial_amount is 10% of the amount
+            if (!isset($data['initial_amount']) && !$data['initial_amount']) {
+                // If initial_amount is provided, use it
+                // $data['initial_amount'] = number_format($data['initial_amount'], 2, '.', '');
+                // If initial_amount is not provided, calculate it as 10% of the amount
+                $data['initial_amount'] = $data['amount'] + (($data['amount'] * 10) / 100); // Set initial_amount if not provided
+            }
             $certification = Certification::create($data);
             $certification->load(['managementSignature.signature', 'secretarySignature.signature', 'createdBy']);
             // Log the successful creation of the certification

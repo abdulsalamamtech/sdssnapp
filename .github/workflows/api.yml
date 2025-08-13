@@ -28,7 +28,8 @@ jobs:
             
             # php artisan migrate --force  # Migrate the database
             # php artisan db:seed --force
-
+            
+            echo "🔄 Running migrations..."
             php artisan migrate --force  # Migrate the database
             php artisan cache:clear  # Clear the cache
             php artisan view:clear  # Clear the view cache
