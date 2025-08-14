@@ -33,9 +33,10 @@ class UpdateCertificationRequest extends FormRequest
             'duration' => 'nullable|integer|min:1',
             'amount' => 'required|numeric|min:0',
             'duration_unit' => 'nullable|string|in:weeks,months,years',
-            'requirements' => 'nullable|string|max:1000',
-            'benefits' => 'nullable|string|max:1000',
-            'targets' => 'nullable|string|max:10000',
+
+            'requirements' => 'nullable|string',
+            'benefits' => 'nullable|string',
+            'targets' => 'nullable|string',
             // 'created_by' => 'nullable|exists:users,id',
             // 'updated_by' => 'nullable|exists:users,id',
             // 'deleted_by' => 'nullable|exists:users,id',
