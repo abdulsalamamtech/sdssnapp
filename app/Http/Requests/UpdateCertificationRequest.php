@@ -33,6 +33,7 @@ class UpdateCertificationRequest extends FormRequest
             'duration' => 'nullable|integer|min:1',
             'amount' => 'required|numeric|min:0',
             'duration_unit' => 'nullable|string|in:weeks,months,years',
+            'initial_amount' => 'nullable|numeric|min:0',
 
             'requirements' => 'nullable|string',
             'benefits' => 'nullable|string',

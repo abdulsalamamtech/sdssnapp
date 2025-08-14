@@ -27,6 +27,7 @@ class CertificationResource extends JsonResource
             'amount'  => $this->amount,
             'benefits'  => $this->benefits,
             'requirements'  => $this->requirements,
+            'initial_amount' => $this->initial_amount,
             // targets
             'targets'  => $this->targets,
             'management_signature' => $this->whenLoaded('managementSignature', function () {
