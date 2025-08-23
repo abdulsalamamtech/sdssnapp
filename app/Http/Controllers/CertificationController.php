@@ -95,6 +95,14 @@ class CertificationController extends Controller
             DB::beginTransaction();
             // update by the authenticated user
             $data['updated_by'] = auth()?->user()?->id; // Set the updated_by field to the authenticated user
+
+            // initial_amount is 10% of the amount
+            if (!isset($data['initial_amount']) && !$data['initial_amount'] && !$certification?->initial_amount && isset($data['amount'])) {
+                // If initial_amount is provided, use it
+                // $data['initial_amount'] = number_format($data['initial_amount'], 2, '.', '');
+                // If initial_amount is not provided, calculate it as 10% of the amount
+                $data['initial_amount'] = $data['amount'] + (($data['amount'] * 10) / 100); // Set initial_amount if not provided
+            }
             // Update the certification
             if (isset($data['management_signature_id']) && $data['management_signature_id'] === null) {
                 // If management_signature_id is null, remove it from the data array
