@@ -208,6 +208,8 @@ Route::get('verify-memberships/{membership:serial_no}', [MembershipController::c
 
 // Certifications routes
 Route::get('certifications', [CertificationController::class, 'available']);
+Route::get('certifications/{certification}', [CertificationController::class, 'showAvailable']);
+
 
 // Quest Messages route
 Route::post('/quest-messages', [MessageController::class, 'store']);
