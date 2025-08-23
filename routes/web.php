@@ -28,7 +28,7 @@ require __DIR__ . '/auth.php';
 
 Route::get('/mail', function (Request $request) {
 
-    $certificationRequest = CertificationRequest::find(2); // Assuming you have a certification request with ID 1
+    $certificationRequest = CertificationRequest::find(1); // Assuming you have a certification request with ID 1
     // Mail::to('abdulsalamamtech@gmail.com')->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
     // Mail::to('abdulsalamamtech@gmail.com')->send(new CertificationRequestRejectedMail($certificationRequest));
     // Mail::to('abdulsalamamtech@gmail.com')->send(new CertificationRequestApprovedMail($certificationRequest));
@@ -39,16 +39,16 @@ Route::get('/mail', function (Request $request) {
     // Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestApprovedMail($certificationRequest));
 
 
-    Mail::to($certificationRequest?->user?->email)->send(new CertificateAndMembershipConfirmed($certificationRequest->membership));
-    info('mail sent: ', [$certificationRequest->user->email]);
+    // Mail::to($certificationRequest?->user?->email)->send(new CertificateAndMembershipConfirmed($certificationRequest->membership));
+    // info('mail sent: ', [$certificationRequest->user->email]);
 
 
-    return "DONE";
+    // return "DONE";
 
-    // $send = Mail::raw('This is a test email, from: SDSSN', function ($message) {
-    //     $message->to('abdulsalamamtech@gmail.com')->subject('Test Email: ' . now());
-    // });
-    // return $send ? "done" : "fail";
+    $send = Mail::raw('This is a test email, from: SDSSN', function ($message) {
+        $message->to('abdulsalamamtech@gmail.com')->subject('Test Email: ' . now());
+    });
+    return $send ? "done" : "fail";
 });
 
 // /home/amtech/Desktop/projects/sdssnapp/resources/views/custom/tawk/index.blade.php
