@@ -49,7 +49,7 @@ class CertificationRequestController extends Controller
 
         // certification_id and user_id
         $requestExisted = CertificationRequest::where('certification_id', $data['certification_id'])
-            ->where('user_id', $request->user()->id)
+            ->where('user_id', $request->user()?->id)
             ->first();
         if ($requestExisted) {
             // with record existed status code 
