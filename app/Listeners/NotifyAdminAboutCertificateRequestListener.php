@@ -42,9 +42,9 @@ class NotifyAdminAboutCertificateRequestListener
         // NotifyAdminAboutCertificateRequestMail 
         // config('app_mail_address') // on production
         info('Preparing to send email to admin about certification request: ' . $certificationRequest->id);
-        info('Admin email address: ' . config('app_mail_address'));
+        info('Admin email address: ' . config('app.app_mail_address'));
         // Mail::to('abdulsalamamtech@gmail.com')->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
-        Mail::to(config('app_mail_address'))->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
+        Mail::to(config('app.app_mail_address'))->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
 
         // Send an email to the user
         // CertificationRequestSubmittedMail
