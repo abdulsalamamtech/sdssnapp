@@ -158,4 +158,15 @@ class CertificationController extends Controller
         // Return the certifications resource
         return ApiResponse::success($data, 'certifications retrieved successfully.', 200, $certifications);
     }
+
+
+    /**
+     * [public] Display the specified certification.
+     */
+    public function showAvailable(Certification $certification)
+    {
+        // response resource
+        $response = new CertificationResource($certification);
+        return ApiResponse::success($response, 'Certification retrieved successfully.');
+    }
 }
