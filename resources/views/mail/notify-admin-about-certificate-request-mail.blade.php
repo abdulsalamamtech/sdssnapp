@@ -30,6 +30,15 @@
         </blockquote>
         </p>
 
+        {{-- this document was submitted along with this mail --}}
+        <p>
+            <strong>Document:</strong>
+            <br>
+            <a href="{{ $certificationRequest?->credential?->url }}" target="_blank" rel="noopener noreferrer">
+                View Document
+            </a>
+        </p>
+
         <p>
             Please log in to the
             <a href="http://sdssn.org/admin/login" target="_blank" rel="noopener noreferrer">dashboard</a>
