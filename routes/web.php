@@ -28,13 +28,13 @@ require __DIR__ . '/auth.php';
 
 Route::get('/mail', function (Request $request) {
 
-    $certificationRequest = CertificationRequest::find(1); // Assuming you have a certification request with ID 1
+    return $certificationRequest = CertificationRequest::find(1); // Assuming you have a certification request with ID 1
     // Mail::to('abdulsalamamtech@gmail.com')->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
     // Mail::to('abdulsalamamtech@gmail.com')->send(new CertificationRequestRejectedMail($certificationRequest));
     // Mail::to('abdulsalamamtech@gmail.com')->send(new CertificationRequestApprovedMail($certificationRequest));
 
     // Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestSubmittedMail($certificationRequest));
-    // Mail::to($certificationRequest?->user?->email)->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
+    Mail::to($certificationRequest?->user?->email)->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
     // Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestRejectedMail($certificationRequest));
     // Mail::to($certificationRequest?->user?->email)->send(new CertificationRequestApprovedMail($certificationRequest));
 
