@@ -23,7 +23,7 @@ class StoreCertificationRequestRequest extends FormRequest
     {
         return [
             'certification_id' => 'required|exists:certifications,id',
-            'reason_for_certification' => 'nullable|string|max:1000',
+            'reason_for_certification' => 'nullable|string|max:100000',
             'credential' => 'file|mimes:jpeg,png,pdf,jpg,gif|max:20480', // Optional file upload for credential
             // 'signature' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Optional image upload for signature
             // 'user_id' => 'required|exists:users,id',
