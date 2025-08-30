@@ -302,6 +302,7 @@ class CertificationRequestController extends Controller
             DB::beginTransaction();
             // Update the status to 'approved'
             $certificationRequest->status = 'approved';
+            $certificationRequest->approved_by = request()?->user()?->id;
             $certificationRequest->save();
             // Log the successful approval of the certification request
             info('Certification request approved successfully: ' . $certificationRequest->id);
@@ -326,6 +327,7 @@ class CertificationRequestController extends Controller
             DB::beginTransaction();
             // Update the status to 'rejected'
             $certificationRequest->status = 'rejected';
+            $certificationRequest->rejected_by = request()?->user()?->id;
             $certificationRequest->save();
             // Log the successful rejection of the certification request
             info('Certification request rejected successfully: ' . $certificationRequest->id);

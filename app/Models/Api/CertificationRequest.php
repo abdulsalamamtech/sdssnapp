@@ -18,6 +18,9 @@ class CertificationRequest extends Model
         'management_note',
         'credential_id',
         'status',
+        'created_by',
+        'approved_by',
+        'rejected_by',
     ];
 
     // hidden 
