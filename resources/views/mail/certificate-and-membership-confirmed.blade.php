@@ -45,6 +45,13 @@
         to download your certificate.
     </p>
     <p>
+        Congratulations on becoming a member of SDSSN 🎉 <br>
+        We are excited to celebrate this milestone with you. <br>
+        Would you like to be unveiled as a Member on our platforms? <br>
+        <a href="https://forms.gle/JpTMce5b4qd2KW9X7" target="_blank" rel="noopener noreferrer">Click here</a> to share your
+        bio.
+    </p>
+    <p>
         Congratulations again, and we look forward to your continued success!
     </p>
 @endsection
