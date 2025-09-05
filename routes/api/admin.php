@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\PodcastController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\CertificationController;
 
+use App\Http\Controllers\CredentialController;
 use App\Http\Controllers\ManagementSignatureController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\OurPartnerController;
@@ -21,6 +22,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
+
 
 
 
@@ -142,6 +144,10 @@ Route::prefix('admin')
         // Certification request routes
         Route::apiResource('certification-requests', CertificationRequestController::class)
             ->only(['index', 'show', 'update', 'destroy']);
+
+        // credential routes
+        Route::apiResource('credentials', CredentialController::class)
+            ->only(['index', 'show']);
 
         // Membership routes
         Route::apiResource('memberships', MembershipController::class)
