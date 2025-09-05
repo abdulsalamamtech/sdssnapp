@@ -38,7 +38,9 @@ class CredentialController extends Controller
      */
     public function show(Credential $credential)
     {
-        return ApiResponse::success(new CredentialResource($credential), 'Credential retrieved successfully.');
+        $credential->load(['file', 'createdBy']);
+        $response = new CredentialResource($credential);
+        return ApiResponse::success($response, 'Credential retrieved successfully.');
     }
 
     /**
