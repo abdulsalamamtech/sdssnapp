@@ -123,6 +123,7 @@ class CertificationRequestController extends Controller
                     'size' => $cloudinaryImage->getSize(),
                 ]);
 
+                // It's was supposed to be credential_id but the column name is wrong
                 $data['credential_id'] = $asset->id;
             }
 

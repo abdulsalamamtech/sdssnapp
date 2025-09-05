@@ -6,6 +6,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Requests\StoreCredentialRequest;
 use App\Http\Requests\UpdateCredentialRequest;
 use App\Http\Resources\CredentialResource;
+use App\Models\Assets;
 use App\Models\Credential;
 
 class CredentialController extends Controller
@@ -15,13 +16,13 @@ class CredentialController extends Controller
      */
     public function index()
     {
-        $credentials = Credential::with(['file', 'createdBy'])->get();
-        // Check if there are any credentials
-        if($credentials->isEmpty()){
-            return ApiResponse::error([], 'No credentials found', 404);
-        }
-        $data = CredentialResource::collection($credentials);
-        return ApiResponse::success($data, 'Credential retrieved successfully.');
+        // $credentials = Credential::with(['file', 'createdBy'])->get();
+        // // Check if there are any credentials
+        // if($credentials->isEmpty()){
+        //     return ApiResponse::error([], 'No credentials found', 404);
+        // }
+        // $data = CredentialResource::collection($credentials);
+        // return ApiResponse::success($data, 'Credential retrieved successfully.');
     
     }
 
@@ -36,10 +37,15 @@ class CredentialController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Credential $credential)
+    public function show($credential)
     {
-        $credential->load(['file', 'createdBy']);
-        $response = new CredentialResource($credential);
+        $response = Assets::where('id', $credential)->first();
+        if (!$response) {
+            return ApiResponse::error([], 'Credential not found', 404);
+        }
+        // This mistake was in the previous code at credentialRequest controller too
+        // $credential->load(['file', 'createdBy']);
+        // $response = new CredentialResource($credential);
         return ApiResponse::success($response, 'Credential retrieved successfully.');
     }
 
