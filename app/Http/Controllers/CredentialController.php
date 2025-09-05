@@ -28,32 +28,32 @@ class CredentialController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCredentialRequest $request)
-    {
-        //
-    }
+    // public function store(StoreCredentialRequest $request)
+    // {
+    //     //
+    // }
 
     /**
      * Display the specified resource.
      */
     public function show(Credential $credential)
     {
-        //
+        return ApiResponse::success(new CredentialResource($credential), 'Credential retrieved successfully.');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCredentialRequest $request, Credential $credential)
-    {
-        //
-    }
+    // public function update(UpdateCredentialRequest $request, Credential $credential)
+    // {
+    //     //
+    // }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Credential $credential)
-    {
-        //
-    }
+    // public function destroy(Credential $credential)
+    // {
+    //     //
+    // }
 }
