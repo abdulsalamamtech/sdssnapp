@@ -146,8 +146,8 @@ Route::prefix('admin')
             ->only(['index', 'show', 'update', 'destroy']);
 
         // credential routes
-        Route::apiResource('credentials', CredentialController::class)
-            ->only(['index', 'show']);
+        // Get credential by id
+        Route::get('credentials/{credential}', [CredentialController::class, 'show']);
 
         // Membership routes
         Route::apiResource('memberships', MembershipController::class)
