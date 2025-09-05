@@ -23,7 +23,13 @@ class CredentialController extends Controller
         // }
         // $data = CredentialResource::collection($credentials);
         // return ApiResponse::success($data, 'Credential retrieved successfully.');
-    
+
+        $credentials = Assets::paginate(40);
+        if ($credentials->isEmpty()) {
+            return ApiResponse::error([], 'No asset found', 404);
+        }
+        $data = CredentialResource::collection($credentials);
+        return ApiResponse::success($data, 'assets retrieved successfully.');
     }
 
     /**
