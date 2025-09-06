@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -21,11 +22,20 @@ class NotifyAdminAboutCertificateRequestMail extends Mailable
     public $certificationRequest;
 
     /**
+     * The credential file instance.
+     *
+     * @var mixed
+     */
+    public $credentialFile;
+
+
+    /**
      * Create a new message instance.
      */
-    public function __construct($certificationRequest)
+    public function __construct($certificationRequest, $credentialFile = null)
     {
         $this->certificationRequest = $certificationRequest;
+        $this->credentialFile = $credentialFile;
         $this->afterCommit();
 
     }
@@ -67,6 +77,15 @@ class NotifyAdminAboutCertificateRequestMail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return [
+            // If there's a credential file, attach it
+            // from storage path
+            // Attachment::fromPath($this->credentialFile->getRealPath())
+            //     ->as($this->credentialFile->getClientOriginalName())
+            //     ->withMime($this->credentialFile->getClientMimeType()),
+            // from request file upload
+            Attachment::fromData(fn () => file_get_contents($this->credentialFile->getRealPath()), $this->credentialFile->getClientOriginalName())
+                ->withMime($this->credentialFile->getClientMimeType()),
+        ];
     }
 }

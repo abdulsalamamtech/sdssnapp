@@ -24,11 +24,19 @@ class CertificationRequestedProceedEvent
     public CertificationRequest $certificationRequest;
 
     /**
+     * The credential file instance.
+     *
+     * @var mixed
+     */
+    public $credentialFile;
+
+    /**
      * Create a new event instance.
      */
-    public function __construct(CertificationRequest $certificationRequest)
+    public function __construct(CertificationRequest $certificationRequest, $credentialFile = null)
     {
         $this->certificationRequest = $certificationRequest;
+        $this->credentialFile = $credentialFile;
     }
 
     /**

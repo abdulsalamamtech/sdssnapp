@@ -29,6 +29,7 @@ class NotifyAdminAboutCertificateRequestListener
         // For example, you might send an email or a notification.
 
         $certificationRequest = $event->certificationRequest;
+        $credentialFile = $event->credentialFile;
 
         // Example: Log the certification request for now
         Log::info('New certification request received', [
@@ -44,7 +45,7 @@ class NotifyAdminAboutCertificateRequestListener
         info('Preparing to send email to admin about certification request: ' . $certificationRequest->id);
         info('Admin email address: ' . config('app.app_mail_address'));
         // Mail::to('abdulsalamamtech@gmail.com')->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
-        Mail::to(config('app.app_mail_address'))->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest));
+        Mail::to(config('app.app_mail_address'))->send(new NotifyAdminAboutCertificateRequestMail($certificationRequest, $credentialFile));
 
         // Send an email to the user
         // CertificationRequestSubmittedMail

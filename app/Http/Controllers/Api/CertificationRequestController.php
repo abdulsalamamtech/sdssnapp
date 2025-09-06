@@ -47,6 +47,8 @@ class CertificationRequestController extends Controller
     {
         $data = $request->validated();
 
+        $credentialFile = $request->file('credential');
+
         // certification_id and user_id
         $requestExisted = CertificationRequest::where('certification_id', $data['certification_id'])
             ->where('user_id', $request->user()?->id)
@@ -127,6 +129,9 @@ class CertificationRequestController extends Controller
                 $data['credential_id'] = $asset->id;
             }
 
+            // get uploaded credential file from request
+            $credentialFile = $request->file('credential');
+
             // Create the certification request
             $certificationRequest = CertificationRequest::create($data);
             // Log the successful creation of the certification request
@@ -136,7 +141,7 @@ class CertificationRequestController extends Controller
             // Send an event to notify the admin about the certification request
             // event(new CertificationRequestedProceedEvent($certificationRequest));
             // dispatch the event to notify the admin about the certification request
-            CertificationRequestedProceedEvent::dispatch($certificationRequest);
+            CertificationRequestedProceedEvent::dispatch($certificationRequest, $credentialFile);
 
             DB::commit(); // Commit the transaction if everything is successful
             // Return the created certification request resource
