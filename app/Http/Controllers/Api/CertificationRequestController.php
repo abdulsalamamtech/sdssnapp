@@ -178,6 +178,12 @@ class CertificationRequestController extends Controller
     public function update(UpdateCertificationRequestRequest $request, CertificationRequest $certificationRequest)
     {
         $data = $request->validated();
+
+        // if paid
+        if ($certificationRequest->status === 'paid') {
+            return ApiResponse::error([], 'Cannot update a paid certification request', 403);
+        }
+
         // approved can't be change
         if ($certificationRequest->status === 'approved' && $data['status'] !== 'approved') {
             return ApiResponse::error([], 'Cannot update an approved certification request', 403);
