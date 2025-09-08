@@ -13,6 +13,20 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 
+
+use App\Models\User;
+
+use Illuminate\Auth\Events\PasswordReset;
+
+use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Support\Facades\Password;
+
+use Illuminate\Support\Str;
+
+
 Route::middleware('guest')->group(function () {
     // Route::get('register', [RegisteredUserController::class, 'create'])
     //     ->name('register');
@@ -35,10 +49,10 @@ Route::middleware('guest')->group(function () {
     });
 
     // Route::post('login', [AuthenticatedSessionController::class, 'store']);
-    Route::get('login', function(){
-        // Redirect to external link
-        return redirect()->away(config('app.frontend_login_url'));
-    });
+    // Route::get('login', function(){
+    //     // Redirect to external link
+    //     return redirect()->away(config('app.frontend_login_url'));
+    // });
 
     // Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
     //     ->name('password.request');
@@ -54,8 +68,75 @@ Route::middleware('guest')->group(function () {
         ->name('password.reset');
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
+        ->withoutMiddleware([Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
         ->name('password.store');
 });
+
+// Route::post('/reset-password', function (Request $request) {
+
+//     $request->validate([
+
+//         'token' => 'required',
+
+//         'email' => 'required|email',
+
+//         'password' => 'required|min:8|confirmed',
+
+//     ]);
+
+ 
+//     info('Attempting password reset', 
+//         [
+//             'email' => $request->email,
+//             'token' => $request->token,
+//             'password' => $request->password ? 'provided' : 'not provided',
+//             'password_confirmation' => $request->password_confirmation ? 'provided' : 'not provided',
+//         ]
+//     );
+
+//         //
+
+//     $status = Password::reset(
+
+//         $request->only('email', 'password', 'password_confirmation', 'token'),
+
+//         function (User $user, string $password) {
+
+//             $user->forceFill([
+
+//                 'password' => Hash::make($password)
+
+//             ])->setRememberToken(Str::random(60));
+
+//             info("SAVED NEW PASSWORD FOR USER ID: {$user->id}");
+ 
+
+//             $user->save();
+
+ 
+
+//             event(new PasswordReset($user));
+
+//         }
+
+//     );
+
+ 
+//     return ($status === Password::PasswordReset)
+
+//         ? "DONE"
+//         : "NOT DONE";
+
+//     return $status === Password::PasswordReset
+
+//         ? redirect()->route('login')->with('status', __($status))
+
+//         : back()->withErrors(['email' => [__($status)]]);
+
+// })
+// ->middleware('guest')
+// ->withoutMiddleware([Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
+// ->name('password.store');
 
 
 // Modified it to suite web and api

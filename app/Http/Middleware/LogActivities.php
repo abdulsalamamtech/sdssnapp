@@ -26,9 +26,18 @@ class LogActivities
         $platform = $this->detectPlatform($userAgent);
         $browser = $this->detectBrowser($userAgent);
 
+        // Remove a specific field, for example, 'password'
+        // unset($request['password']);
+        // Remove a specific field, for example, 'password_confirmation'
+        // unset($request['password_confirmation']);
+
+        // Get all request data except sensitive fields
+        $request_data = $request->except(['password', 'password_confirmation']);
+        info('Request data:', $request_data);
+        // $request->all() ?? $request->getContent()
         // Prepare the data to be logged
         $data = [
-            'request' => $request->all() ?? $request->getContent(),
+            'request' => $request_data,
             'ip_address' => $ipAddress,
             'user_agent' => $userAgent,
             'device' => $device,
