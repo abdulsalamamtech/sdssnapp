@@ -55,8 +55,6 @@ class MembershipPaymentController extends Controller
                 return ApiResponse::success([], "you have paid for this membership certification!");
             }
 
-            // TESTING PURPOSES
-
             // Check if the user has already paid for this membership
             $existingPayment = $membership->membershipPayments()
                 ->where('user_id', $membership->user->id)
@@ -75,14 +73,8 @@ class MembershipPaymentController extends Controller
                 ->latest()
                 ->first();
 
+            // Log the last payment info
             info('Last Created Pending Payment: ', $lastPayment?->toArray() ?? []);
-
-            // if ($lastPayment) {
-            //     return ApiResponse::success([
-            //         'membership_id' => $membership->id,
-            //         'payment_link' => route('transactions.verify') . '?reference=' . $lastPayment->reference,
-            //     ], 'You have a pending payment. Please complete the payment using the link provided.');
-            // }
 
             // If there is a last payment, use its PSP data to get the payment link
             if ($lastPayment) {
