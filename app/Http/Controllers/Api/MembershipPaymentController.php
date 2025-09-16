@@ -62,7 +62,7 @@ class MembershipPaymentController extends Controller
                 ->where('user_id', $membership->user->id)
                 ->where('status', 'successful')
                 ->first();
-            info('Existing Payment: ', $existingPayment?->toArray() ?? []);
+            info('Existing Successful Payment: ', $existingPayment?->toArray() ?? []);
             if ($existingPayment) {
                 return ApiResponse::error([], 'Error: you have already paid for this membership!', 400);
             }
@@ -75,7 +75,7 @@ class MembershipPaymentController extends Controller
                 ->latest()
                 ->first();
 
-            info('Last Created Payment: ', $lastPayment?->toArray() ?? []);
+            info('Last Created Pending Payment: ', $lastPayment?->toArray() ?? []);
 
             // if ($lastPayment) {
             //     return ApiResponse::success([
@@ -89,14 +89,14 @@ class MembershipPaymentController extends Controller
                 $PSP = $lastPayment?->data ? json_decode($lastPayment->data, true) : null;
                 if ($lastPayment && $PSP && isset($PSP['authorization_url']) && isset($PSP['reference'])) {
                     // Payment link
-                    info('Last Payment PSP: ', [$PSP]);
+                    info('Last Payment Generated PSP: ', $PSP ?? []);
                     $response = [
                         'membership_id' => $membership->id,
                         'payment_link' => $PSP['authorization_url'],
                     ];
 
                     // return ApiResponse::success($response, 'You have a pending payment. Please complete the payment using the link provided, your payment validate your membership!');
-                    // info('payment link created from last payment: ' . json_encode($response));
+                    info('Payment link created from last payment: ' . json_encode($response));
                     $PSP = null; // reset PSP to null so that a new payment link is created below
                 }
             }
