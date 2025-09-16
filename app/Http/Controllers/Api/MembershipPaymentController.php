@@ -75,7 +75,7 @@ class MembershipPaymentController extends Controller
                 ->latest()
                 ->first();
 
-            info('Last Payment: ', [$lastPayment]);
+            info('Last Payment: ', $lastPayment);
 
             // if ($lastPayment) {
             //     return ApiResponse::success([
