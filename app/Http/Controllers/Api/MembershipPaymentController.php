@@ -144,8 +144,8 @@ class MembershipPaymentController extends Controller
                 info('payment link created: ' . $PSP['authorization_url']);
                 return ApiResponse::success($response, 'Payment link created, please make payment to validate your membership!');
             } else {
-                info('payment initialization error: ' . $PSP['message']);
-                return ApiResponse::error([], 'Error: unable to initialize payment process!', 500);
+                info('payment initialization failed: ' . $PSP['message']);
+                return ApiResponse::error([], 'Error: failed to initialize payment process!', 500);
             }
         } catch (\Throwable $th) {
             //throw $th;

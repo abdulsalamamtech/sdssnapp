@@ -121,6 +121,7 @@ class Paystack
                 ->post(config('services.paystack.url') . '/transaction/initialize', $data);
 
             // return $response;
+            logger('Paystack Initialize Response: ', $response->json());
 
             if ($response->failed()) {
                 return ([
