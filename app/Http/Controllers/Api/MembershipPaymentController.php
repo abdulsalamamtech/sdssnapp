@@ -62,7 +62,7 @@ class MembershipPaymentController extends Controller
                 ->where('user_id', $membership->user->id)
                 ->where('status', 'successful')
                 ->first();
-            info('Existing Payment: ', [$existingPayment]);
+            info('Existing Payment: ', $existingPayment ?? []);
             if ($existingPayment) {
                 return ApiResponse::error([], 'Error: you have already paid for this membership!', 400);
             }
