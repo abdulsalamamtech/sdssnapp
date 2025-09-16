@@ -95,7 +95,7 @@ class MembershipPaymentController extends Controller
                 ];
 
                 // return ApiResponse::success($response, 'You have a pending payment. Please complete the payment using the link provided, your payment validate your membership!');
-                info('payment link created from last payment: ' . [$response]);
+                info('payment link created from last payment: ' . json_encode($response));
                 $PSP = null; // reset PSP to null so that a new payment link is created below
             }
 
