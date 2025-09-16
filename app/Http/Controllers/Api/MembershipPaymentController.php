@@ -68,7 +68,7 @@ class MembershipPaymentController extends Controller
             }
 
             // Get the last payment if it hasn't expired
-            $lastPayment = $membership->membershipPayments()
+            $lastPayment = $membership?->membershipPayments()
                 ->where('user_id', $membership->user->id)
                 ->where('status', 'pending')
                 ->where('created_at', '>=', now()->subMinutes(20)) // assuming 20 minutes expiry
@@ -85,18 +85,20 @@ class MembershipPaymentController extends Controller
             // }
 
             // If there is a last payment, use its PSP data to get the payment link
-            $PSP = $lastPayment?->data ? json_decode($lastPayment->data, true) : null;
-            if ($lastPayment && $PSP && isset($PSP['authorization_url']) && isset($PSP['reference'])) {
-                // Payment link
-                info('Last Payment PSP: ', [$PSP]);
-                $response = [
-                    'membership_id' => $membership->id,
-                    'payment_link' => $PSP['authorization_url'],
-                ];
-
-                // return ApiResponse::success($response, 'You have a pending payment. Please complete the payment using the link provided, your payment validate your membership!');
-                info('payment link created from last payment: ' . json_encode($response));
-                $PSP = null; // reset PSP to null so that a new payment link is created below
+            if($lastPayment){
+                $PSP = $lastPayment?->data ? json_decode($lastPayment->data, true) : null;
+                if ($lastPayment && $PSP && isset($PSP['authorization_url']) && isset($PSP['reference'])) {
+                    // Payment link
+                    info('Last Payment PSP: ', [$PSP]);
+                    $response = [
+                        'membership_id' => $membership->id,
+                        'payment_link' => $PSP['authorization_url'],
+                    ];
+    
+                    // return ApiResponse::success($response, 'You have a pending payment. Please complete the payment using the link provided, your payment validate your membership!');
+                    // info('payment link created from last payment: ' . json_encode($response));
+                    $PSP = null; // reset PSP to null so that a new payment link is created below
+                }
             }
 
 
@@ -112,6 +114,7 @@ class MembershipPaymentController extends Controller
             ];
 
             $PSP = Paystack::make($payment_data);
+            info('Paystack Response: ', $PSP);
             if ($PSP['success']) {
                 // Record The transaction
                 // 'user_id',
