@@ -11,6 +11,7 @@ use App\Http\Resources\MembershipPaymentResource;
 use App\Mail\CertificateAndMembershipConfirmed;
 use App\Models\Api\Membership;
 use App\Models\Api\MembershipPayment;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -54,14 +55,50 @@ class MembershipPaymentController extends Controller
                 return ApiResponse::success([], "you have paid for this membership certification!");
             }
 
+            // TESTING PURPOSES
+
             // Check if the user has already paid for this membership
             $existingPayment = $membership->membershipPayments()
                 ->where('user_id', $membership->user->id)
                 ->where('status', 'successful')
                 ->first();
+            info('Existing Payment: ', [$existingPayment]);
             if ($existingPayment) {
                 return ApiResponse::error([], 'Error: you have already paid for this membership!', 400);
             }
+
+            // Get the last payment if it hasn't expired
+            $lastPayment = $membership->membershipPayments()
+                ->where('user_id', $membership->user->id)
+                ->where('status', 'pending')
+                ->where('created_at', '>=', now()->subMinutes(20)) // assuming 20 minutes expiry
+                ->latest()
+                ->first();
+
+            info('Last Payment: ', [$lastPayment]);
+
+            // if ($lastPayment) {
+            //     return ApiResponse::success([
+            //         'membership_id' => $membership->id,
+            //         'payment_link' => route('transactions.verify') . '?reference=' . $lastPayment->reference,
+            //     ], 'You have a pending payment. Please complete the payment using the link provided.');
+            // }
+
+            // If there is a last payment, use its PSP data to get the payment link
+            $PSP = $lastPayment?->data ? json_decode($lastPayment->data, true) : null;
+            if ($lastPayment && $PSP && isset($PSP['authorization_url']) && isset($PSP['reference'])) {
+                // Payment link
+                info('Last Payment PSP: ', [$PSP]);
+                $response = [
+                    'membership_id' => $membership->id,
+                    'payment_link' => $PSP['authorization_url'],
+                ];
+
+                // return ApiResponse::success($response, 'You have a pending payment. Please complete the payment using the link provided, your payment validate your membership!');
+                info('payment link created from last payment: ' . [$response]);
+                $PSP = null; // reset PSP to null so that a new payment link is created below
+            }
+
 
             // Create the payment data
             $payment_data = [
@@ -251,7 +288,7 @@ class MembershipPaymentController extends Controller
 
                         // return $membershipPayment;
                         return redirect($redirectUrl);
-                    }else{
+                    } else {
                         info('Membership Payment Transaction not found: ', [$message]);
                         // Redirect to error page
                         $redirectUrl = config('app.frontend_url') . '/payment/error?trxref=' . $reference;
@@ -268,7 +305,6 @@ class MembershipPaymentController extends Controller
             // return $redirectUrl;
             // return response
             return redirect($redirectUrl);
-
         } catch (\Exception $e) {
             // log error and return error response
             // return response()->json(['message' => 'Transaction verification failed', 'error' => $e->getMessage()], 500);
