@@ -75,7 +75,7 @@ class MembershipPaymentController extends Controller
                 ->latest()
                 ->first();
 
-            info('Last Payment: ', $lastPayment);
+            info('Last Payment: ', $lastPayment ?? []);
 
             // if ($lastPayment) {
             //     return ApiResponse::success([
@@ -85,7 +85,7 @@ class MembershipPaymentController extends Controller
             // }
 
             // If there is a last payment, use its PSP data to get the payment link
-            if($lastPayment){
+            if ($lastPayment) {
                 $PSP = $lastPayment?->data ? json_decode($lastPayment->data, true) : null;
                 if ($lastPayment && $PSP && isset($PSP['authorization_url']) && isset($PSP['reference'])) {
                     // Payment link
@@ -94,7 +94,7 @@ class MembershipPaymentController extends Controller
                         'membership_id' => $membership->id,
                         'payment_link' => $PSP['authorization_url'],
                     ];
-    
+
                     // return ApiResponse::success($response, 'You have a pending payment. Please complete the payment using the link provided, your payment validate your membership!');
                     // info('payment link created from last payment: ' . json_encode($response));
                     $PSP = null; // reset PSP to null so that a new payment link is created below
