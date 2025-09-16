@@ -116,7 +116,7 @@ class NewPasswordController extends Controller
     //     : back()->withErrors(['email' => [__($status)]]);
         
         
-        dd($request->only('email', 'password', 'password_confirmation', 'token'), $status);
+        // dd($request->only('email', 'password', 'password_confirmation', 'token'), $status);
 
         info('Password reset status: ' . $status,
             [
