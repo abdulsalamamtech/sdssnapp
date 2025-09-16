@@ -202,3 +202,28 @@ Route::get('/run-command', function () {
 
     return 'Error: ' . nl2br($process->getErrorOutput());
 });
+
+
+
+// Optimization routes
+Route::get('/vc', function () {
+    Artisan::call('view:clear');
+    echo '<script>alert("view clear Success")</script>';
+});
+
+
+Route::get('/cr', function () {
+    Artisan::call('route:cache');
+    echo '<script>alert("route clear Success")</script>';
+});
+
+
+Route::get('/coc', function () {
+    Artisan::call('config:clear');
+    echo '<script>alert("config clear Success")</script>';
+});
+
+Route::get('/storage123', function () {
+    Artisan::call('storage:link');
+    echo '<script>alert("linked")</script>';
+});
