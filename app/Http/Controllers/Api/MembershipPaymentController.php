@@ -86,6 +86,7 @@ class MembershipPaymentController extends Controller
                         'membership_id' => $membership->id,
                         'payment_link' => $PSP['authorization_url'],
                         'reference' => $PSP['reference'],
+                        'access_code' => $PSP['access_code'],
                     ];
 
                     info('Payment link created from last payment: ' . json_encode($response));
@@ -131,6 +132,7 @@ class MembershipPaymentController extends Controller
                     'membership_id' => $membership->id,
                     'payment_link' => $PSP['authorization_url'],
                     'reference' => $PSP['reference'],
+                    'access_code' => $PSP['access_code'],
                 ];
                 // Commit the transaction
                 DB::commit();
