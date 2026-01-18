@@ -7,6 +7,26 @@ on:
   pull:
     branches:
       - staging
+
+name: Run on pull request
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  pull_request:
+    branches: [staging]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+name: Manual Workflow
+on: 
+  workflow_dispatch:
+    # Optional inputs can be defined here
+    # inputs:
+    #   example_input:
+    #     description: 'A description for the input'
+    #     required: true
+    #     default: 'default_value'
+
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
