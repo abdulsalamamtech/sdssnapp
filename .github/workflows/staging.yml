@@ -4,20 +4,14 @@ on:
   push:
     branches:
       - staging
-  pull_request:
-    branches:
-      - staging
+  # pull_request:
+  #   branches:
+  #     - staging
 
-name: Run on pull request
-on:
   # Triggers the workflow on push or pull request events but only for the main branch
   pull_request:
     branches: [staging]
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-name: Manual Workflow
-on: 
   workflow_dispatch:
     # Optional inputs can be defined here
     # inputs:
