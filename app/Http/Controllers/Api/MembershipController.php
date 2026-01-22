@@ -25,7 +25,7 @@ class MembershipController extends Controller
         }
         $data = MembershipResource::collection($memberships);
         // Return the memberships resource
-        return ApiResponse::success($data, 'memberships retrieved successfully.');
+        return ApiResponse::success($data, 'memberships retrieved successfully.', 200, $memberships);
     }
 
     /**

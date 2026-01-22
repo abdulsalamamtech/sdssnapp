@@ -31,7 +31,7 @@ class MembershipPaymentController extends Controller
         }
         $data = MembershipPaymentResource::collection($membershipPayments);
         // Return the membership payments resource
-        return ApiResponse::success($data, 'Membership payments retrieved successfully.');
+        return ApiResponse::success($data, 'Membership payments retrieved successfully.', 200, $membershipPayments);
     }
 
     /**
