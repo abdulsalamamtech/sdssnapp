@@ -156,7 +156,7 @@ class MembershipPaymentController extends Controller
      */
     public function show(MembershipPayment $membershipPayment)
     {
-        return $membershipPayment->load(['user', 'membership']);
+        $membershipPayment->load(['user', 'membership']);
         $response = new MembershipPaymentResource($membershipPayment);
         return ApiResponse::success($response, 'Membership payment retrieved successfully.');
     }
