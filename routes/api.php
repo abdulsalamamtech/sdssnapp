@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\CertificationRequestController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\DonationController;
+use App\Http\Controllers\Api\DonationPaymentController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\MembershipController;
 use App\Http\Controllers\Api\MembershipPaymentController;
@@ -287,6 +289,15 @@ Route::get('/podcasts/category/audio', [PodcastController::class, 'audio']);
 // Verify transaction
 Route::get('transactions/verify', [MembershipPaymentController::class, 'verifyTransaction'])
     ->name('transactions.verify');
+
+
+// Donation
+Route::post('/donations', [DonationController::class, 'store']);
+
+
+// Verify transaction
+Route::get('donations/verify', [DonationPaymentController::class, 'verifyDonation'])
+    ->name('donations.verify');
 
 // Admin Routes
 require  __DIR__ . "/api/admin.php";

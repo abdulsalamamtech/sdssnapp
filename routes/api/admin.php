@@ -4,6 +4,7 @@ use App\Enums\UserRoleEnum;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\Api\CertificationRequestController;
+use App\Http\Controllers\Api\DonationPaymentController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\MembershipController;
 use App\Http\Controllers\Api\MembershipPaymentController;
@@ -160,6 +161,10 @@ Route::prefix('admin')
 
             Route::apiResource('membership-payments', MembershipPaymentController::class)
                 ->only(['index', 'show']);
+
+            // Donation payments
+            Route::apiResource('donation-payments', DonationPaymentController::class)
+                ->only(['index', 'show']);                
         }
     );
 
