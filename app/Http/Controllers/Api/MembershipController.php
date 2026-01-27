@@ -17,7 +17,7 @@ class MembershipController extends Controller
      */
     public function index()
     {
-        $memberships = Membership::latest()->paginate();
+        $memberships = Membership::with(['user'])->latest()->paginate();
 
         // Check if there are any memberships
         if ($memberships->isEmpty()) {
