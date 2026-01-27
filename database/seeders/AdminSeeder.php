@@ -14,13 +14,14 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         // Application admin
-        $adminEmail = ['info@sdssn.org'];
-        foreach($adminEmail as $email){
+        $adminEmail = ['info@sdssn.org', 'abdulsalamamtech@gmail.com'];
+        foreach ($adminEmail as $email) {
             if (!User::where('email', $email)->exists()) {
                 $user = User::create([
                     'name' => 'Admin User',
                     'email' => $email,
-                    'password' => bcrypt('password'), // Use bcrypt for password hashing by default
+                    // Use bcrypt for password hashing by default - Reset password after access
+                    'password' => bcrypt('password'),
                     'email_verified_at' => now(),
                     'first_name' => 'Admin',
                     'last_name' => 'User',
@@ -33,7 +34,7 @@ class AdminSeeder extends Seeder
                 ]);
                 $user->assignRole('super-admin');
                 $user->assignRole('admin');
-    
+
                 info('Admin user created with email: ' . $email);
             }
         }
