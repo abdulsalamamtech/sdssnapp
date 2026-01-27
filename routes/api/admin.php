@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\ConversationController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\Api\CertificationRequestController;
+use App\Http\Controllers\Api\DonationPaymentController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\MembershipController;
 use App\Http\Controllers\Api\MembershipPaymentController;
@@ -163,6 +164,10 @@ Route::prefix('admin')
                 ->only(['index', 'show']);
 
             Route::apiResource('conversations', ConversationController::class)->except(['update']);
+          
+            // Donation payments
+            Route::apiResource('donation-payments', DonationPaymentController::class)
+                ->only(['index', 'show']);                
         }
     );
 
