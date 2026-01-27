@@ -18,13 +18,13 @@ class PodcastController extends Controller
      */
     public function index()
     {
-        $podcast = Podcast::with(['user', 'podcastComments.user', 'banner'])->get();
+        $podcast = Podcast::with(['user', 'podcastComments.user', 'banner'])->paginate();
 
         // ->orderBy('created_at', 'desc')
         // ->paginate(10);
 
         if (!$podcast) {
-            return $this->sendError([], 'unable to load podcast', 500);
+            return $this->sendError([], 'unable to load podcast', 404);
         }
 
         return $this->sendSuccess($podcast, 'successful', 200);
