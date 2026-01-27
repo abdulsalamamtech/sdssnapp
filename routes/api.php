@@ -288,6 +288,8 @@ Route::get('/podcasts/category/audio', [PodcastController::class, 'audio']);
 Route::get('transactions/verify', [MembershipPaymentController::class, 'verifyTransaction'])
     ->name('transactions.verify');
 
+
+
 // Admin Routes
 require  __DIR__ . "/api/admin.php";
 

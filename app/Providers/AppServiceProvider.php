@@ -5,7 +5,9 @@ namespace App\Providers;
 
 // use Dedoc\Scramble\Scramble;
 use App\Events\CertificationRequestedProceedEvent;
+use App\Events\ConversationSaved;
 use App\Listeners\NotifyAdminAboutCertificateRequestListener;
+use App\Listeners\SendConversationEmail;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
@@ -75,6 +77,8 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(
             CertificationRequestedProceedEvent::class,
             NotifyAdminAboutCertificateRequestListener::class,
+            ConversationSaved::class, // Event
+            SendConversationEmail::class // Listener
         );
     }
 }
