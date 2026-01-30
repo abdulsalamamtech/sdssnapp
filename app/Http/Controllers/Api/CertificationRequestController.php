@@ -28,7 +28,7 @@ class CertificationRequestController extends Controller
     public function index()
     {
         // $certificationRequests = CertificationRequest::with(['user'])->get();
-        $certificationRequests = CertificationRequest::with(['certification'])
+        $certificationRequests = CertificationRequest::with(['certification', 'user'])
             ->latest()->paginate();
 
         // Check if there are any certification requests
@@ -286,7 +286,7 @@ class CertificationRequestController extends Controller
             DB::beginTransaction();
 
             if ($certificationRequest->status !== 'rejected' || $certificationRequest->membership) {
-                return ApiResponse::error([], 'you can only delete rejected certification request', 500);
+                return ApiResponse::error([], 'you can only delete rejected certification request', 403);
             }
             // Delete the certification request
             $certificationRequest->delete();
@@ -329,6 +329,7 @@ class CertificationRequestController extends Controller
             return ApiResponse::error($e->getMessage(), 'Failed to approve certification request', 500);
         }
     }
+
     /**
      * Reject the specified certification request.
      */
@@ -354,6 +355,41 @@ class CertificationRequestController extends Controller
             return ApiResponse::error($e->getMessage(), 'Failed to reject certification request', 500);
         }
     }
+
+    /**
+     * Reject the specified certification request.
+     */
+    public function delete(CertificationRequest $certificationRequest)
+    {
+        try {
+            // Begin a database transaction
+            DB::beginTransaction();
+
+            // Check the status
+            if ($certificationRequest->status == 'paid' || $certificationRequest->status == 'approved') {
+                return ApiResponse::error([], "Can't delete paid or approved certification request", 403);
+            }
+            // Update the status to 'rejected'
+            $certificationRequest->status = 'rejected';
+            $certificationRequest->rejected_by = request()?->user()?->id;
+            $certificationRequest->save();
+
+            // Delete the certification
+            $certificationRequest->delete();
+            // Log the successful rejection of the certification request
+            info('Certification request deleted successfully: ' . $certificationRequest->id);
+            DB::commit(); // Commit the transaction if everything is successful
+            // Return a success response
+            return ApiResponse::success(new CertificationRequestResource($certificationRequest), 'Certification request deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack(); // Rollback the transaction in case of an error
+            // Log the error and return an error response
+            info('Failed to delete certification request: ' . $e->getMessage());
+            // Return an error response with a 500 status code
+            return ApiResponse::error($e->getMessage(), 'Failed to delete certification request', 500);
+        }
+    }
+
     /**
      * Restore the specified certification request.
      */

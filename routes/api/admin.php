@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserRoleEnum;
+use App\Http\Controllers\Api\Admin\ConversationController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\Api\CertificationRequestController;
@@ -162,6 +163,7 @@ Route::prefix('admin')
             Route::apiResource('membership-payments', MembershipPaymentController::class)
                 ->only(['index', 'show']);
 
+            Route::apiResource('conversations', ConversationController::class)->except(['update']);
             // Donation payments
             Route::apiResource('donation-payments', DonationPaymentController::class)
                 ->only(['index', 'show']);                
