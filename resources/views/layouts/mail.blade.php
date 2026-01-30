@@ -79,6 +79,7 @@
             color: #333333;
             line-height: 1.6;
             font-size: 16px;
+            padding: 1px 8px;
         }
 
 
