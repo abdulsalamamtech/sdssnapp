@@ -28,7 +28,7 @@ class CertificationRequestController extends Controller
     public function index()
     {
         // $certificationRequests = CertificationRequest::with(['user'])->get();
-        $certificationRequests = CertificationRequest::with(['certification'])
+        $certificationRequests = CertificationRequest::with(['certification','user'])
             ->latest()->paginate();
 
         // Check if there are any certification requests
