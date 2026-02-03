@@ -280,7 +280,6 @@ class AdminController extends Controller
         if (!$data) {
             return $this->sendError([], 'unable to load data', 500);
         }
-
         return $this->sendSuccess($data, 'successful', 200);
     }
 
