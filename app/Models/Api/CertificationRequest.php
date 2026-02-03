@@ -85,4 +85,6 @@ class CertificationRequest extends Model
     {
         return $this->belongsTo('App\Models\User', 'created_by');
     }
+
+    
 }

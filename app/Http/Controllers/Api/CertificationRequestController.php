@@ -49,6 +49,14 @@ class CertificationRequestController extends Controller
 
         $credentialFile = $request->file('credential');
 
+        $existingCertRequest = CertificationRequest::where('user_id', $request->user()?->id)
+            ->where('status', '!=', 'rejected')
+            ->first();
+        if ($existingCertRequest) {
+            // with record existed status code 
+            return ApiResponse::error([], 'You have already requested for a certification, contact SDSSN if you believe this is an error.', 409);
+        }
+
         // certification_id and user_id
         $requestExisted = CertificationRequest::where('certification_id', $data['certification_id'])
             ->where('user_id', $request->user()?->id)
