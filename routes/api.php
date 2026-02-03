@@ -18,9 +18,12 @@ use App\Http\Controllers\Api\UserProfile;
 use App\Http\Controllers\Api\UserSocial;
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\NewsletterController;
+use App\Models\Api\CertificationRequest;
 use App\Models\Api\Membership;
+use App\Models\Certification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -298,6 +301,9 @@ Route::post('/donations', [DonationController::class, 'store']);
 // Verify transaction
 Route::get('donations/verify', [DonationPaymentController::class, 'verifyDonation'])
     ->name('donations.verify');
+
+// Membership statistical routes
+Route::get('/memberships', [AdminController::class, 'memberships']);
 
 // Admin Routes
 require  __DIR__ . "/api/admin.php";
