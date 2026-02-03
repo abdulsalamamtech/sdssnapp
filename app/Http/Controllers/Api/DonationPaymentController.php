@@ -51,7 +51,7 @@ class DonationPaymentController extends Controller
      */
     public function show(DonationPayment $donationPayment)
     {
-        return $donationPayment->load(['user', 'donation']);
+        $donationPayment->load(['user', 'donation']);
         $response = new DonationPaymentResource($donationPayment);
         return ApiResponse::success($response, 'Donation payment retrieved successfully.');
         //
