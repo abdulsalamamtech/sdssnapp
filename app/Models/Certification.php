@@ -97,9 +97,9 @@ class Certification extends Model
             Membership::class,
             CertificationRequest::class,
             'certification_id', // Foreign key on CertificationRequest table
-            'id', // Foreign key on Membership table
+            'certification_request_id', // Foreign key on Membership table
             'id', // Local key on Certification table
-            'certification_id' // Local key on CertificationRequest table
+            'id' // Local key on CertificationRequest table
         );
     }
 }

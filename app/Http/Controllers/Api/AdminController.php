@@ -267,8 +267,9 @@ class AdminController extends Controller
         $data['membership_requests'] = CertificationRequest::count();
 
         $data['membership_types'] = Certification::select('type', DB::raw('count(*) as total'))
-            ->withCount('certificationRequestsMemberships')
-            ->withCount('certificationRequests')
+            ->selectRaw('(SELECT COUNT(*) FROM memberships INNER JOIN certification_requests ON certification_requests.id = memberships.certification_request_id WHERE certification_requests.certification_id IN (SELECT id FROM certifications c WHERE c.type = certifications.type AND c.deleted_at IS NULL) AND memberships.deleted_at IS NULL AND certification_requests.deleted_at IS NULL) as certification_requests_memberships_count')
+            ->selectRaw('(SELECT COUNT(*) FROM certification_requests WHERE certification_requests.certification_id IN (SELECT id FROM certifications c WHERE c.type = certifications.type AND c.deleted_at IS NULL) AND certification_requests.deleted_at IS NULL) as certification_requests_count')
+            ->whereNull('deleted_at')
             ->groupBy('type')
             ->get();
 
