@@ -65,4 +65,17 @@ class Membership extends Model
         return $this->hasMany(MembershipPayment::class);
     }
 
+    // belongs to many through certification_request to certification
+    public function certifications()
+    {
+        return $this->hasManyThrough(
+            Certification::class,
+            CertificationRequest::class,
+            'id', // Foreign key on CertificationRequest table
+            'id', // Foreign key on Certification table
+            'certification_request_id', // Local key on Membership table
+            'certification_id' // Local key on CertificationRequest table
+        );
+    }
+
 }

@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Enums\UserRoleEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Api\Certificate;
+use App\Models\Api\CertificationRequest;
+use App\Models\Api\Membership;
 use App\Models\Api\Podcast;
 use App\Models\Api\Project;
 use App\Models\Assets;
+use App\Models\Certification;
 use App\Models\Gallery;
 use App\Models\Newsletter;
 use App\Models\User;
@@ -74,7 +77,7 @@ class AdminController extends Controller
                 'female' => User::where('gender', 'female')->count(),
             ],
             'certificates' => [
-                'total'=> Certificate::all(),
+                'total' => Certificate::all(),
                 'courses' => Certificate::select('course', DB::raw('count(*) as total'))
                     ->groupBy('course')
                     ->get()
@@ -90,7 +93,7 @@ class AdminController extends Controller
                 ->get(),
             'states' => User::select('state', DB::raw('count(*) as total'))
                 ->groupBy('state')
-                ->get(), 
+                ->get(),
             'countries' => User::select('country', DB::raw('count(*) as total'))
                 ->groupBy('country')
                 ->get(),
@@ -125,7 +128,8 @@ class AdminController extends Controller
     /**
      * Get all statistical resource
      */
-    public function resources(){
+    public function resources()
+    {
         $data = [
             'users' => [
                 'total' => User::count(),
@@ -133,7 +137,7 @@ class AdminController extends Controller
                 'female' => User::where('gender', 'female')->count(),
             ],
             'certificates' => [
-                'total'=> Certificate::all(),
+                'total' => Certificate::all(),
                 'courses' => Certificate::select('course', DB::raw('count(*) as total'))
                     ->groupBy('course')
                     ->get()
@@ -149,7 +153,7 @@ class AdminController extends Controller
                 ->get(),
             'states' => User::select('state', DB::raw('count(*) as total'))
                 ->groupBy('state')
-                ->get(), 
+                ->get(),
             'countries' => User::select('country', DB::raw('count(*) as total'))
                 ->groupBy('country')
                 ->get(),
@@ -216,7 +220,6 @@ class AdminController extends Controller
         }
 
         return $this->sendSuccess($users, 'successful', 200, $metadata);
-
     }
 
     /**
@@ -237,27 +240,49 @@ class AdminController extends Controller
         }
 
         return $this->sendSuccess($locations, 'successful', 200, $metadata);
-
     }
 
 
     /**
-     * Display all memberships of users.
+     * Display statistical data for memberships.
      */
     public function memberships()
     {
-        $locations = User::select('membership_status', DB::raw('count(*) as total'))
+
+        $data = [];
+
+        $data['total_members'] = Membership::count();
+        $data['active_members'] = Membership::where('expires_on', '>=', now())->count();
+        $data['expired_members'] = Membership::where('expires_on', '<', now())->count();
+        $data['pending_members'] = Membership::where('status', 'pending')->count();
+        $data['certified_members'] = Membership::where('certificate_status', 'generated')->count();
+        $data['certificates_processing'] = Membership::where('certificate_status', 'processing')->count();
+
+        // $data['members'] = Membership::with(['certificationRequest.certification'])->get();
+        // $data['certifications'] = Certification::withCount('memberships')->get();
+        // $data['certifications'] = Certification::with('certificationRequestsMemberships')->get();
+        $data['certifications'] = Certification::count();
+
+        // certifications
+        $data['membership_requests'] = CertificationRequest::count();
+
+        $data['membership_types'] = Certification::select('type', DB::raw('count(*) as total'))
+            ->selectRaw('(SELECT COUNT(*) FROM memberships INNER JOIN certification_requests ON certification_requests.id = memberships.certification_request_id WHERE certification_requests.certification_id IN (SELECT id FROM certifications c WHERE c.type = certifications.type AND c.deleted_at IS NULL) AND memberships.deleted_at IS NULL AND certification_requests.deleted_at IS NULL) as certification_requests_memberships_count')
+            ->selectRaw('(SELECT COUNT(*) FROM certification_requests WHERE certification_requests.certification_id IN (SELECT id FROM certifications c WHERE c.type = certifications.type AND c.deleted_at IS NULL) AND certification_requests.deleted_at IS NULL) as certification_requests_count')
+            ->whereNull('deleted_at')
+            ->groupBy('type')
+            ->get();
+
+        $data['membership_status'] = User::select('membership_status', DB::raw('count(*) as total'))
             ->groupBy('membership_status')
             ->get();
 
-        $metadata = $this->getMetadata($locations);
 
-        if (!$locations) {
-            return $this->sendError([], 'unable to load locations', 500);
+        if (!$data) {
+            return $this->sendError([], 'unable to load data', 500);
         }
 
-        return $this->sendSuccess($locations, 'successful', 200, $metadata);
-
+        return $this->sendSuccess($data, 'successful', 200);
     }
 
 
@@ -266,12 +291,13 @@ class AdminController extends Controller
      * Update user role [user, admin]
      * @param ['user', 'admin']
      */
-    public function assignRole(Request $request){
+    public function assignRole(Request $request)
+    {
         $request->validate([
-            'email' =>'required|email|exists:users,email',
-            'role' =>'required|in:user,admin'
+            'email' => 'required|email|exists:users,email',
+            'role' => 'required|in:user,admin'
         ]);
-    
+
 
         $user = User::where('email', $request->email)->first();
         // I remove the package from the middleware
@@ -281,35 +307,35 @@ class AdminController extends Controller
         //   "error": "Authorizable class `App\\Models\\User` must use Spatie\\Permission\\Traits\\HasRoles trait."
         // }
 
-        if(!$user){
+        if (!$user) {
             return response()->json(['status' => false, 'message' => 'User not found'], 201);
         }
-    
-        if(!$request->role){
+
+        if (!$request->role) {
             return response()->json(['status' => false, 'message' => 'enter a role'], 201);
         }
-    
-        if(!in_array($request->role, ['user', 'moderator', 'admin', 'super-admin'])){
-            return response()->json(['status' => false,'message' => 'Invalid role'], 201);
+
+        if (!in_array($request->role, ['user', 'moderator', 'admin', 'super-admin'])) {
+            return response()->json(['status' => false, 'message' => 'Invalid role'], 201);
         }
-    
+
 
         // Represent the user role
-        if($request->role == 'admin'){
+        if ($request->role == 'admin') {
             // $user->assignRole(UserRoleEnum::ADMIN->value);
             // Remove previous roles
             $user->syncRoles(UserRoleEnum::ADMIN->value);
             $user->role = UserRoleEnum::ADMIN->value;
-        }else if($request->role == 'moderator'){
+        } else if ($request->role == 'moderator') {
             $user->syncRoles(UserRoleEnum::MODERATOR->value);
             $user->role = UserRoleEnum::MODERATOR->value;
-        }else{
+        } else {
             $user->syncRoles(UserRoleEnum::USER->value);
             $user->role = UserRoleEnum::USER->value;
         }
         // $user->role = $request->role;
         $user->save();
-    
+
 
         $message = $request->role . ' role assign to ' . $request->email;
         return response()->json([
@@ -317,5 +343,4 @@ class AdminController extends Controller
             'message' => $message
         ], 201);
     }
-
 }

@@ -18,7 +18,7 @@ class AdminSeeder extends Seeder
         foreach ($adminEmail as $email) {
             if (!User::where('email', $email)->exists()) {
                 $user = User::create([
-                    'name' => 'Admin User',
+                    'name' => 'Admin User ' . random_int(1, 100),
                     'email' => $email,
                     // Use bcrypt for password hashing by default - Reset password after access
                     'password' => bcrypt('password'),

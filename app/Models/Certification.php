@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Api\CertificationRequest;
+use App\Models\Api\Membership;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -78,5 +80,26 @@ class Certification extends Model
     public function deletedBy()
     {
         return $this->belongsTo(User::class, 'deleted_by');
+    }
+
+
+    // certification has many through certification_requests
+    public function certificationRequests()
+    {
+        return $this->hasMany(CertificationRequest::class, 'certification_id');
+    }
+
+
+    // certification request (certification id) belongs to certification while membership (certification_request id) belongs to certification request
+    public function certificationRequestsMemberships()
+    {
+        return $this->hasManyThrough(
+            Membership::class,
+            CertificationRequest::class,
+            'certification_id', // Foreign key on CertificationRequest table
+            'certification_request_id', // Foreign key on Membership table
+            'id', // Local key on Certification table
+            'id' // Local key on CertificationRequest table
+        );
     }
 }
