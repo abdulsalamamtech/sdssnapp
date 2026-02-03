@@ -237,6 +237,10 @@ class MembershipPaymentController extends Controller
                         $membershipPayment->status = 'successful';
                         $membershipPayment->save();
 
+                        // Update the user membership status the paid membership name
+                        $membershipPayment->user->membership_status = 'premium';
+                        $membershipPayment->user->save();
+
                         // redirect to success page
                         $redirectUrl = config('app.frontend_url') . '/payment/success?trxref=' . $membershipPayment->reference;
 
