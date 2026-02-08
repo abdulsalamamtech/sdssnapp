@@ -316,7 +316,11 @@ require __DIR__ . '/api-auth.php';
 // require __DIR__ . '/terminal.php';
 
 
-
+// V1 Auth Routes
+Route::prefix('v1')->group(function () {
+    // Authentication
+    require __DIR__ . '/v1/auth.php';
+});
 
 // Cloudinary Test Routes
 // Route::apiResource('test-cloudinary', \App\Http\Controllers\Api\TestCloudinaryController::class);
