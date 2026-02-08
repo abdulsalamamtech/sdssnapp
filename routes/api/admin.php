@@ -164,10 +164,19 @@ Route::prefix('admin')
                 ->only(['index', 'show']);
 
             Route::apiResource('conversations', ConversationController::class)->except(['update']);
-          
+
             // Donation payments
             Route::apiResource('donation-payments', DonationPaymentController::class)
-                ->only(['index', 'show']);                
+                ->only(['index', 'show']);
+
+            // get free membership users
+            Route::get('free-membership-users', [AdminController::class, 'freeMembershipUsers']);
+            // get premium membership users
+            Route::get('premium-membership-users', [AdminController::class, 'premiumMembershipUsers']);
+            // Set up existing premium users
+            Route::get('/setup-premium-users', [AdminController::class, 'setupPremiumUsers']);
+            // Set up premium user by email
+            Route::post('/setup-test-premium-user', [AdminController::class, 'setupTestPremiumUsers']);
         }
     );
 
