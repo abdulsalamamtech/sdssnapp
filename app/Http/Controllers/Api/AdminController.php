@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\UserRoleEnum;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\Api\Certificate;
 use App\Models\Api\CertificationRequest;
 use App\Models\Api\Membership;
+use App\Models\Api\MembershipPayment;
 use App\Models\Api\Podcast;
 use App\Models\Api\Project;
 use App\Models\Assets;
@@ -342,5 +345,60 @@ class AdminController extends Controller
             'status' => true,
             'message' => $message
         ], 201);
+    }
+
+    /**
+     * Set up existing premium users based on successful membership payments.
+     */
+    public function setupPremiumUsers()
+    {
+
+        $premiumUser = [];
+        $membershipPayment = MembershipPayment::where('status', 'successful')->get();
+        foreach ($membershipPayment as $payment) {
+            // Update the user membership status the paid membership name
+            $payment->user->membership_status = 'premium';
+            $payment->user->save();
+            $premiumUser[] = $payment->user;
+        }
+        return ApiResponse::success($premiumUser, 'Premium users updated successfully');
+    }
+
+    /**
+     * Get all users with free membership status.
+     */
+    public function freeMembershipUsers()
+    {
+        $user = User::where('membership_status', 'free')->paginate();
+        $response = UserResource::collection($user);
+        return ApiResponse::success($response, 'Free membership users retrieved successfully', 200, $user);
+    }
+
+    /**
+     * Get all users with premium membership status.
+     */
+    public function premiumMembershipUsers()
+    {
+        $user = User::where('membership_status', 'premium')->paginate();
+        $response = UserResource::collection($user);
+        return ApiResponse::success($response, 'Premium membership users retrieved successfully', 200, $user);
+    }
+
+    /** 
+     * Set up test premium users based on email address.
+     * This method is for testing purposes and should be removed in production.
+     * It updates the membership status of users with specific email address to 'premium'.
+     * @param email
+     */
+    public function setupTestPremiumUsers(Request $request)
+    {
+        $data = $request->validate([
+            'email' => ['required', 'exists:users,email']
+        ]);
+        $user = User::where('email', $data['email'])->first();
+        // Update the user membership status the paid membership name
+        $user->membership_status = 'premium';
+        $user->save();
+        return ApiResponse::success($user, 'Premium membership setup successfully');
     }
 }
