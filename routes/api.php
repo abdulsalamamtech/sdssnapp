@@ -180,16 +180,18 @@ Route::group(['prefix' => 'profile', 'middleware' => ['auth:sanctum', 'verified'
 // AUTH ROUTES RESOURCES
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
-    // PROJECTS
-    // Project routes
-    Route::apiResource('projects', ProjectController::class)
-        ->only(['store', 'destroy']);
-    // Update Project
-    Route::post('projects/{project}/update', [ProjectController::class, 'update']);
-    Route::put('projects/{project}', [ProjectController::class, 'update']);
-    // Project comments
-    Route::apiResource('projects.comments', CommentController::class)
-        ->only(['store', 'update', 'destroy']);
+    Route::middleware(['premium_user'])->group(function () {
+        // PROJECTS
+        // Project routes
+        Route::apiResource('projects', ProjectController::class)
+            ->only(['store', 'destroy']);
+        // Update Project
+        Route::post('projects/{project}/update', [ProjectController::class, 'update']);
+        Route::put('projects/{project}', [ProjectController::class, 'update']);
+        // Project comments
+        Route::apiResource('projects.comments', CommentController::class)
+            ->only(['store', 'update', 'destroy']);
+    });
 
     // Like project
     Route::put('projects/{project}/likes', [ProjectController::class, 'like']);
