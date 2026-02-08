@@ -149,4 +149,11 @@ class User extends Authenticatable implements MustVerifyEmail
     // {
     //     return $this->belongsToMany(Assets::class, 'user_pictures', 'user_id', 'asset_id');
     // }
+
+
+    // set user's name as first_name + last_name
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = $this->first_name . ' ' . $this->last_name . ' ' . $this->other_name . ' ' . User::count();
+    }
 }

@@ -31,6 +31,7 @@ class AdminSeeder extends Seeder
                     'address' => '123 Admin St, Admin City, Admin Country',
                     'state' => 'Admin State',
                     'country' => 'Admin Country',
+                    'membership_status' => 'premium',
                 ]);
                 $user->assignRole('super-admin');
                 $user->assignRole('admin');

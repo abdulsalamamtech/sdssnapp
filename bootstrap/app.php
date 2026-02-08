@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\LogActivities;
+use App\Http\Middleware\PremiumUserMiddleware;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -24,9 +25,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        api: __DIR__.'/../routes/api.php',
-        commands: __DIR__.'/../routes/console.php',
+        web: __DIR__ . '/../routes/web.php',
+        api: __DIR__ . '/../routes/api.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
@@ -36,12 +37,13 @@ return Application::configure(basePath: dirname(__DIR__))
             // Log laravel Activities
             LogActivities::class,
         ]);
-       
+
         // Custom middleware
         $middleware->alias([
 
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-            
+            'premium_user' => PremiumUserMiddleware::class,
+
             // Comment this when using spatie permission
             // 'admin' => AdminMiddleware::class,
             // 'user-role' => \App\Http\Middleware\UserRoleMiddleware::class,
@@ -58,7 +60,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
 
-        
+
         // Start of render customized error message
         $exceptions->render(function (Throwable $e, Request $request) {
 
@@ -84,7 +86,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 if ($e instanceof ModelNotFoundException) {
                     $response['message'] = 'Resource not found.';
                     $statusCode = 404;
-                } elseif($e instanceof NotFoundHttpException) {
+                } elseif ($e instanceof NotFoundHttpException) {
                     $response['message'] = 'Endpoint not found.';
                     $statusCode = 404;
                 } elseif ($e instanceof AuthenticationException) {
@@ -105,9 +107,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 }
 
                 return response()->json($response, $statusCode);
-
             }
-
         });
         // End of render customized error message
 

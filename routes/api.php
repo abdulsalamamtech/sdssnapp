@@ -180,16 +180,18 @@ Route::group(['prefix' => 'profile', 'middleware' => ['auth:sanctum', 'verified'
 // AUTH ROUTES RESOURCES
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
-    // PROJECTS
-    // Project routes
-    Route::apiResource('projects', ProjectController::class)
-        ->only(['store', 'destroy']);
-    // Update Project
-    Route::post('projects/{project}/update', [ProjectController::class, 'update']);
-    Route::put('projects/{project}', [ProjectController::class, 'update']);
-    // Project comments
-    Route::apiResource('projects.comments', CommentController::class)
-        ->only(['store', 'update', 'destroy']);
+    Route::middleware(['premium_user'])->group(function () {
+        // PROJECTS
+        // Project routes
+        Route::apiResource('projects', ProjectController::class)
+            ->only(['store', 'destroy']);
+        // Update Project
+        Route::post('projects/{project}/update', [ProjectController::class, 'update']);
+        Route::put('projects/{project}', [ProjectController::class, 'update']);
+        // Project comments
+        Route::apiResource('projects.comments', CommentController::class)
+            ->only(['store', 'update', 'destroy']);
+    });
 
     // Like project
     Route::put('projects/{project}/likes', [ProjectController::class, 'like']);
@@ -316,7 +318,11 @@ require __DIR__ . '/api-auth.php';
 // require __DIR__ . '/terminal.php';
 
 
-
+// V1 Auth Routes
+Route::prefix('v1')->group(function () {
+    // Authentication
+    require __DIR__ . '/v1/auth.php';
+});
 
 // Cloudinary Test Routes
 // Route::apiResource('test-cloudinary', \App\Http\Controllers\Api\TestCloudinaryController::class);
