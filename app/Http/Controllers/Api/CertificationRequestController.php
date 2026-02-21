@@ -321,7 +321,7 @@ class CertificationRequestController extends Controller
             DB::beginTransaction();
 
             // with no membership payments
-            if ($certificationRequest->status !== 'rejected' || ($certificationRequest->membership && $certificationRequest->membership->payments()->exists())) {
+            if ($certificationRequest->status !== 'rejected' || ($certificationRequest->membership && $certificationRequest->membership->membershipPayments()->exists())) {
                 return ApiResponse::error([], 'you can only delete rejected certification request with no initial approval and no membership payments', 403);
             }
 
