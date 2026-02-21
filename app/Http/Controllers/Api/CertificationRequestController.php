@@ -218,7 +218,11 @@ class CertificationRequestController extends Controller
         if ($certificationRequest->status === 'paid') {
             return ApiResponse::error([], 'Cannot update a paid certification request', 403);
         }
-
+        // You can only delete rejected certification request with no initial approval and no membership payments
+        // with no membership payments
+        if ($certificationRequest->status !== 'rejected'  && $data['status'] == 'rejected' && $certificationRequest->membership && $certificationRequest->membership->membershipPayments()->exists()) {
+            return ApiResponse::error([], 'you can only reject certification request with no initial approval and no membership payments', 403);
+        }
         // approved can't be change
         if ($certificationRequest->status === 'approved' && $data['status'] !== 'approved') {
             return ApiResponse::error([], 'Cannot update an approved certification request', 403);
@@ -325,8 +329,7 @@ class CertificationRequestController extends Controller
                 return ApiResponse::error([], "Can't delete paid or approved certification request", 403);
             }
 
-             // You can only delete rejected certification request with no initial approval and no membership payments
-
+            // You can only delete rejected certification request with no initial approval and no membership payments
             // with no membership payments
             if ($certificationRequest->status !== 'rejected' && !$certificationRequest->membership && !$certificationRequest->membership->membershipPayments()->exists()) {
                 return ApiResponse::error([], 'you can only delete rejected certification request with no initial approval and no membership payments', 403);
