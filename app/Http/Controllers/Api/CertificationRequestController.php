@@ -320,8 +320,15 @@ class CertificationRequestController extends Controller
             // Begin a database transaction
             DB::beginTransaction();
 
+             // Check if the certification request is paid or approved, if yes return error
+             if ($certificationRequest->status === 'paid' || $certificationRequest->status === 'approved') {
+                return ApiResponse::error([], "Can't delete paid or approved certification request", 403);
+            }
+
+             // You can only delete rejected certification request with no initial approval and no membership payments
+
             // with no membership payments
-            if ($certificationRequest->status !== 'rejected' || ($certificationRequest->membership && $certificationRequest->membership->membershipPayments()->exists())) {
+            if ($certificationRequest->status !== 'rejected' && !$certificationRequest->membership && !$certificationRequest->membership->membershipPayments()->exists()) {
                 return ApiResponse::error([], 'you can only delete rejected certification request with no initial approval and no membership payments', 403);
             }
 
