@@ -321,7 +321,7 @@ class CertificationRequestController extends Controller
             DB::beginTransaction();
 
             if ($certificationRequest->status !== 'rejected' || $certificationRequest->membership) {
-                return ApiResponse::error([], 'you can only delete rejected certification request', 403);
+                return ApiResponse::error([], 'you can only delete rejected certification request with no initial approval', 403);
             }
             // Delete the certification request
             $certificationRequest->delete();
