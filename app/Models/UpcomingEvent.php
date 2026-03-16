@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
+
 
 class UpcomingEvent extends Model
 {
@@ -35,7 +38,26 @@ class UpcomingEvent extends Model
         'status' => 'boolean',
         'speakers' => 'array',
         'facilitators' => 'array',
+        'start_date' => 'date:Y-m-d',
+        'end_date' => 'date:Y-m-d',
     ];
+
+
+    protected function startTime(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ? Carbon::parse($value)->format('H:i') : null,
+            set: fn($value) => $value ? Carbon::parse($value)->format('H:i:s') : null,
+        );
+    }
+
+    protected function endTime(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ? Carbon::parse($value)->format('H:i') : null,
+            set: fn($value) => $value ? Carbon::parse($value)->format('H:i:s') : null,
+        );
+    }
 
     // banner
     public function banner()
