@@ -35,7 +35,7 @@ class UpcomingEvent extends Model
 
     // casts
     protected $casts = [
-        // 'status' => 'boolean',
+        'status' => 'boolean',
         'speakers' => 'array',
         'facilitators' => 'array',
         'start_date' => 'date:Y-m-d',
