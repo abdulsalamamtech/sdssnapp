@@ -51,6 +51,14 @@ class UpcomingEvent extends Model
         );
     }
 
+    protected function startDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ? Carbon::parse($value)->format('Y-m-d') : null,
+            set: fn($value) => $value ? Carbon::parse($value)->format('Y-m-d') : null,
+        );
+    }
+
     protected function endTime(): Attribute
     {
         return Attribute::make(
@@ -59,6 +67,13 @@ class UpcomingEvent extends Model
         );
     }
 
+    protected function endDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ? Carbon::parse($value)->format('Y-m-d') : null,
+            set: fn($value) => $value ? Carbon::parse($value)->format('Y-m-d') : null,
+        );
+    }
     // banner
     public function banner()
     {
