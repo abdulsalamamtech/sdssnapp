@@ -31,7 +31,7 @@ class StoreUpcomingEventRequest extends FormRequest
             'start_date' => ['required', 'date'],
             'end_time' => ['nullable', 'date_format:H:i'],
             'end_date' => ['nullable', 'date'],
-            'status' => ['required', 'string', 'in:true,false'],
+            'status' => ['required', 'in:true,false'],
             'contact_name' => ['nullable', 'string'],
             'contact_phone_number' => ['nullable', 'string'],
             'speakers' => ['nullable', 'array'],
