@@ -47,6 +47,8 @@ class StoreUpcomingEventRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
+            // Convert 'true'/'false' strings or booleans to 1 or 0
+            'status' => filter_var($this->status, FILTER_VALIDATE_BOOLEAN) ? 1 : 0,
             'start_date' => $this->start_date ? Carbon::createFromFormat('d-m-Y', $this->start_date)->format('Y-m-d') : null,
             'start_time' => $this->start_time ? Carbon::parse($this->start_time)->format('H:i') : null,
         ]);
