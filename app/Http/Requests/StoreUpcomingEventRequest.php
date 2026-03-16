@@ -48,7 +48,7 @@ class StoreUpcomingEventRequest extends FormRequest
     {
         $this->merge([
             // Convert 'true'/'false' strings or booleans to 1 or 0
-            'status' => $this->status == true ? 1 : 0,
+            'status' => $this->status ? 1 : 0,
             'start_date' => $this->start_date ? Carbon::createFromFormat('d-m-Y', $this->start_date)->format('Y-m-d') : null,
             'start_time' => $this->start_time ? Carbon::parse($this->start_time)->format('H:i') : null,
         ]);
