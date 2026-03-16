@@ -26,7 +26,7 @@ class UpcomingEventController extends Controller
     }
 
     /**
-     * Public - Display a listing of all active upcoming events.
+     * Public - Display a listing of all upcoming events.
      */
     public function upcoming()
     {
