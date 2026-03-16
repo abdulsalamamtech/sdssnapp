@@ -26,7 +26,7 @@ class UpcomingEventController extends Controller
     }
 
     /**
-     * Public - Display a listing of all upcoming events.
+     * Public - Display a listing of all upcoming events (upcoming active events).
      */
     public function upcoming()
     {
@@ -42,7 +42,7 @@ class UpcomingEventController extends Controller
     }
 
     /**
-     * Public - Display a listing of all recent events.
+     * Public - Display a listing of all recent events (past inactive events).
      */
     public function recent()
     {
