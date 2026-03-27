@@ -23,7 +23,7 @@ class UpcomingEvent extends Model
         'end_time',
         'end_date',
         'category',
-        'status',
+        'status', // draft, published
         'facilitators',
         'speakers',
         'contact_name',
@@ -35,7 +35,6 @@ class UpcomingEvent extends Model
 
     // casts
     protected $casts = [
-        'status' => 'boolean',
         'speakers' => 'array',
         'facilitators' => 'array',
         'start_date' => 'date:Y-m-d',
