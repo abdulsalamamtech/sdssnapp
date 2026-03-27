@@ -34,7 +34,6 @@ jobs:
 
             echo "🔄 Running migrations..."
             php artisan migrate --force
-            php artisan migrate:refresh --step=1
 
             echo "⚡ Clearing cache..."
             php artisan cache:clear

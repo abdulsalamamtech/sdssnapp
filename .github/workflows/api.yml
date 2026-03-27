@@ -28,7 +28,6 @@ jobs:
             
             # php artisan migrate --force  # Migrate the database
             # php artisan db:seed --force
-            php artisan migrate:refresh --step=1
             
             echo "🔄 Running migrations..."
             php artisan migrate --force  # Migrate the database
