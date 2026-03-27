@@ -31,7 +31,7 @@ class UpcomingEventController extends Controller
     public function upcoming()
     {
         $upcomingEvents = UpcomingEvent::with('banner')
-            ->where('status', 'true')
+            ->where('status', 'published')
             ->latest()
             ->paginate();
         if ($upcomingEvents->isEmpty()) {
@@ -47,7 +47,8 @@ class UpcomingEventController extends Controller
     public function recent()
     {
         $upcomingEvents = UpcomingEvent::with('banner')
-            ->whereNot('status', 'true')
+            ->where('status', 'resent')
+            ->orWhere('start_date', '<=', now())
             ->latest()
             ->paginate();
         if ($upcomingEvents->isEmpty()) {
