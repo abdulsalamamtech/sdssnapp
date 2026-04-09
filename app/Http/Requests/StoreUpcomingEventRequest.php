@@ -50,7 +50,7 @@ class StoreUpcomingEventRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'start_date' => $this->start_date ? Carbon::createFromFormat('d-m-Y', $this->start_date)->format('Y-m-d') : null,
+            'start_date' => $this->start_date ? Carbon::createFromFormat('Y-m-d', $this->start_date)->format('Y-m-d') : null,
             'start_time' => $this->start_time ? Carbon::parse($this->start_time)->format('H:i') : null,
         ]);
     }
