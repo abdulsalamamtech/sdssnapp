@@ -32,6 +32,12 @@ class UpdateUpcomingEventRequest extends FormRequest
             'end_date' => ['nullable', 'date'],
             // 'status' => ['nullable', 'in:true,false'],
             // 'status' => ['nullable', 'in:1,0'],
+
+            'category' => ['nullable', 'string'],
+            'registration_link' => ['nullable', 'url'],
+            'venue' => ['nullable', 'string'],
+            'location' => ['nullable', 'string'],
+
             // // draft, published
             'status' => ['nullable', 'in:draft,published,closed'],
             'contact_name' => ['nullable', 'string'],

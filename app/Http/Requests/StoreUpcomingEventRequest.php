@@ -34,6 +34,11 @@ class StoreUpcomingEventRequest extends FormRequest
             // 'status' => ['required', 'in:1,0'],
             // 'status' => ['nullable', 'in:1,0'],
             // // draft, published
+            'category' => ['nullable', 'string'],
+            'registration_link' => ['nullable', 'url'],
+            'venue' => ['nullable', 'string'],
+            'location' => ['nullable', 'string'],
+
             'status' => ['nullable', 'in:draft,published'],
             'contact_name' => ['nullable', 'string'],
             'contact_phone_number' => ['nullable', 'string'],
