@@ -32,8 +32,8 @@ class UpcomingEventController extends Controller
     {
         $upcomingEvents = UpcomingEvent::with('banner')
             ->where('status', 'published')
-            // start date is less than or equal to today
-            ->where('start_date', '>=', now()->toDateString())
+            // start date is greater than or equal to today
+            ->where('start_date', '>=', now()->subDays(3)->toDateString())
             ->latest()
             ->paginate();
         if ($upcomingEvents->isEmpty()) {
