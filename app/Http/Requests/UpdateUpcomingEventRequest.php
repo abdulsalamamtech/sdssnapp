@@ -33,7 +33,7 @@ class UpdateUpcomingEventRequest extends FormRequest
             // 'status' => ['nullable', 'in:true,false'],
             // 'status' => ['nullable', 'in:1,0'],
             // // draft, published
-            'status' => ['nullable', 'in:draft,recent,published'],
+            'status' => ['nullable', 'in:draft,published,closed'],
             'contact_name' => ['nullable', 'string'],
             'contact_phone_number' => ['nullable', 'string'],
             'speakers' => ['nullable', 'array'],
