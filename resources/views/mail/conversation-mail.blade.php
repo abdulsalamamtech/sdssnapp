@@ -9,6 +9,6 @@
     {{-- <h2>Hi, Dear!</h2> --}}
     <h2>Dear {{ $user?->first_name ?? 'SDSSN Member' }},</h2>
     <p>
-        {{ $content['message'] ?? '' }}
+        {{ !! $content['message'] ?? '' !! }}
     </p>
 @endsection
